@@ -1,3 +1,8 @@
 abc
+<<<<<<< HEAD
 cded
 111222
+=======
+def
+ggg
+>>>>>>> 495485bb116bb09e7d4fda430af348c49f47e51e
