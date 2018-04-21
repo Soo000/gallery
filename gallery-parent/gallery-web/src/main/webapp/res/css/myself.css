@@ -1,0 +1,29 @@
+.myself-header {
+	height: 120px;
+	background-image: url(../img/common/myself-bg.png);	
+}
+
+.myself-header .pic {
+	width: 70px;
+	margin-top: 15px;
+	margin-left: 15px;
+}
+
+.myself-header .persnal-info {
+	margin-top: 25px;
+	margin-left: 15px;
+	font-size: 14px;
+	font-weight: bold;
+	color: rgb(255,255,255);
+}
+
+.myself-header .persnal-info .level {
+	margin-top: 15px;
+}
+
+.order {
+	text-align: center;
+}
+
+.order .header {
+}

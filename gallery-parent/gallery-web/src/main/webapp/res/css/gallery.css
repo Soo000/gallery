@@ -1,0 +1,62 @@
+.gallery-navbar {	
+}
+
+.gallery-navbar .icon-previous {
+	width: 35px;
+	height: 35px;
+	margin: 5px 0 5px 5px;
+	padding: 4px;
+	cursor: pointer;
+}
+
+.gallery-navbar .icon-close {
+	width: 35px;
+	height: 35px;
+	margin: 5px 0 5px 0;
+	cursor: pointer;
+}
+.gallery-navbar .gallery-navbar-title {
+	line-height: 45px;
+	text-align: center;
+}
+
+.gallery-navbar .right-text {
+	color: #fff;
+	margin-top: 14px;
+	margin-right: 10px;
+	text-align: right;
+}
+
+.new-pro {
+	font-size: 10px;
+	border: 1px solid RGB(255,183,140);
+	padding: 2px;
+	border-radius: 3px;
+	color: RGB(255,133,60);
+}
+
+.nav-menubar {
+	background-color: #FFFFFF;	
+}
+
+.nav-menubar .nav-menubar-menu {
+	width: 40px;
+	height: 45px;
+	margin: 2px auto;
+	cursor: pointer;
+}
+
+.nav-menubar .nav-menubar-menu .menu-icon {
+	margin-top: 4px;
+	margin-left: 9px;
+}
+
+.nav-menubar .nav-menubar-menu .menu-text {
+	font-size: 11px;
+	text-align: center;
+	color: #A14C4C;
+}
+
+.nav-menubar .active {
+	color: red;
+}

@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kkwrite.gallery.mapper.address.GlyAddressMapper" >
+  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.address.GlyAddress" >
+    <id column="address_id" property="addressId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="phone_num" property="phoneNum" jdbcType="VARCHAR" />
+    <result column="address_labels" property="addressLabels" jdbcType="VARCHAR" />
+    <result column="is_default" property="isDefault" jdbcType="INTEGER" />
+    <result column="province_id" property="provinceId" jdbcType="INTEGER" />
+    <result column="city_id" property="cityId" jdbcType="BIGINT" />
+    <result column="county_id" property="countyId" jdbcType="BIGINT" />
+    <result column="town_id" property="townId" jdbcType="BIGINT" />
+    <result column="village_id" property="villageId" jdbcType="BIGINT" />
+    <result column="zip_code" property="zipCode" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="VARCHAR" />
+    <result column="ext_0" property="ext0" jdbcType="VARCHAR" />
+    <result column="ext_1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext_2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext_3" property="ext3" jdbcType="VARCHAR" />
+    <result column="ext_4" property="ext4" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    address_id, user_id, receiver, phone_num, address_labels, is_default, province_id, 
+    city_id, county_id, town_id, village_id, zip_code, address, is_valid, creation_time, 
+    creator, update_time, updator, ext_0, ext_1, ext_2, ext_3, ext_4
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.address.GlyAddressExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from gly_address
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gly_address
+    where address_id = #{addressId,jdbcType=INTEGER}
+  </select>
+  <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.address.GlyAddress">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from gly_address
+  	<where>
+  		<if test="addressId != null">
+  			address_id = #{addressId,jdbcType=BIGINT}
+  		</if>
+  		<if test="userId != null">
+  			and user_id = #{userId,jdbcType=INTEGER}
+  		</if>
+  		<if test="isDefault != null">
+  			and is_default = #{isDefault,jdbcType=INTEGER}
+  		</if>
+  		<if test="isValid != null">
+  			and is_valid = #{isValid,jdbcType=INTEGER}
+  		</if>
+  	</where>
+  	order by creation_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gly_address
+    where address_id = #{addressId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kkwrite.gallery.pojo.address.GlyAddressExample" >
+    delete from gly_address
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kkwrite.gallery.pojo.address.GlyAddress" >
+    insert into gly_address (address_id, user_id, receiver, 
+      phone_num, address_labels, is_default, 
+      province_id, city_id, county_id, 
+      town_id, village_id, zip_code, 
+      address, is_valid, creation_time, 
+      creator, update_time, updator, 
+      ext_0, ext_1, ext_2, ext_3, 
+      ext_4)
+    values (#{addressId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{receiver,jdbcType=VARCHAR}, 
+      #{phoneNum,jdbcType=VARCHAR}, #{addressLabels,jdbcType=VARCHAR}, #{isDefault,jdbcType=INTEGER}, 
+      #{provinceId,jdbcType=INTEGER}, #{cityId,jdbcType=BIGINT}, #{countyId,jdbcType=BIGINT}, 
+      #{townId,jdbcType=BIGINT}, #{villageId,jdbcType=BIGINT}, #{zipCode,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{isValid,jdbcType=INTEGER}, #{creationTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updator,jdbcType=VARCHAR}, 
+      #{ext0,jdbcType=VARCHAR}, #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, 
+      #{ext4,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kkwrite.gallery.pojo.address.GlyAddress" useGeneratedKeys="true" keyProperty="address_id" >
+    insert into gly_address
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="addressId != null" >
+        address_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="phoneNum != null" >
+        phone_num,
+      </if>
+      <if test="addressLabels != null" >
+        address_labels,
+      </if>
+      <if test="isDefault != null" >
+        is_default,
+      </if>
+      <if test="provinceId != null" >
+        province_id,
+      </if>
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="countyId != null" >
+        county_id,
+      </if>
+      <if test="townId != null" >
+        town_id,
+      </if>
+      <if test="villageId != null" >
+        village_id,
+      </if>
+      <if test="zipCode != null" >
+        zip_code,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="creationTime != null" >
+        creation_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="ext0 != null" >
+        ext_0,
+      </if>
+      <if test="ext1 != null" >
+        ext_1,
+      </if>
+      <if test="ext2 != null" >
+        ext_2,
+      </if>
+      <if test="ext3 != null" >
+        ext_3,
+      </if>
+      <if test="ext4 != null" >
+        ext_4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="addressId != null" >
+        #{addressId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="receiver != null" >
+        #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null" >
+        #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="addressLabels != null" >
+        #{addressLabels,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        #{isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="provinceId != null" >
+        #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=BIGINT},
+      </if>
+      <if test="countyId != null" >
+        #{countyId,jdbcType=BIGINT},
+      </if>
+      <if test="townId != null" >
+        #{townId,jdbcType=BIGINT},
+      </if>
+      <if test="villageId != null" >
+        #{villageId,jdbcType=BIGINT},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="ext0 != null" >
+        #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        #{ext4,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kkwrite.gallery.pojo.address.GlyAddressExample" resultType="java.lang.Integer" >
+    select count(*) from gly_address
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update gly_address
+    <set >
+      <if test="record.addressId != null" >
+        address_id = #{record.addressId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.receiver != null" >
+        receiver = #{record.receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phoneNum != null" >
+        phone_num = #{record.phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addressLabels != null" >
+        address_labels = #{record.addressLabels,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDefault != null" >
+        is_default = #{record.isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="record.provinceId != null" >
+        province_id = #{record.provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="record.cityId != null" >
+        city_id = #{record.cityId,jdbcType=BIGINT},
+      </if>
+      <if test="record.countyId != null" >
+        county_id = #{record.countyId,jdbcType=BIGINT},
+      </if>
+      <if test="record.townId != null" >
+        town_id = #{record.townId,jdbcType=BIGINT},
+      </if>
+      <if test="record.villageId != null" >
+        village_id = #{record.villageId,jdbcType=BIGINT},
+      </if>
+      <if test="record.zipCode != null" >
+        zip_code = #{record.zipCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=INTEGER},
+      </if>
+      <if test="record.creationTime != null" >
+        creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.creator != null" >
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updator != null" >
+        updator = #{record.updator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext0 != null" >
+        ext_0 = #{record.ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext1 != null" >
+        ext_1 = #{record.ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext2 != null" >
+        ext_2 = #{record.ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext3 != null" >
+        ext_3 = #{record.ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext4 != null" >
+        ext_4 = #{record.ext4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update gly_address
+    set address_id = #{record.addressId,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      receiver = #{record.receiver,jdbcType=VARCHAR},
+      phone_num = #{record.phoneNum,jdbcType=VARCHAR},
+      address_labels = #{record.addressLabels,jdbcType=VARCHAR},
+      is_default = #{record.isDefault,jdbcType=INTEGER},
+      province_id = #{record.provinceId,jdbcType=INTEGER},
+      city_id = #{record.cityId,jdbcType=BIGINT},
+      county_id = #{record.countyId,jdbcType=BIGINT},
+      town_id = #{record.townId,jdbcType=BIGINT},
+      village_id = #{record.villageId,jdbcType=BIGINT},
+      zip_code = #{record.zipCode,jdbcType=INTEGER},
+      address = #{record.address,jdbcType=VARCHAR},
+      is_valid = #{record.isValid,jdbcType=INTEGER},
+      creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      updator = #{record.updator,jdbcType=VARCHAR},
+      ext_0 = #{record.ext0,jdbcType=VARCHAR},
+      ext_1 = #{record.ext1,jdbcType=VARCHAR},
+      ext_2 = #{record.ext2,jdbcType=VARCHAR},
+      ext_3 = #{record.ext3,jdbcType=VARCHAR},
+      ext_4 = #{record.ext4,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kkwrite.gallery.pojo.address.GlyAddress" >
+    update gly_address
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null" >
+        phone_num = #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="addressLabels != null" >
+        address_labels = #{addressLabels,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        is_default = #{isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="provinceId != null" >
+        province_id = #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=BIGINT},
+      </if>
+      <if test="countyId != null" >
+        county_id = #{countyId,jdbcType=BIGINT},
+      </if>
+      <if test="townId != null" >
+        town_id = #{townId,jdbcType=BIGINT},
+      </if>
+      <if test="villageId != null" >
+        village_id = #{villageId,jdbcType=BIGINT},
+      </if>
+      <if test="zipCode != null" >
+        zip_code = #{zipCode,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="ext0 != null" >
+        ext_0 = #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext_1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext_2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext_3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        ext_4 = #{ext4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where address_id = #{addressId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kkwrite.gallery.pojo.address.GlyAddress" >
+    update gly_address
+    set user_id = #{userId,jdbcType=INTEGER},
+      receiver = #{receiver,jdbcType=VARCHAR},
+      phone_num = #{phoneNum,jdbcType=VARCHAR},
+      address_labels = #{addressLabels,jdbcType=VARCHAR},
+      is_default = #{isDefault,jdbcType=INTEGER},
+      province_id = #{provinceId,jdbcType=INTEGER},
+      city_id = #{cityId,jdbcType=BIGINT},
+      county_id = #{countyId,jdbcType=BIGINT},
+      town_id = #{townId,jdbcType=BIGINT},
+      village_id = #{villageId,jdbcType=BIGINT},
+      zip_code = #{zipCode,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      creation_time = #{creationTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=VARCHAR},
+      ext_0 = #{ext0,jdbcType=VARCHAR},
+      ext_1 = #{ext1,jdbcType=VARCHAR},
+      ext_2 = #{ext2,jdbcType=VARCHAR},
+      ext_3 = #{ext3,jdbcType=VARCHAR},
+      ext_4 = #{ext4,jdbcType=VARCHAR}
+    where address_id = #{addressId,jdbcType=INTEGER}
+  </update>
+  <select id="selectProvince" resultType="map">
+  	select provice_id, provice_name from j_position_provice 
+  </select>
+  <select id="selectCity" parameterType="string" resultType="map">
+  	select city_id, city_name from j_position_city t 
+  	where t.province_id = #{provinceId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectCountry" parameterType="string" resultType="map">
+  	select county_id, county_name from j_position_county t 
+  	where t.city_id = #{cityId,jdbcType=VARCHAR} 
+  </select>
+  <select id="selectProCitCountName" parameterType="string" resultType="string">
+  	select concat(p.provice_name, c.city_name, t.county_name) 
+  	from j_position_county t 
+	left join j_position_city c on t.city_id = c.city_id 
+	left join j_position_provice p on c.province_id = p.provice_id 
+	where t.county_id = #{countyId,jdbcType=VARCHAR} 
+  </select>
+  <select id="selectDefAddrId" resultType="java.lang.Integer">
+  	select t.address_id from gly_address t where t.is_default = 1 
+  </select>
+  <update id="cancelDefAddr" parameterType="int">
+  	update gly_address t 
+    set t.is_default = 0 
+    where t.address_id = #{addrId,jdbcType=INTEGER} 
+  </update>
+  
+</mapper>

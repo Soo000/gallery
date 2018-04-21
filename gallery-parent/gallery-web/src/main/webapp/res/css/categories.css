@@ -1,0 +1,46 @@
+.cond-title {
+	border-left: 3px solid red;
+	margin: 10px 0 0 10px;
+	font-size: 14px;
+	color: red;
+}
+
+.cond-title-text {
+	padding-left: 10px;
+}
+
+.cond {
+	margin: 0;
+	padding: 0;
+	height: 40px;
+	vertical-align: middle;
+	cursor: pointer;
+	width: 400px;
+}
+.cond li {
+	list-style: none;
+	float: left;
+	line-height: 30px;
+	margin-left: 10px;
+	font-size: 12px;
+	color: #a23939;
+	margin-top: 4px;
+	padding: 0 5px;
+	border-radius: 3px;				
+}
+.cond li.active {
+	background: #c5eae9;
+	color: #42ba28;
+}
+.cond:after {
+	content: ".";
+	clear: both; /* 清浮动 */
+	display: block; /*块*/
+	visibility: hidden; /*隐藏掉*/
+	height: 0;
+	line-height: 0;				
+}
+
+.thumbnail {
+	margin-bottom: 0;
+}

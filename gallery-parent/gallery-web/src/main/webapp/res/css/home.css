@@ -1,0 +1,45 @@
+.carousel-gallery {
+}
+
+.carousel-item-img {
+	width: 100%;
+	height: 100%;
+}
+
+.panel {
+	margin-bottom: 0;
+}
+
+.area {
+	
+}
+
+.area .area-title {
+	position: relative;
+	width: 200px;
+	height: 50px;
+	margin: auto;
+}
+
+.area .area-pic {
+	background-image: url(../img/common/area_bg.png);
+	height: 30px;
+	width: 200px;
+	margin-top: 10px;
+}
+
+.area .area-text {
+	position: absolute;
+	top: 15px;
+	left: 80px;
+	font-size: 14px;
+	color: rgb(255,0,0);
+}
+
+#reservationBtn {
+	position: "fixed";
+	left: 0;
+	bottom: 0;
+	line-height: 1.8;
+	border-radius: 0;
+}

@@ -1,0 +1,84 @@
+.cart {
+	border: 0;
+}
+
+.cart .product-item {
+	margin-bottom: 15px;
+}
+
+.cart .product-pic {
+	width: 100px;
+	height: 100px;
+	margin: 0 5px;
+	border: 6px solid #f2e8e8;
+}
+
+.cart .product-checkbox {
+	line-height: 100px;
+	margin-left: 10px;
+}
+
+.cart .product-name {
+	margin-top: 5px;
+}
+
+.cart .product-intro {
+	margin-top: 15px;
+	font-size: 10px;
+	color: #AD5D5D;
+}
+
+.cart .product-price {
+	margin-top: 20px;
+}
+
+.cart .product-price .money-icon {
+	color: #c68b70;
+	font-size: 10px;
+}
+
+.cart .product-price .money-value {
+	color: #bd7250;
+	font-size: 14px;
+}
+
+.cart .product-number {
+	margin-top: 20px;
+	margin-right: 10px;
+}
+
+/*** 编辑栏 ***/
+.edit-bar {
+	position: fixed;
+	bottom: 50px;
+	width: 100%;
+	background: #fefefe;
+	border-top: 1px solid #ccc;
+	padding: 5px;
+}
+
+/*** 结算栏 ***/
+.settlement-bar {
+	position: fixed;
+	bottom: 30px;
+	width: 100%;
+}
+
+.settlement-bar .settlement {
+	line-height: 50px;
+	padding-left: 15px;
+}
+
+.settlement-bar .amount {
+	margin-left: 15px;
+	font-size: 14px;
+}
+
+.settlement-bar .go-settlement {
+	padding-right: 25px;
+	font-size: 16px;
+	background-color: rgb(192,0,0);
+	color: rgb(255,255,255);
+	padding-left: 25px;
+	cursor: pointer;
+}

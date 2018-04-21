@@ -1,0 +1,179 @@
+.product-info {
+	
+}
+
+.product-info .product-detail {
+	line-height: 35px;
+	font-size: 13px;
+	color: #965959;
+	padding-left: 10px;
+}
+
+.product-info .product-features {
+	padding-left: 10px;
+	margin-bottom: 5px;
+	font-size: 13px;
+}
+
+.jumbotron {
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-bottom: 0;
+}
+
+/*** price-bar ***/
+.price-text {
+	font-size: 11px;
+}
+
+.price-value {
+	font-size: 13px;
+	color: #170303;
+	text-decoration: line-through;
+}
+
+.discount-text {
+	font-size: 11px;
+}
+
+.discount-value {
+	font-size: 13px;
+	color: #fb0404;
+	font-weight: bold;
+}
+
+/*** commitment-bar ***/
+.commitment-bar {
+}
+
+.commitment-bar span {
+	font-size: 10px;
+	padding-left: 5px;
+}
+
+/*** comment-bar ***/
+.comment-head {
+	width: 30px;
+	height: 30px;
+}
+
+.comment-username-text {
+	margin-top: 6px;
+	margin-left: 2px;
+	color: rgb(146, 136, 132);
+}
+
+.comment-date {
+	color: rgb(175,175,175);
+}
+
+.comment-content {
+	color: rgb(103,103,103);
+}
+
+.comment-more-button {
+	border: 1px solid #818dce;
+	border-radius: 20px;
+	color: #57729b;
+	padding: 5px;
+}
+
+.size-bar {
+	line-height: 50px;
+	background-color: rgba(255,255,255);
+	border-bottom: 1px solid #ccc;
+	cursor: pointer;
+}
+
+.order-bar {
+}
+
+.order-bar .icon {
+	margin-top: 10px;
+	margin-left: 17px;
+	cursor: pointer;
+}
+
+.order-bar .text {
+	background-color: rgb(255,255,255);
+	color: rgb(87,87,87);
+	text-align: center;
+	font-size: 10px;
+	cursor: pointer;
+}
+
+.order-bar .add-to-cart {
+	background-color: rgb(151,192,222);
+	color: rgb(8, 0, 0);
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.order-bar .buy {
+	background-color: rgb(255,178,0);
+	color: rgb(8, 0, 0);
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.at-bottom {
+	margin-bottom: 50px;
+	color: rgb(186, 141, 141);
+	font-size: 11px;
+	line-height: 50px;
+	height: 50px;
+}
+
+#choosen {
+}
+
+#choosen .product-pic {
+	width: 100px;
+	height: 100px;
+	position: absolute;
+	top: -25px;
+	left: 10%;
+	margin-left: -25px;
+	border-radius: 5px;
+	border: 4px solid #fff;
+}
+
+#choosen .product-prop-frame {
+	border: 1px solid #deacac;
+	border-radius: 5px;
+	padding: 3px 5px;
+	margin-bottom: 5px;
+	width: 120px;
+	color: #bd7171;
+	text-align: center;
+	cursor: pointer;
+}
+
+#choosen .active {
+	border: 1px solid red;
+	color: red;
+	font-weight: bold;
+}
+
+#choosen .confirm-button {
+	line-height: 35px;
+	background-color: rgb(192,0,0);
+	text-align: center;
+	font-size: 14px;
+	color: rgb(255,255,255);
+	cursor: pointer;
+}
+
+#myModalLabel .money-icon {
+	font-size: 10px;
+	color: #c68484;
+	font-weight: bold;
+}
+
+#myModalLabel .money-value {
+	color: red;
+}

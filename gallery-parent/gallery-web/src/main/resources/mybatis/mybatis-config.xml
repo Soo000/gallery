@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 加载属性文件 
+	<properties resource="config.properties"></properties>
+	-->
+	
+	<!-- 全局参数配置 -->
+	<settings>
+		<!-- 开启二级缓存 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- MyBatis 打印日志配置 -->
+		<setting name="logImpl" value="LOG4J"/>
+	</settings>
+
+	<!-- 定义别名 -->
+	<typeAliases>
+		<!-- <typeAlias alias="Blog" type="com.mybatis.pojo.Blog" /> -->
+		<!-- 
+		批量别名 
+		自动扫描 name 属性所指的包名下所有的类，类名即别名
+		-->
+		<package name="com.kkwrite.gallery.pojo"/>
+	</typeAliases>
+
+	<!-- 配置数据源 
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driver}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	-->
+
+	<!-- 
+		加载映射文件
+		由于使用 Spring 和 MyBatis 的整合包进行 mapper扫描，这里不需要进行 mapper 配置
+		但是必须遵守：mapper.xml 和 mapper.java 文件在同一个目录 
+	-->
+	<!-- <mappers> -->
+		<!-- resource 加载单个映射文件 
+		<mapper resource="sqlmap/User.xml"/>
+		<mapper resource="com/demomybatis/mapper/UserMapper.xml" />
+		-->
+		
+		<!-- mapper 接口加载映射文件
+			使用 mapper 代理方法
+			mapper 接口类名和 mapper.xml映射文件名一致，且在同一个目录 
+		<mapper class="com.demomybatis.mapper.UserMapper"/>
+		-->
+		
+		<!-- 批量加载 
+			使用 mapper 代理方法
+			mapper 接口类名和 mapper.xml映射文件名一致，且在同一个目录
+			name 指定mapper接口的报名
+		<package name="com.demomybatis.mapper"/>
+		-->
+	<!-- </mappers> -->
+</configuration>

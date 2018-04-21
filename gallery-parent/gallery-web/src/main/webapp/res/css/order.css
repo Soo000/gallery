@@ -1,0 +1,85 @@
+.address-bar {
+	background-color: rgb(255,255,255);
+}
+
+.address-bar .contact-info {
+	width: 260px;
+}
+
+.address-bar .contact-info .contact-name {
+	padding: 5px 0 5px 15px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.address-bar .contact-info .contact-address {
+	padding: 5px 0 5px 15px;
+}
+
+.address-bar .contact-more {
+	height: 70px;
+	vertical-align: middle;
+	line-height: 70px;
+	padding-right: 10px;
+}
+
+.product-bar {
+	background-color: rgb(255,255,255);
+	padding: 15px;
+}
+
+.product-bar .product-item {
+	margin-bottom: 15px;
+}
+
+.product-bar .product-pic {
+	width: 100px;
+	height: 100px;
+	margin-left: 15px;
+	border: 6px solid #f2e8e8;
+}
+
+.product-bar .product-intro {
+	margin-top: 15px;
+	font-size: 10px;
+	color: #AD5D5D;
+}
+
+.product-bar .product-price {
+	margin-top: 20px;
+}
+
+.product-bar .product-price .money-icon {
+	color: #c68b70;
+	font-size: 10px;
+}
+
+.product-bar .product-price .money-value {
+	color: #bd7250;
+	font-size: 14px;
+}
+
+.product-bar .product-number {
+	margin-top: 20px;
+	margin-right: 10px;
+}
+
+.settlement-bar .settlement {
+	line-height: 50px;
+	padding-left: 15px;
+}
+
+.settlement-bar .amount {
+	font-size: 14px;
+	font-weight: bold;
+	color: rgb(255,0,0);
+}
+	
+.settlement-bar .go-settlement {
+	padding-right: 25px;
+	font-size: 16px;
+	background-color: rgb(192,0,0);
+	color: rgb(255,255,255);
+	padding-left: 25px;
+	cursor: pointer;
+}

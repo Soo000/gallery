@@ -1,0 +1,41 @@
+.address-item {
+	border-bottom: 1px solid #CCCCCC;
+}
+
+.address-item .address-checkbox {
+	line-height: 35px;
+	padding: 15px 10px 15px 5px;
+}
+
+.address-item .contact-info-0 {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 35px;
+	color: black;
+}
+
+.address-item .contact-info-1 {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 35px;
+	color: red;
+}
+
+.address-item .contact-info .type {
+	border: 1px solid #ccc;
+	font-size: 8px;
+	color: blue;
+	padding: 1px 6px 1px 6px;
+	font-weight: normal;
+	border-radius: 2px;
+	margin-left: 10px;
+}
+
+.address-item .address-details {
+	color: #BD7A7A;
+}
+
+.address-item .address-edit {
+	line-height: 35px;
+	padding-top: 15px
+}

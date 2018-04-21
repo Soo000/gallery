@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kkwrite.gallery.mapper.product.ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.product.Product" >
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_intro" property="productIntro" jdbcType="VARCHAR" />
+    <result column="product_detail" property="productDetail" jdbcType="VARCHAR" />
+    <result column="initial_price" property="initialPrice" jdbcType="REAL" />
+    <result column="real_price" property="realPrice" jdbcType="REAL" />
+    <result column="discount" property="discount" jdbcType="REAL" />
+    <result column="inventory_number" property="inventoryNumber" jdbcType="REAL" />
+    <result column="sale_number" property="saleNumber" jdbcType="REAL" />
+    <result column="residue_number" property="residueNumber" jdbcType="REAL" />
+    <result column="book_number" property="bookNumber" jdbcType="INTEGER" />
+    <result column="product_order" property="productOrder" jdbcType="REAL" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="VARCHAR" />
+    <result column="ext_0" property="ext0" jdbcType="VARCHAR" />
+    <result column="ext_1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext_2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext_3" property="ext3" jdbcType="VARCHAR" />
+    <result column="ext_4" property="ext4" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    product_id, product_name, product_intro, product_detail, initial_price, real_price, 
+    discount, inventory_number, sale_number, residue_number, book_number, product_order, 
+    is_valid, creation_time, creator, update_time, updator, ext_0, ext_1, ext_2, ext_3, 
+    ext_4
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select
+  	<include refid="Base_Column_List" />
+  	from gly_product a
+  	where product_id = #{product_id}
+  </select>
+  <select id="selectAllProduct" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select
+	<include refid="Base_Column_List" />
+  	from gly_product a
+  	<where>
+  		a.is_valid = #{is_valid}
+  	</where>
+  	order by a.creation_time desc
+  </select>
+  <select id="selectProducts" resultMap="BaseResultMap">
+  	select 
+	<include refid="Base_Column_List" />
+  	from gly_product
+  	where product_id in
+  	<foreach collection="array" item="productIds" open="(" separator="," close=")">
+  		${productIds}
+  	</foreach>
+  	order by creation_time desc
+  </select>
+</mapper>

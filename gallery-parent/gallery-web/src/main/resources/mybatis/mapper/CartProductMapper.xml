@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kkwrite.gallery.mapper.cart.CartProductMapper" >
+  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.product.Product" >
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_intro" property="productIntro" jdbcType="VARCHAR" />
+    <result column="product_detail" property="productDetail" jdbcType="VARCHAR" />
+    <result column="initial_price" property="initialPrice" jdbcType="REAL" />
+    <result column="real_price" property="realPrice" jdbcType="REAL" />
+    <result column="discount" property="discount" jdbcType="REAL" />
+    <result column="inventory_number" property="inventoryNumber" jdbcType="REAL" />
+    <result column="sale_number" property="saleNumber" jdbcType="REAL" />
+    <result column="residue_number" property="residueNumber" jdbcType="REAL" />
+    <result column="book_number" property="bookNumber" jdbcType="REAL" />
+    <result column="product_order" property="productOrder" jdbcType="REAL" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="VARCHAR" />
+    <result column="ext_0" property="ext0" jdbcType="VARCHAR" />
+    <result column="ext_1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext_2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext_3" property="ext3" jdbcType="VARCHAR" />
+    <result column="ext_4" property="ext4" jdbcType="VARCHAR" />
+    
+    <result column="product_num" property="productNum" jdbcType="INTEGER" />
+    <result column="is_selected" property="isSelected" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <select id="selectCartProducts" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.cart.GlyCart">
+	select 
+		a.product_id, a.product_name, a.product_intro, a.product_detail, a.initial_price, a.real_price, a.discount,
+  		a.inventory_number, a.sale_number, a.residue_number, a.book_number, a.product_order, a.is_valid, a.creation_time,
+  		a.creator, a.update_time, a.updator, b.product_num, b.is_selected
+	from gly_product a right join gly_r_product_cart b
+	on a.product_id = b.product_id
+	where b.cart_code = #{cartCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

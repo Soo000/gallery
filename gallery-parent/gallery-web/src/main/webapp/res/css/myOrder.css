@@ -1,0 +1,57 @@
+.order-tab-header {
+}
+.order-item {
+	margin-bottom: 10px;
+}
+
+.order-item .header,.footer {
+	line-height: 35px;
+	background-color: #FFF;
+}
+
+.order-item .order-title {
+	text-align: right;
+	margin-right: 15px;
+}
+
+.order-item .product-pic {
+	width: 100px;
+	height: 100px;
+	margin: 5px 5px 5px 15px;
+	border: 6px solid #f2e8e8;
+}
+
+.order-item .product-name {
+	margin-top: 5px;
+	margin-left: 10px;
+}
+
+.order-item .product-intro {
+	margin-top: 15px;
+	margin-left: 10px;
+	font-size: 10px;
+	color: #AD5D5D;
+}
+
+.order-item .order-info {
+	text-align: right;
+	margin-right: 15px;
+}
+
+.order-item .product-num {
+	margin-top: 15px;
+	margin-left: 10px;
+	font-size: 10px;
+	color: #AD5D5D;
+}
+
+.order-item .order-buttons-bar {
+	border-top: 1px dotted #ccc;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.order-item .order-buttons {
+	font-size: 10px;
+	padding-right: 10px;
+}

@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kkwrite.gallery.mapper.product.GlyProductTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.product.GlyProductType" >
+    <id column="product_type_id" property="productTypeId" jdbcType="INTEGER" />
+    <result column="parent_product_type_id" property="parentProductTypeId" jdbcType="INTEGER" />
+    <result column="product_type_name" property="productTypeName" jdbcType="VARCHAR" />
+    <result column="product_type_value" property="productTypeValue" jdbcType="VARCHAR" />
+    <result column="product_type_order" property="productTypeOrder" jdbcType="REAL" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="VARCHAR" />
+    <result column="ext_0" property="ext0" jdbcType="VARCHAR" />
+    <result column="ext_1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext_2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext_3" property="ext3" jdbcType="VARCHAR" />
+    <result column="ext_4" property="ext4" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    product_type_id, parent_product_type_id, product_type_name, product_type_value, product_type_order, 
+    is_valid, creation_time, creator, update_time, updator, ext_0, ext_1, ext_2, ext_3, 
+    ext_4
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.product.GlyProductTypeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from gly_product_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gly_product_type
+    where product_type_id = #{productTypeId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from gly_product_type
+    where product_type_id in
+    <foreach collection="array" item="productTypeIds" open="(" separator="," close=")">
+    	${productTypeIds}
+    </foreach>
+  </select>
+  <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.product.GlyProductType">
+  	select 
+    <include refid="Base_Column_List" />
+    from gly_product_type
+    <where>
+    	<if test="productTypeId != null">
+    		product_type_id = #{productTypeId,jdbcType=INTEGER}
+    	</if>
+    	<if test="parentProductTypeId != null">
+    		and parent_product_type_id = #{parentProductTypeId,jdbcType=INTEGER}
+    	</if>
+    	<if test="isValid != null">
+    		and is_valid = #{isValid,jdbcType=INTEGER}
+    	</if>
+    </where>
+    order by product_type_order, creation_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gly_product_type
+    where product_type_id = #{productTypeId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kkwrite.gallery.pojo.product.GlyProductTypeExample" >
+    delete from gly_product_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kkwrite.gallery.pojo.product.GlyProductType" >
+    insert into gly_product_type (product_type_id, parent_product_type_id, 
+      product_type_name, product_type_value, product_type_order, 
+      is_valid, creation_time, creator, 
+      update_time, updator, ext_0, 
+      ext_1, ext_2, ext_3, ext_4
+      )
+    values (#{productTypeId,jdbcType=INTEGER}, #{parentProductTypeId,jdbcType=INTEGER}, 
+      #{productTypeName,jdbcType=VARCHAR}, #{productTypeValue,jdbcType=VARCHAR}, #{productTypeOrder,jdbcType=REAL}, 
+      #{isValid,jdbcType=INTEGER}, #{creationTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updator,jdbcType=VARCHAR}, #{ext0,jdbcType=VARCHAR}, 
+      #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{ext4,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kkwrite.gallery.pojo.product.GlyProductType" >
+    insert into gly_product_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productTypeId != null" >
+        product_type_id,
+      </if>
+      <if test="parentProductTypeId != null" >
+        parent_product_type_id,
+      </if>
+      <if test="productTypeName != null" >
+        product_type_name,
+      </if>
+      <if test="productTypeValue != null" >
+        product_type_value,
+      </if>
+      <if test="productTypeOrder != null" >
+        product_type_order,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="creationTime != null" >
+        creation_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="ext0 != null" >
+        ext_0,
+      </if>
+      <if test="ext1 != null" >
+        ext_1,
+      </if>
+      <if test="ext2 != null" >
+        ext_2,
+      </if>
+      <if test="ext3 != null" >
+        ext_3,
+      </if>
+      <if test="ext4 != null" >
+        ext_4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productTypeId != null" >
+        #{productTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="parentProductTypeId != null" >
+        #{parentProductTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="productTypeName != null" >
+        #{productTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeValue != null" >
+        #{productTypeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeOrder != null" >
+        #{productTypeOrder,jdbcType=REAL},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="ext0 != null" >
+        #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        #{ext4,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kkwrite.gallery.pojo.product.GlyProductTypeExample" resultType="java.lang.Integer" >
+    select count(*) from gly_product_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update gly_product_type
+    <set >
+      <if test="record.productTypeId != null" >
+        product_type_id = #{record.productTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.parentProductTypeId != null" >
+        parent_product_type_id = #{record.parentProductTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.productTypeName != null" >
+        product_type_name = #{record.productTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productTypeValue != null" >
+        product_type_value = #{record.productTypeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productTypeOrder != null" >
+        product_type_order = #{record.productTypeOrder,jdbcType=REAL},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=INTEGER},
+      </if>
+      <if test="record.creationTime != null" >
+        creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.creator != null" >
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updator != null" >
+        updator = #{record.updator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext0 != null" >
+        ext_0 = #{record.ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext1 != null" >
+        ext_1 = #{record.ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext2 != null" >
+        ext_2 = #{record.ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext3 != null" >
+        ext_3 = #{record.ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext4 != null" >
+        ext_4 = #{record.ext4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update gly_product_type
+    set product_type_id = #{record.productTypeId,jdbcType=INTEGER},
+      parent_product_type_id = #{record.parentProductTypeId,jdbcType=INTEGER},
+      product_type_name = #{record.productTypeName,jdbcType=VARCHAR},
+      product_type_value = #{record.productTypeValue,jdbcType=VARCHAR},
+      product_type_order = #{record.productTypeOrder,jdbcType=REAL},
+      is_valid = #{record.isValid,jdbcType=INTEGER},
+      creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      updator = #{record.updator,jdbcType=VARCHAR},
+      ext_0 = #{record.ext0,jdbcType=VARCHAR},
+      ext_1 = #{record.ext1,jdbcType=VARCHAR},
+      ext_2 = #{record.ext2,jdbcType=VARCHAR},
+      ext_3 = #{record.ext3,jdbcType=VARCHAR},
+      ext_4 = #{record.ext4,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kkwrite.gallery.pojo.product.GlyProductType" >
+    update gly_product_type
+    <set >
+      <if test="parentProductTypeId != null" >
+        parent_product_type_id = #{parentProductTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="productTypeName != null" >
+        product_type_name = #{productTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeValue != null" >
+        product_type_value = #{productTypeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeOrder != null" >
+        product_type_order = #{productTypeOrder,jdbcType=REAL},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="ext0 != null" >
+        ext_0 = #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext_1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext_2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext_3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        ext_4 = #{ext4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where product_type_id = #{productTypeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kkwrite.gallery.pojo.product.GlyProductType" >
+    update gly_product_type
+    set parent_product_type_id = #{parentProductTypeId,jdbcType=INTEGER},
+      product_type_name = #{productTypeName,jdbcType=VARCHAR},
+      product_type_value = #{productTypeValue,jdbcType=VARCHAR},
+      product_type_order = #{productTypeOrder,jdbcType=REAL},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      creation_time = #{creationTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=VARCHAR},
+      ext_0 = #{ext0,jdbcType=VARCHAR},
+      ext_1 = #{ext1,jdbcType=VARCHAR},
+      ext_2 = #{ext2,jdbcType=VARCHAR},
+      ext_3 = #{ext3,jdbcType=VARCHAR},
+      ext_4 = #{ext4,jdbcType=VARCHAR}
+    where product_type_id = #{productTypeId,jdbcType=INTEGER}
+  </update>
+</mapper>

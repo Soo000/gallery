@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kkwrite.gallery.mapper.product.GlyRProductPropCarMapper" >
+  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.product.GlyRProductPropCarKey" >
+    <id column="prop_id" property="propId" jdbcType="INTEGER" />
+    <id column="product_id" property="productId" jdbcType="INTEGER" />
+    <id column="cart_code" property="cartCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    prop_id, product_id, cart_code
+  </sql>
+  <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.product.GlyRProductPropCarKey">
+  	select
+  	<include refid="Base_Column_List" />
+  	from gly_r_product_prop_car
+  	<where>
+  		<if test="cartCode != null">
+  			cart_code = #{cartCode,jdbcType=VARCHAR}
+  		</if>
+  		<if test="productId != null">
+  			and product_id = #{productId,jdbcType=INTEGER}
+  		</if>
+  		<if test="propId != null">
+  			and prop_id = #{propId,jdbcType=INTEGER}
+  		</if>
+  	</where>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.product.GlyRProductPropCarExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from gly_r_product_prop_car
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.kkwrite.gallery.pojo.product.GlyRProductPropCarKey" >
+    delete from gly_r_product_prop_car
+    where prop_id = #{propId,jdbcType=INTEGER}
+      and product_id = #{productId,jdbcType=INTEGER}
+      and cart_code = #{cartCode,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kkwrite.gallery.pojo.product.GlyRProductPropCarExample" >
+    delete from gly_r_product_prop_car
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kkwrite.gallery.pojo.product.GlyRProductPropCarKey" >
+    insert into gly_r_product_prop_car (prop_id, product_id, cart_code
+      )
+    values (#{propId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{cartCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kkwrite.gallery.pojo.product.GlyRProductPropCarKey" >
+    insert into gly_r_product_prop_car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="propId != null" >
+        prop_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="cartCode != null" >
+        cart_code
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="propId != null" >
+        #{propId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="cartCode != null" >
+        #{cartCode,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kkwrite.gallery.pojo.product.GlyRProductPropCarExample" resultType="java.lang.Integer" >
+    select count(*) from gly_r_product_prop_car
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update gly_r_product_prop_car
+    <set >
+      <if test="record.propId != null" >
+        prop_id = #{record.propId,jdbcType=INTEGER},
+      </if>
+      <if test="record.productId != null" >
+        product_id = #{record.productId,jdbcType=INTEGER},
+      </if>
+      <if test="record.cartCode != null" >
+        cart_code = #{record.cartCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update gly_r_product_prop_car
+    set prop_id = #{record.propId,jdbcType=INTEGER},
+      product_id = #{record.productId,jdbcType=INTEGER},
+      cart_code = #{record.cartCode,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

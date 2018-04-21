@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kkwrite.gallery.mapper.module.GlyModuleMapper" >
+  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.module.GlyModule" >
+    <id column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="module_name" property="moduleName" jdbcType="VARCHAR" />
+    <result column="p_module_id" property="pModuleId" jdbcType="INTEGER" />
+    <result column="p_module_name" property="pModuleName" jdbcType="VARCHAR" />
+    <result column="module_desc" property="moduleDesc" jdbcType="CHAR" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="VARCHAR" />
+    <result column="ext_0" property="ext0" jdbcType="VARCHAR" />
+    <result column="扩展字段_1" property="扩展字段1" jdbcType="VARCHAR" />
+    <result column="扩展字段_2" property="扩展字段2" jdbcType="VARCHAR" />
+    <result column="扩展字段_3" property="扩展字段3" jdbcType="VARCHAR" />
+    <result column="扩展字段_4" property="扩展字段4" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    module_id, module_name, p_module_id, p_module_name, module_desc, is_valid, creation_time, 
+    creator, update_time, updator, ext_0, 扩展字段_1, 扩展字段_2, 扩展字段_3, 扩展字段_4
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from gly_module
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gly_module
+    where module_id = #{moduleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gly_module
+    where module_id = #{moduleId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleExample" >
+    delete from gly_module
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kkwrite.gallery.pojo.module.GlyModule" >
+    insert into gly_module (module_id, module_name, p_module_id, 
+      p_module_name, module_desc, is_valid, 
+      creation_time, creator, update_time, 
+      updator, ext_0, 扩展字段_1, 
+      扩展字段_2, 扩展字段_3, 扩展字段_4
+      )
+    values (#{moduleId,jdbcType=INTEGER}, #{moduleName,jdbcType=VARCHAR}, #{pModuleId,jdbcType=INTEGER}, 
+      #{pModuleName,jdbcType=VARCHAR}, #{moduleDesc,jdbcType=CHAR}, #{isValid,jdbcType=INTEGER}, 
+      #{creationTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updator,jdbcType=VARCHAR}, #{ext0,jdbcType=VARCHAR}, #{扩展字段1,jdbcType=VARCHAR}, 
+      #{扩展字段2,jdbcType=VARCHAR}, #{扩展字段3,jdbcType=VARCHAR}, #{扩展字段4,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kkwrite.gallery.pojo.module.GlyModule" >
+    insert into gly_module
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="moduleId != null" >
+        module_id,
+      </if>
+      <if test="moduleName != null" >
+        module_name,
+      </if>
+      <if test="pModuleId != null" >
+        p_module_id,
+      </if>
+      <if test="pModuleName != null" >
+        p_module_name,
+      </if>
+      <if test="moduleDesc != null" >
+        module_desc,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="creationTime != null" >
+        creation_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="ext0 != null" >
+        ext_0,
+      </if>
+      <if test="扩展字段1 != null" >
+        扩展字段_1,
+      </if>
+      <if test="扩展字段2 != null" >
+        扩展字段_2,
+      </if>
+      <if test="扩展字段3 != null" >
+        扩展字段_3,
+      </if>
+      <if test="扩展字段4 != null" >
+        扩展字段_4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="moduleId != null" >
+        #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="moduleName != null" >
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="pModuleId != null" >
+        #{pModuleId,jdbcType=INTEGER},
+      </if>
+      <if test="pModuleName != null" >
+        #{pModuleName,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleDesc != null" >
+        #{moduleDesc,jdbcType=CHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="ext0 != null" >
+        #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="扩展字段1 != null" >
+        #{扩展字段1,jdbcType=VARCHAR},
+      </if>
+      <if test="扩展字段2 != null" >
+        #{扩展字段2,jdbcType=VARCHAR},
+      </if>
+      <if test="扩展字段3 != null" >
+        #{扩展字段3,jdbcType=VARCHAR},
+      </if>
+      <if test="扩展字段4 != null" >
+        #{扩展字段4,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleExample" resultType="java.lang.Integer" >
+    select count(*) from gly_module
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update gly_module
+    <set >
+      <if test="record.moduleId != null" >
+        module_id = #{record.moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="record.moduleName != null" >
+        module_name = #{record.moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pModuleId != null" >
+        p_module_id = #{record.pModuleId,jdbcType=INTEGER},
+      </if>
+      <if test="record.pModuleName != null" >
+        p_module_name = #{record.pModuleName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.moduleDesc != null" >
+        module_desc = #{record.moduleDesc,jdbcType=CHAR},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=INTEGER},
+      </if>
+      <if test="record.creationTime != null" >
+        creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.creator != null" >
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updator != null" >
+        updator = #{record.updator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext0 != null" >
+        ext_0 = #{record.ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="record.扩展字段1 != null" >
+        扩展字段_1 = #{record.扩展字段1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.扩展字段2 != null" >
+        扩展字段_2 = #{record.扩展字段2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.扩展字段3 != null" >
+        扩展字段_3 = #{record.扩展字段3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.扩展字段4 != null" >
+        扩展字段_4 = #{record.扩展字段4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update gly_module
+    set module_id = #{record.moduleId,jdbcType=INTEGER},
+      module_name = #{record.moduleName,jdbcType=VARCHAR},
+      p_module_id = #{record.pModuleId,jdbcType=INTEGER},
+      p_module_name = #{record.pModuleName,jdbcType=VARCHAR},
+      module_desc = #{record.moduleDesc,jdbcType=CHAR},
+      is_valid = #{record.isValid,jdbcType=INTEGER},
+      creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      updator = #{record.updator,jdbcType=VARCHAR},
+      ext_0 = #{record.ext0,jdbcType=VARCHAR},
+      扩展字段_1 = #{record.扩展字段1,jdbcType=VARCHAR},
+      扩展字段_2 = #{record.扩展字段2,jdbcType=VARCHAR},
+      扩展字段_3 = #{record.扩展字段3,jdbcType=VARCHAR},
+      扩展字段_4 = #{record.扩展字段4,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kkwrite.gallery.pojo.module.GlyModule" >
+    update gly_module
+    <set >
+      <if test="moduleName != null" >
+        module_name = #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="pModuleId != null" >
+        p_module_id = #{pModuleId,jdbcType=INTEGER},
+      </if>
+      <if test="pModuleName != null" >
+        p_module_name = #{pModuleName,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleDesc != null" >
+        module_desc = #{moduleDesc,jdbcType=CHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="ext0 != null" >
+        ext_0 = #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="扩展字段1 != null" >
+        扩展字段_1 = #{扩展字段1,jdbcType=VARCHAR},
+      </if>
+      <if test="扩展字段2 != null" >
+        扩展字段_2 = #{扩展字段2,jdbcType=VARCHAR},
+      </if>
+      <if test="扩展字段3 != null" >
+        扩展字段_3 = #{扩展字段3,jdbcType=VARCHAR},
+      </if>
+      <if test="扩展字段4 != null" >
+        扩展字段_4 = #{扩展字段4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where module_id = #{moduleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kkwrite.gallery.pojo.module.GlyModule" >
+    update gly_module
+    set module_name = #{moduleName,jdbcType=VARCHAR},
+      p_module_id = #{pModuleId,jdbcType=INTEGER},
+      p_module_name = #{pModuleName,jdbcType=VARCHAR},
+      module_desc = #{moduleDesc,jdbcType=CHAR},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      creation_time = #{creationTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=VARCHAR},
+      ext_0 = #{ext0,jdbcType=VARCHAR},
+      扩展字段_1 = #{扩展字段1,jdbcType=VARCHAR},
+      扩展字段_2 = #{扩展字段2,jdbcType=VARCHAR},
+      扩展字段_3 = #{扩展字段3,jdbcType=VARCHAR},
+      扩展字段_4 = #{扩展字段4,jdbcType=VARCHAR}
+    where module_id = #{moduleId,jdbcType=INTEGER}
+  </update>
+</mapper>
