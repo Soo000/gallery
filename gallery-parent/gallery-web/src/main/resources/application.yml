@@ -1,0 +1,41 @@
+server:
+  port: 1024
+#  context-path: /gallery-web
+  
+spring:
+  application:
+    name: gallery-web
+#  mvc:
+#    view:
+#      prefix: /WEB-INF/jsp
+#      suffix: .jsp
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://www.artlyt.com.cn:3306/gallery?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 7890uiop
+    driver-class-name: com.mysql.jdbc.Driver
+#    schema: classpath:schema.sql
+#    data: classpath:data.sql    
+  
+security:
+#  user:
+#    username: user
+#    password: user
+#  role:
+#    GUEST,USER,AdMIN
+  ignored:
+    /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.txt
+
+mybatis:
+  #type-aliases-package: com.wangsu_bi.web.entity
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml  
+
+#设置日志级别，打印mybatis的日志  
+#logging:  
+#  level:  
+#    root: debug  
