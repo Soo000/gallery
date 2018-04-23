@@ -1,0 +1,33 @@
+<div data-th-switch="${status}">
+    <h1 class="page-header" data-th-case="1">待付款订单</h1>
+    <h1 class="page-header" data-th-case="2">已支付订单</h1>
+    <h1 class="page-header" data-th-case="3">待收货订单</h1>
+    <h1 class="page-header" data-th-case="4">已完成订单</h1>
+    <h1 class="page-header" data-th-case="5">已过期订单</h1>
+    <h1 class="page-header" data-th-case="6">已取消订单</h1>
+</div>
+<div class="row" data-th-id="'status-order-' + ${status}">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>订单编号</th>
+                <th>下单账号</th>
+                <th>收货人</th>
+                <th>收货地址</th>
+                <th>购买数量(个)</th>
+                <th>支付金额(元)</th>
+                <th>订单类型</th>
+                <th>订单状态</th>
+                <th>生效时间</th>
+                <th>失效时间</th>
+                <th>是否有效</th>
+                <th>生成时间</th>
+                <th>更新时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <ul class="pagination pull-right"></ul>
+</div>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="renderer" content="webkit"/>
+	<title>登录</title>
+	<!-- 引入bootstrap样式 -->
+	<link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.min.css}"/>
+	<!-- 引入自定义样式 -->
+	<link rel="stylesheet" th:href="@{/css/login.css}"/>
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div class="container">
+      <form class="form-signin" th:action="@{/login}" method="post">
+        <h2 class="form-signin-heading">管理系统登录</h2>
+        <label for="username" class="sr-only">用户名：</label>
+        <input type="text" id="username" class="form-control" name="username" placeholder="请输入用户名" required="required" autofocus="autofocus" />
+        <label for="password" class="sr-only">密码：</label>
+        <input type="password" id="password" class="form-control" name="password" placeholder="请输入密码" required="required" />
+        <input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登&nbsp;&nbsp;录</button>
+      </form>
+    </div>
+</body>
+</html>

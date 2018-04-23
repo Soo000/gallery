@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>管理台</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.min.css}"/>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link rel="stylesheet" th:href="@{/css/ie10-viewport-bug-workaround.css}"/>
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script th:src="@{/js/ie8-responsive-file-warning.js}"></script><![endif]-->
+    <script th:src="@{/js/ie-emulation-modes-warning.js}"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">显示隐藏导航栏</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">小画仓管理</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" id="logout_btn">注销</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div id="side_bar" class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                首页 <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#">首页管理一</a></li>
+                <li><a href="#">首页管理二</a></li>
+                <li><a href="#">首页管理三</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                订单管理 <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li id="all_order_show"><a href="#">全部订单</a></li>
+                <li id="pending_payment_order_show"><a href="#">待付款订单</a></li>
+                <li id="paid_order_show"><a href="#">已支付订单</a></li>
+                <li id="no_receive_order_show"><a href="#">待收货订单</a></li>
+                <li id="completed_order_show"><a href="#">已完成订单</a></li>
+                <li id="expired_order_show"><a href="#">已过期订单</a></li>
+                <li id="cancelled_order_show"><a href="#">已取消订单</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                商品管理 <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li id="add_product_bar"><a href="#">添加商品</a></li>
+                <li id="edit_product_bar"><a href="#">编辑商品</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        	<!-- Ajax请求返回代码片段填充此div以供页面显示 -->
+        </div>
+      </div>
+    </div>
+
+    <div style="display: none">
+      <form id="logout_form" style="display: none;" th:action="@{/logout}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      </form>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script th:src="@{/lib/jquery/jquery-1.12.4.min.js}"></script>
+    <script>window.jQuery || document.write('<script src="/js/vendor/jquery.min.js"><\/script>')</script>
+    <script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script th:src="@{/js/vendor/holder.min.js}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script th:src="@{/js/ie10-viewport-bug-workaround.js}"></script>
+    <!-- page -->
+    <script th:src="@{/lib/jqpaginator/jqpaginator.min.js}"></script>
+    <script th:src="@{/js/common.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+server:
+  port: 1044
+  error:
+    whitelabel:
+      enabled: false
+  servlet:
+    context-path: /
+    session:
+      timeout: 1800
+spring:
+  thymeleaf:
+    mode: HTML
+    cache: false
+  datasource:
+    url: jdbc:mysql://111.231.220.72:3306/gallery?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 7890uiop
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    
