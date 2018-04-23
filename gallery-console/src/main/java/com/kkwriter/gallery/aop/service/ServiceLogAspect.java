@@ -19,7 +19,7 @@ public class ServiceLogAspect {
 	}
 
 	@Before("log()")
-	public void doBefor(JoinPoint joinPoint) {
+	public void doBefore(JoinPoint joinPoint) {
 		logger.info("service：{} 开始执行，入参为：{}",
 				joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName(),
 				joinPoint.getArgs());
