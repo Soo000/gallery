@@ -36,6 +36,6 @@ mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml  
 
 #设置日志级别，打印mybatis的日志  
-#logging:  
-#  level:  
-#    root: debug  
+logging:
+  level:  
+    root: info  

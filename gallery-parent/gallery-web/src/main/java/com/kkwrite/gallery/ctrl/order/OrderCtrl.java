@@ -139,20 +139,21 @@ public class OrderCtrl extends BaseCtrl {
 	 */
 	@RequestMapping("/submitorder")
 	public ModelAndView submitOrder(int[] productId, int[] productNum, String addressId, String subType) {
+		logger.info("[ begin ] OrderCtrl.submitOrder().");
 		ModelAndView modelAndView = new ModelAndView("/order/orderPay");
 		
 		if (productId == null || productId.length <= 0) {
-			modelAndView.setViewName("/order/pagectrl");
+			modelAndView.setViewName("forward:/orderctrl/pagectrl");
 			return modelAndView;
 		}
 		
 		if (productNum == null || productNum.length <= 0) {
-			modelAndView.setViewName("/order/pagectrl");
+			modelAndView.setViewName("forward:/order/pagectrl");
 			return modelAndView;
 		}
 		
 		if (addressId == null) {
-			modelAndView.setViewName("/order/pagectrl");
+			modelAndView.setViewName("forward:/addressctrl/pagectrl");
 			return modelAndView;
 		}
 		
@@ -219,6 +220,7 @@ public class OrderCtrl extends BaseCtrl {
 		modelAndView.addObject("count", count);
 		modelAndView.addObject("orderCode", orderCode);
 		
+		logger.info("[ end ] OrderCtrl.submitOrder().");
 		return modelAndView;
 	}
 	
