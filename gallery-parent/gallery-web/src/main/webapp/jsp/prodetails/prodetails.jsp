@@ -431,6 +431,11 @@
 				}
 				
 				if (!canSubmit) {
+					layer.open({
+                        content: '请选择产品属性！',
+                        skin: 'msg',
+                        time: 2
+                   });
 					return;
 				}
 				
