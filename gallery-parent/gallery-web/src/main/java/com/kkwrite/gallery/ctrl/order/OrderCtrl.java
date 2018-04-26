@@ -2,7 +2,9 @@ package com.kkwrite.gallery.ctrl.order;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +43,22 @@ public class OrderCtrl extends BaseCtrl {
 	private OrderService orderService;
 
 	@RequestMapping("/pagectrl")
-	public ModelAndView pageCtrl(int productId) {
+	public ModelAndView pageCtrl(String productId) {
 		logger.debug("[ begin ] OrderCtrl.pageCtrl(), productId=" + productId);
 		
 		ModelAndView modelAndView = new ModelAndView("/order/order");
+		// 如果 productId 为null, 说明是点击返回页面按钮而来 
+		if (productId == null) {
+			modelAndView.setViewName("forward:/cartctrl/pagectrl");
+			return modelAndView;
+		}
 		
 		logger.debug("[ end ] OrderCtrl.pageCtrl().");
 		return modelAndView;
 	}
 	
 	/**
-	 * 下订单
+	 * 去结算（下订单）
 	 * @param productId
 	 * @return
 	 */
@@ -66,16 +73,23 @@ public class OrderCtrl extends BaseCtrl {
 				return modelAndView;
 			}
 			
-			// 查询产品信息
-			List<Product> products = productService.queryProduct(productId);
 			// 设置购买的产品数量
 			if (productNum == null || productNum.length <= 0 
-					|| productId.length != productNum.length 
-					|| productNum.length != products.size()) {
+					|| productId.length != productNum.length) {
 				throw new ServiceException("产品购买数量异常");
 			}
+			
+			/// productNumMap 用于保存产品购买的数量
+			Map<Integer, Integer> productNumMap = new HashMap<Integer, Integer>(productId.length);
+			for (int i = 0; i < productId.length; i++) {
+				productNumMap.put(new Integer(productId[i]), new Integer(productNum[i]));
+			}
+			
+			// 查询产品信息
+			List<Product> products = productService.queryProduct(productId);
+			// 设置产品购买数量
 			for (int i = 0; i < productNum.length; i++) {
-				products.get(i).setProductNum(productNum[i]);
+				products.get(i).setProductNum(productNumMap.get(products.get(i).getProductId()));
 			}
 			modelAndView.addObject("products", products);
 			
@@ -90,9 +104,8 @@ public class OrderCtrl extends BaseCtrl {
 			if (products != null) {
 				for (Product product: products) {
 					int proNum = product.getProductNum() <= 0 ? 1: product.getProductNum();
-					acount += product.getRealPrice();
 					// 计算产品金额
-					acount += product.getRealPrice() * proNum;
+					acount += (product.getRealPrice() * proNum);
 					// 计算产品数量
 					count += proNum;
 				}
@@ -148,7 +161,7 @@ public class OrderCtrl extends BaseCtrl {
 		}
 		
 		if (productNum == null || productNum.length <= 0) {
-			modelAndView.setViewName("forward:/order/pagectrl");
+			modelAndView.setViewName("forward:/orderctrl/pagectrl");
 			return modelAndView;
 		}
 		
