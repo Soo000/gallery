@@ -23,6 +23,7 @@ import com.kkwrite.gallery.pojo.product.GlyProductInstance;
 import com.kkwrite.gallery.pojo.product.Product;
 import com.kkwrite.gallery.pojo.user.GlyUser;
 import com.kkwrite.gallery.service.address.AddressService;
+import com.kkwrite.gallery.service.cart.CartService;
 import com.kkwrite.gallery.service.order.OrderService;
 import com.kkwrite.gallery.service.product.ProductService;
 import com.kkwrite.gallery.service.user.UserService;
@@ -41,6 +42,8 @@ public class OrderCtrl extends BaseCtrl {
 	private AddressService addressService;
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private CartService carService;
 
 	@RequestMapping("/pagectrl")
 	public ModelAndView pageCtrl(String productId) {
@@ -174,6 +177,24 @@ public class OrderCtrl extends BaseCtrl {
 		String username = getUserDetails().getUsername();
 		GlyUser glyUser = userService.queryUserByName(username);
 		
+		// 如果是从购物车提交订单，首先查询购物车中的产品是是否存在，如果不存在，则是点击返回按钮过来的；subType 提交方式：addToCart-加入购物车，buyNow-立即购买
+		if ("addToCart".equalsIgnoreCase(subType)) {
+			List<Product> productsInCart = carService.queryCartProducts(username);
+			if (productsInCart == null || productsInCart.size() <= 0) {
+				modelAndView.setViewName("forward:/cartctrl/pagectrl");
+				return modelAndView;
+			}
+			
+			for (int i = 0; i < productId.length; i++) {
+				boolean isExists = productIdInCart(productId[i], productsInCart);
+				if (!isExists) { // 如果不存在，则是点击返回按钮过来的
+					modelAndView.setViewName("forward:/cartctrl/pagectrl");
+					return modelAndView;
+				}
+			}
+		}
+		
+		
 		// 查询产品信息
 		List<Product> products = productService.queryProduct(productId);
 		for (int i = 0; i < productNum.length; i++) {
@@ -296,6 +317,21 @@ public class OrderCtrl extends BaseCtrl {
 			e.printStackTrace();
 		}
 		return modelAndView;
+	}
+	
+	/**
+	 * 判断 productId 在用户的购物车中是否存在
+	 * @param productId
+	 * @param productsInCart
+	 * @return
+	 */
+	private boolean productIdInCart(int productId, List<Product> productsInCart) {
+		for (Product product: productsInCart) {
+			if (product.getProductId().intValue() == productId) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
