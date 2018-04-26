@@ -1,7 +1,7 @@
 ;$(function() {
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
-	$(document).ajaxSend(function(e, xhr, options) {
+	$(document).ajaxSend(function(e, xhr) {
 		xhr.setRequestHeader(header, token);
 	});
 
@@ -336,8 +336,11 @@
         var _this = $(this);
         var productId = $.trim(_this.children().eq(0).text());
         $.get("/product/getProductById", {"productId": productId, "_":new Date().getTime()}, function (page) {
-            $("#product_detail_edit_area").html("").html(page);
-            $("html,body").animate({scrollTop: $("#product_detail_edit_area").offset().top}, 1000);
+            if ($('#editProductModal').length > 0) {
+                $('#editProductModal').remove();
+            }
+            $("body").append(page);
+            $('#editProductModal').modal();
         });
     });
 
