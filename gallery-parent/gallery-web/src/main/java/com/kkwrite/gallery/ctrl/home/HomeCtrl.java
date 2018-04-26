@@ -1,6 +1,9 @@
 package com.kkwrite.gallery.ctrl.home;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kkwrite.gallery.common.JsonUtil;
 import com.kkwrite.gallery.common.ModuleDict;
 import com.kkwrite.gallery.common.https.HttpsUtil;
 import com.kkwrite.gallery.ctrl.BaseCtrl;
@@ -25,7 +29,7 @@ public class HomeCtrl extends BaseCtrl {
 	private HomeService homeService;
 	
 	@RequestMapping("/prepage")
-	public String prePage(String code) {
+	public String prePage(String code, HttpServletRequest request) {
 		logger.debug("[ begin ] HomeCtrl.prePage().");
 		
 		// 1. 获取 code
@@ -42,9 +46,15 @@ public class HomeCtrl extends BaseCtrl {
 	    webAuthAccessTokenUrl = webAuthAccessTokenUrl.replace("APPID", "wx6e6fe98f77e9d950");
 	    webAuthAccessTokenUrl = webAuthAccessTokenUrl.replace("SECRET", "356fa56285c980bacfc3044f88e66b81");
 	    webAuthAccessTokenUrl = webAuthAccessTokenUrl.replace("CODE", code);
-	    String responseContent = HttpsUtil.httpsRequest(webAuthAccessTokenUrl, "GET", null);
-	    logger.info("[ run ] HomeCtrl.prePage(), 获取网页授权回调，responseContent = " + responseContent);
-		
+	    String webAuthAccessTokenResponse = HttpsUtil.httpsRequest(webAuthAccessTokenUrl, "GET", null);
+	    logger.info("[ run ] HomeCtrl.prePage(), 获取网页授权回调，webAuthAccessTokenResponse = " + webAuthAccessTokenResponse);
+	    Map<String, String> webAuthAccessTokenMap = JsonUtil.generateBean(webAuthAccessTokenResponse);
+	    String openId = webAuthAccessTokenMap.get("openid");
+	    logger.info("[ run ] HomeCtrl.prePage(), openId = " + openId);
+	    
+	    // 将 openId 保持到 session 中
+	    request.getSession().setAttribute("openId", openId);
+	    
 		logger.debug("[ begin ] HomeCtrl.prePage().");
 		return "forward:/homectrl/pagectrl";
 	}

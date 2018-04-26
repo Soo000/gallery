@@ -60,12 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		// 注册页面
 		http.authorizeRequests().mvcMatchers("/jsp/signup/signup.jsp").access("permitAll");
-		// 调用微信获取用户同意授权回调页面
-		http.authorizeRequests().mvcMatchers("/jsp/weixin/codeResult.jsp").access("permitAll");
-		// 网页授权页面
-		http.authorizeRequests().mvcMatchers("/jsp/weixin/getauth.jsp").access("permitAll");
-		// 网页授权回调页面
-		http.authorizeRequests().mvcMatchers("/jsp/weixin/getauthresp.jsp").access("permitAll");
+		// 支付成功回调页面
+		http.authorizeRequests().mvcMatchers("/jsp/weixin/payResult.jsp").access("permitAll");
 		
 		// mvcMatchers(...) 不支持通配符
 		http.authorizeRequests().mvcMatchers("/").access("permitAll");

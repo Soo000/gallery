@@ -2,21 +2,6 @@
 <%@ page import="com.kkwrite.gallery.component.weixin.WeiXinTokenUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
-	// 用户同意授权，获取code
-	String codeResultUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=#APPID#"
-		+ "&redirect_uri=#REDIRECT_URI#"
-		+ "&response_type=code"
-		+ "&scope=snsapi_userinfo"
-		+ "#wechat_redirect";
-
-	// 获取 code 后得回调地址
-	String redirectUri = "http://artlyt.com.cn/jsp/weixin/codeResult.jsp";
-	
-	codeResultUrl = codeResultUrl.replaceFirst("#APPID#", WeiXinTokenUtil.getAppId());
-	codeResultUrl = codeResultUrl.replaceFirst("#REDIRECT_URI#", redirectUri);
-	// 调用用户同意授权的回调函数（需要在微信公众平台配置授权域名，如artlyt.com.cn）
-	//codeResultUrl = codeResultUrl.replaceFirst("#REDIRECT_URI#", "http://artlyt.com.cn/weixinctrl/authorizeback"); 
-	
 	// 将支付信息保存到session
 	String orderCode = (String) request.getAttribute("orderCode");
 	session.setAttribute("orderCode", orderCode);
@@ -29,8 +14,6 @@
 	Integer count = (Integer) request.getAttribute("count");
 	session.setAttribute("count", request.getAttribute("count"));
 	System.out.println("Session中保存购买数量 count = " + count);
-	
-	System.out.println("获取用户同意授权接口地址 codeResultUrl = " + codeResultUrl);
 %>
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -84,7 +67,8 @@
 			 * 支付按钮动作
 			 */
 			$("#payButton").on("click", function(evt) {
-				window.location.href = "<%=codeResultUrl%>";
+				var callPayUrl = "<%=request.getContextPath()%>/jsp/weixin/callPay.jsp?orderCode=<%=orderCode%>&acount=<%=acount%>&count=<%=count%>";
+				window.location.href = callPayUrl;
 			});
 		});
 	</script>
