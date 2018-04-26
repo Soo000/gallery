@@ -23,6 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
+/**
+ * @author lisha
+ */
 @Service
 public class ProductServiceImpl implements ProductService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -271,6 +276,16 @@ public class ProductServiceImpl implements ProductService {
 	        throw new GalleyConsoleException(ReturnEnum.DO_NOT_HAVE_DATA);
         }
 	    return products;
+	}
+
+	@Override
+	public GlyProduct getProductInfoById(int id) {
+		return glyProductRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public List<GlyProductPicture> getAllPictures(int productId) {
+		return glyProductPictureRepository.findAllByProductId(productId);
 	}
 
 	@Override

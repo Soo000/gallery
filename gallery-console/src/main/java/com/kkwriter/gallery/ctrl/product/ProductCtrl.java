@@ -1,6 +1,7 @@
 package com.kkwriter.gallery.ctrl.product;
 
 import com.kkwriter.gallery.entity.product.GlyProduct;
+import com.kkwriter.gallery.entity.product.GlyProductPicture;
 import com.kkwriter.gallery.entity.product.GlyProductProp;
 import com.kkwriter.gallery.entity.product.GlyProductType;
 import com.kkwriter.gallery.result.Result;
@@ -49,8 +50,25 @@ public class ProductCtrl {
 
 	@GetMapping("/getProductById")
 	public ModelAndView queryById(int productId) {
-		ModelAndView model = new ModelAndView("product_detail");
-
+		// 查询商品信息
+		GlyProduct product = productService.getProductInfoById(productId);
+		// 查询所有属性
+		List<GlyProductProp> allProps = queryAllProps();
+		if (allProps == null) {
+			allProps = new ArrayList<>();
+		}
+		// 查询所有类型
+		List<GlyProductType> allTypes = queryAllTypes();
+		if (allTypes == null) {
+			allTypes = new ArrayList<>();
+		}
+		// 查询商品配图
+		List<GlyProductPicture> pictures = productService.getAllPictures(productId);
+		ModelAndView model = new ModelAndView("modify_product_modal");
+		model.addObject("product", product);
+		model.addObject("allTypes", allTypes);
+		model.addObject("allProps", allProps);
+		model.addObject("pictures", pictures);
 		return model;
 	}
 
