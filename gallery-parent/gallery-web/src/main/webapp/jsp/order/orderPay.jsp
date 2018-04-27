@@ -4,16 +4,8 @@
 <%
 	// 将支付信息保存到session
 	String orderCode = (String) request.getAttribute("orderCode");
-	session.setAttribute("orderCode", orderCode);
-	System.out.println("Session中保存订单编号 orderCode = " + orderCode);
-	
 	Float acount = (Float) request.getAttribute("acount");
-	session.setAttribute("acount", acount);
-	System.out.println("Session中保存支付的金额 account = " + acount);
-	
 	Integer count = (Integer) request.getAttribute("count");
-	session.setAttribute("count", request.getAttribute("count"));
-	System.out.println("Session中保存购买数量 count = " + count);
 %>
 <!DOCTYPE html>
 <html lang="zh-cn">

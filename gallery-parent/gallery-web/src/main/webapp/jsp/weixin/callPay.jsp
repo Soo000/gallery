@@ -29,11 +29,13 @@
     // TODO 参数校验 支付金额
     String acount = request.getParameter("acount");
     System.out.println("进行支付页面中，获取支付金额，acount = " + acount);
+    // 订单编号
+    String orderCode = request.getParameter("orderCode");
     
-    String body = "OrderCode: ";
+    String body = "OrderCode: " + orderCode;
     String nonce_str = "2";
     String notify_url = "http://artlyt.com.cn/jsp/weixin/payResult.jsp";
-    String out_trade_no = sdf.format(Calendar.getInstance().getTime());
+    String out_trade_no = orderCode;
     String spbill_create_ip = "0.0.0.0";
     // 支付金额（单位分）
     String total_fee = String.valueOf((Double.parseDouble(acount) * 100));
@@ -116,10 +118,10 @@
                     signType: '<%=signType%>', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
                     paySign: '<%=paySign%>', // 支付签名
                     success: function(res) {
-                        alert("支付成功 " + res);
+                        //alert("支付成功 " + JSON.stringify(res)); // {"errMsg":"chooseWXPay:ok"}
                     },
-                    fail: function() {
-                    	alert("支付失败");
+                    fail: function(res) {
+                    	alert("支付失败 " + JSON.stringify(res));
                     }
                 });
             });

@@ -108,7 +108,10 @@ public class XmlUtil {
 	}
 	
 	public static void main(String[] args) {
-		String xml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg><appid><![CDATA[wx6e6fe98f77e9d950]]></appid><mch_id><![CDATA[1488074752]]></mch_id><nonce_str><![CDATA[VEiMYhMdvvNWAVvB]]></nonce_str><sign><![CDATA[02BB8EEC6063EA315517EFE82CC831B8]]></sign><result_code><![CDATA[SUCCESS]]></result_code><prepay_id><![CDATA[wx20180116174000ba05c9359a0745158981]]></prepay_id><trade_type><![CDATA[JSAPI]]></trade_type></xml>";
+		//String xml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg><appid><![CDATA[wx6e6fe98f77e9d950]]></appid><mch_id><![CDATA[1488074752]]></mch_id><nonce_str><![CDATA[VEiMYhMdvvNWAVvB]]></nonce_str><sign><![CDATA[02BB8EEC6063EA315517EFE82CC831B8]]></sign><result_code><![CDATA[SUCCESS]]></result_code><prepay_id><![CDATA[wx20180116174000ba05c9359a0745158981]]></prepay_id><trade_type><![CDATA[JSAPI]]></trade_type></xml>";
+		
+		// notify_url
+		String xml = "<xml><appid><![CDATA[wx6e6fe98f77e9d950]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[1488074752]]></mch_id><nonce_str><![CDATA[2]]></nonce_str><openid><![CDATA[odJuIwSif8spo3kwlx7mMluKv6RM]]></openid><out_trade_no><![CDATA[20180427202619463]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[0563C191287E7EFC599FD9CB8320119E]]></sign><time_end><![CDATA[20180427202627]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[JSAPI]]></trade_type><transaction_id><![CDATA[4200000076201804277284181198]]></transaction_id></xml>";
 		try {
 			Map<String, String> resultMap = tradeXmlToMap(xml);
 			System.out.println(resultMap);

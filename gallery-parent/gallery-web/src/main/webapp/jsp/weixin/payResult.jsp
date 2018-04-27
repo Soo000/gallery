@@ -1,4 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.io.BufferedReader" %>
+<%@ page import="java.io.InputStream" %>
+<%@ page import="java.io.InputStreamReader" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="javax.servlet.ServletInputStream" %>
+<%@ page import="com.kkwrite.gallery.common.XmlUtil" %>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@ page import="org.springframework.web.context.WebApplicationContext" %>
+<%@ page import="com.kkwrite.gallery.service.order.OrderService" %>
+<%@ page import="com.kkwrite.gallery.pojo.BasePojo" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -17,6 +28,35 @@
 		</script>
 	</head>
 	<body>
-		支付结果通知
+		<%
+		   ServletInputStream is = request.getInputStream();
+		   InputStreamReader isr = new InputStreamReader(is, "utf-8");
+           BufferedReader br = new BufferedReader(isr);
+           StringBuffer buffer = new StringBuffer();
+           String line = null;
+           while ((line = br.readLine()) != null) {
+               buffer.append(line);
+           }
+           
+           System.out.println("回调返回数据：" + buffer.toString());
+           
+           Map<String, String> payResult = XmlUtil.tradeXmlToMap(buffer.toString());
+           System.out.println("payResult = " + payResult);
+           
+           String returnCode = payResult.get("return_code");
+           if ("SUCCESS".equals(returnCode)) {
+        	   String outTradeNo = payResult.get("out_trade_no");
+        	   System.out.println("订单 " + outTradeNo + " 支付成功！");
+        	   
+        	   WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
+        	   OrderService orderService = (OrderService) context.getBean("orderService");
+        	   System.out.println("orderService = " + orderService);
+        	   int updateResult = orderService.setOrderStatus(outTradeNo, BasePojo.OrderDict.ORDER_STATUS_PAYED);
+        	   System.out.println("updateResult = " + updateResult);
+           }
+           
+           response.setContentType("text/xml; charset=UTF-8");
+           response.getWriter().println("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[支付成功]]></return_msg></xml>");
+		%>
 	</body>
 </html>
