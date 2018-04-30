@@ -1,5 +1,6 @@
 package com.kkwriter.gallery.repository.product;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.kkwriter.gallery.entity.product.GlyProductPicture;
@@ -16,6 +17,6 @@ public interface GlyProductPictureRepository extends JpaRepository<GlyProductPic
      * @param productId 产品ID
      * @return 产品的所有配图
      */
-    List<GlyProductPicture> findAllByProductId(int productId);
+    List<GlyProductPicture> findAllByProductId(int productId, Sort sort);
 
 }
