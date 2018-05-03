@@ -3,6 +3,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="com.kkwrite.gallery.pojo.BasePojo" %>
 <%@ page import="com.kkwrite.gallery.common.XmlUtil"%>
 <%@ page import="com.kkwrite.gallery.component.weixin.WeiXinTokenUtil" %>
 <!DOCTYPE html>
@@ -118,10 +119,11 @@
                     signType: '<%=signType%>', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
                     paySign: '<%=paySign%>', // 支付签名
                     success: function(res) {
-                        //alert("支付成功 " + JSON.stringify(res)); // {"errMsg":"chooseWXPay:ok"}
+                    	window.location.href = "<%=request.getContextPath()%>/orderctrl/myorder?orderStatus=<%=BasePojo.OrderDict.ORDER_STATUS_WAITING_RECV%>";
                     },
                     fail: function(res) {
-                    	alert("支付失败 " + JSON.stringify(res));
+                    	alert("支付失败，请在我的订单中查看订单，并尝试再次支付，谢谢！");
+                    	window.location.href = "<%=request.getContextPath()%>/orderctrl/myorder?orderStatus=<%=BasePojo.OrderDict.ORDER_STATUS_WAITING_PAY%>";
                     }
                 });
             });

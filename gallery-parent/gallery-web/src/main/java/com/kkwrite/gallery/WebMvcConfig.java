@@ -33,7 +33,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
             + "?appid=wx6e6fe98f77e9d950"
             + "&redirect_uri=http://artlyt.com.cn/homectrl/prepage"
             + "&response_type=code"
-            + "&scope=snsapi_base"
+            + "&scope=snsapi_userinfo"
             + "&state=STATE#wechat_redirect";
 		registry.addRedirectViewController("/", codeUrl);
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);

@@ -6,6 +6,7 @@
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="phone_num" property="phoneNum" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
     <result column="user_type" property="userType" jdbcType="INTEGER" />
     <result column="user_level" property="userLevel" jdbcType="INTEGER" />
     <result column="score" property="score" jdbcType="INTEGER" />
@@ -102,6 +103,12 @@
     from gly_user
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
+  <select id="selectByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gly_user
+    where open_id = #{openId,jdbcType=VARCHAR}
+  </select>
   <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.user.GlyUser">
   	select 
     <include refid="Base_Column_List" />
@@ -166,9 +173,15 @@
       <if test="email != null" >
         email,
       </if>
+      <if test="openId != null" >
+        open_id,
+      </if>      
       <if test="userType != null" >
         user_type,
       </if>
+      <if test="password != null" >
+        password,
+      </if>      
       <if test="userLevel != null" >
         user_level,
       </if>
@@ -219,9 +232,15 @@
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
       </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>      
       <if test="userType != null" >
         #{userType,jdbcType=INTEGER},
       </if>
+        <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>      
       <if test="userLevel != null" >
         #{userLevel,jdbcType=INTEGER},
       </if>

@@ -17,7 +17,9 @@ import com.kkwrite.gallery.common.https.HttpsUtil;
 import com.kkwrite.gallery.ctrl.BaseCtrl;
 import com.kkwrite.gallery.exception.ServiceException;
 import com.kkwrite.gallery.pojo.module.GlyModuleItem;
+import com.kkwrite.gallery.pojo.user.GlyUser;
 import com.kkwrite.gallery.service.home.HomeService;
+import com.kkwrite.gallery.service.user.UserService;
 
 @Controller
 @RequestMapping("/homectrl")
@@ -27,6 +29,9 @@ public class HomeCtrl extends BaseCtrl {
 	
 	@Autowired
 	private HomeService homeService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping("/prepage")
 	public String prePage(String code, HttpServletRequest request) {
@@ -52,8 +57,23 @@ public class HomeCtrl extends BaseCtrl {
 	    String openId = webAuthAccessTokenMap.get("openid");
 	    logger.info("[ run ] HomeCtrl.prePage(), openId = " + openId);
 	    
-	    // 将 openId 保持到 session 中
-	    request.getSession().setAttribute("openId", openId);
+	    // 根据 openId 查询用户
+	    GlyUser glyUser = userService.queryUserByOpenId(openId);
+	    if (glyUser == null) {
+	    	logger.info("[ run ] HomeCtrl.prePage(), openId = " + openId + " 的用户不存在，准备创建该用户");
+	    	GlyUser glyUserNew = new GlyUser();
+	    	glyUserNew.setUsername(openId);
+	    	glyUserNew.setIsValid(1);
+	    	glyUserNew.setOpenId(openId);
+	    	glyUserNew.setUserType(11);
+	    	glyUserNew.setPassword("123321");
+	    	glyUserNew.setUserLevel(1);
+	    	glyUserNew.setScore(0);
+	    	
+	    	int saveResult = userService.saveUser(glyUserNew);
+	    	logger.info("[ run ] HomeCtrl.prePage(), 创建 openId = " + openId + " 的新用户结果 saveResult = " + saveResult);
+	    }
+	    logger.info("[ run ] HomeCtrl.prePage(), openId = " + openId + " 的用户已经存在，准备设置其登录"); // TODO 默认登录逻辑处理
 	    
 		logger.debug("[ begin ] HomeCtrl.prePage().");
 		return "forward:/homectrl/pagectrl";

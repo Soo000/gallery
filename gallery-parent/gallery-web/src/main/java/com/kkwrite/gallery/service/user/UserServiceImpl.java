@@ -43,6 +43,11 @@ public class UserServiceImpl implements UserService {
 		logger.debug("[ end ] UserServiceImpl.queryUserByName().");
 		return users.get(0);
 	}
+	
+	@Override
+	public GlyUser queryUserByOpenId(String openId) throws ServiceException {
+		return glyUserMapper.selectByOpenId(openId);
+	}
 
 	@Override
 	public List<GlyUser> queryUsers(GlyUser record) throws ServiceException {
@@ -50,6 +55,11 @@ public class UserServiceImpl implements UserService {
 		List<GlyUser> users = glyUserMapper.selectSelective(record);
 		logger.debug("[ end ] UserServiceImpl.queryUsers().");
 		return users;
+	}
+
+	@Override
+	public int saveUser(GlyUser glyUser) throws ServiceException {
+		return glyUserMapper.insertSelective(glyUser);
 	}
 
 }
