@@ -285,7 +285,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<GlyProductPicture> getAllPictures(int productId) {
-		return glyProductPictureRepository.findAllByProductId(productId);
+		return glyProductPictureRepository.findAllByProductId(productId, new Sort(Direction.ASC, "productPictureType", "productPictureOrder"));
 	}
 
 	@Override

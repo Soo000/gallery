@@ -71,125 +71,6 @@
         openOrderPageByStatus(6)
     });
 
-	// 根据状态获取订单页面
-	function openOrderPageByStatus(status) {
-        // 1-待付款 2-已支付 3-待收货 4-已完成 5-已过期 6-已取消
-		$.get("/order/order-status", {"status": status, "_": new Date().getTime()}, function (page) {
-            $("div.main").html("").html(page);
-            // 查询第一页数据
-            getStatusOrder(1, status);
-        });
-    }
-
-	// 根据状态获取订单
-	function getStatusOrder(page, status) {
-        $.get("/order/statusorder/" + status + "/", {"page": page - 1, "size": 10}, function(result) {
-            if (result.code !== 0) {
-                return;
-            }
-        	buildOrdersTable(result, status);
-            // 构建分页插件
-            buildPagePlugin("div.main ul", result.data.totalElements, result.data.size, function (page) {
-                getStatusOrder(page, status);
-            });
-        });
-    }
-
-	// 获取所有订单数据
-	function getAllOrders(page) {
-        $.get("/order/all", {"page": page - 1, "size": 10}, function(result) {
-            if (result.code !== 0) {
-            	return;
-			}
-        	buildOrdersTable(result);
-            // 构建分页插件
-            buildPagePlugin("div.main ul", result.data.totalElements, result.data.size, function (page) {
-                getAllOrders(page);
-            });
-        });
-	}
-
-	// 构建订单表格
-	function buildOrdersTable(result, status) {
-        // 构建table body
-        // 先清空
-        $("div.main tbody").html("");
-        // 新建
-        var orders = result.data.content;
-        var operateTd = "";
-        if (status) {
-            switch (status) {
-                // 1-待付款 2-已支付 3-待收货 4-已完成 5-已过期 6-已取消
-                case 1:
-                    operateTd += "<button type='button' class='btn btn-link edit-price-btn'>修改金额</button>";
-                    break;
-                case 2:
-                    operateTd += "<button type='button' class='btn btn-link'>发货</button>";
-                    break;
-                case 3:
-                    operateTd += "-";
-                    break;
-                case 4:
-                    operateTd += "-";
-                    break;
-                case 5:
-                    operateTd += "-";
-                    break;
-                case 6:
-                    operateTd += "-";
-                    break;
-                case 7:
-                    operateTd += "-";
-                    break;
-            }
-		}
-        var str = "";
-        $.each(orders, function(i, v) {
-            str = "";
-            str += "<tr>";
-            str += "<td>" + v.orderCode + "</td>";
-            str += "<td>" + v.glyUser.username + "</td>";
-            str += "<td>" + v.glyAddress.receiver + "</td>";
-            str += "<td>" + v.glyAddress.address + "</td>";
-            str += "<td>" + v.productNum + "</td>";
-            str += "<td>" + v.realPayment + "</td>";
-            str += "<td>" + formatOrderType(v.orderType) + "</td>";
-            str += "<td>" + formatOrderStatus(v.orderStatus) + "</td>";
-            str += "<td>" + formatTimestamp(v.validTime) + "</td>";
-            str += "<td>" + formatTimestamp(v.invalidTime) + "</td>";
-            str += "<td>" + formatIsValid(v.isValid) + "</td>";
-            str += "<td>" + formatTimestamp(v.creationTime) + "</td>";
-            str += "<td>" + formatTimestamp(v.updateTime) + "</td>";
-            if (operateTd) {
-                str += "<td>" + operateTd + "</td>";
-			}
-            str += "</tr>";
-            $("div.main tbody").append($(str));
-        });
-    }
-
-	// 构建分页插件
-	function buildPagePlugin(selector, counts, size, onChange) {
-		if ($(selector + " li").length  > 0)
-			return;
-		$(selector).jqPaginator({
-            totalCounts: counts,
-            pageSize: size,
-            visiblePages: 10,
-            currentPage: 1,
-            first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
-            prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
-            next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
-            last: '<li class="last"><a href="javascript:void(0);">尾页</a></li>',
-            page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
-            onPageChange: function (page, type) {
-                if (type !== "init") {
-                    onChange.call(this, page);
-                }
-            }
-        });
-	}
-
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
@@ -279,57 +160,6 @@
         });
     });
 
-    // 分页查询产品
-    function getProductByPage(page) {
-        $.get("/product/query-product", {"page": page - 1, "size": 10, "_": new Date().getTime()}, function (result) {
-            if (result.code !== 0) {
-                return;
-            }
-            // 构建table body
-            // 先清空
-            $("div.main tbody").html("");
-            var products = result.data.content;
-            var str = "";
-            $.each(products, function(i, v) {
-                str = "";
-                str += "<tr>";
-                str += "<td>" + v.productId + "</td>";
-                str += "<td>" + v.productName + "</td>";
-                str += "<td>" + (v.productIntro.length > 8 ? (v.productIntro.substr(0, 6) + "...") : v.productIntro) + "</td>";
-                str += "<td>" + v.initialPrice + "</td>";
-                str += "<td>" + v.realPrice + "</td>";
-                str += "<td>" + v.discount + "</td>";
-                str += "<td>" + v.inventoryNumber + "</td>";
-                str += "<td>" + v.saleNumber + "</td>";
-                str += "<td>" + v.bookNumber + "</td>";
-                str += "<td>" + v.productOrder + "</td>";
-                str += "<td>" + formatIsValid(v.isValid) + "</td>";
-                str += "<td>" + formatTimestamp(v.creationTime) + "</td>";
-                str += "<td>" + formatTimestamp(v.updateTime) + "</td>";
-                str += "<td><button type='button' class='btn btn-link product_edit_btn'>修改</button>" +
-                    "<button type='button' class='btn btn-link product_delete_btn'>删除</button></td>";
-                str += "</tr>";
-                $("div.main tbody").append($(str));
-            });
-            buildPagePlugin("div.main ul", result.data.totalElements, result.data.size, function (page) {
-                getProductByPage(page);
-            });
-            // 删除按钮绑定单击事件
-            $("div.main button.product_delete_btn").click(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var _this = $(this);
-                $.post("/product/delete", {"productId":$.trim($(this).parent().parent().find("td").eq(0).text())}, function (result) {
-                    if (result.code === 0) {
-                        _this.parent().parent().remove();
-                    } else {
-                        alert("删除产品服务异常！");
-                    }
-                });
-            });
-        });
-    }
-
     // 产品编辑页面，产品列表行单击事件
     $("div.main").on("click", "#product_list_in_edit_page tbody tr", function (e) {
         e.preventDefault();
@@ -341,7 +171,243 @@
             }
             $("body").append(page);
             $('#editProductModal').modal();
+            // 获取产品配图
+            $.get("/product/getProductPicturesByProductId", {"productId": productId, "_":new Date().getTime()}, function (result) {
+                var mainPictures = [], detailPictures = [];
+                // 分拣图片
+                $.each(result.data, function (i, picture) {
+                    if (picture.productPictureType === 11) {
+                        mainPictures.push(picture);
+                    } else if (picture.productPictureType === 21) {
+                        detailPictures.push(picture);
+                    }
+                });
+                // 替换主图
+                var $imgs = $("div.main-picture-area img");
+                $.each(mainPictures, function (i, picture) {
+                    $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
+                    $($imgs[i]).data("picture", picture);
+                });
+                // 替换详情图
+                $imgs = $("div.detail-picture-area img");
+                $.each(detailPictures, function (i, picture) {
+                    $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
+                    $($imgs[i]).data("picture", picture);
+                });
+            });
         });
     });
 
+    // 修改产品页面，删除图片操作
+    $("body").on("click", "div.caption a.delete-btn", function (e) {
+        e.preventDefault();
+        // 获取到img元素
+        var $img = $(this).parent().parent().parent().find("img");
+        $img.attr("src", "/img/add_picture.jpg");
+        // 判断该位置是否有图片
+        if ($img.data("picture")) {
+            $img.data("operate", "delete");
+        } else {
+            $img.data("operate", "-1");
+        }
+    });
+
+    // 修改产品页面，添加图片操作
+    $("body").on("click", "div.caption a.add-btn", function (e) {
+        e.preventDefault();
+        // 获取到img元素
+        var $img = $(this).parent().parent().parent().find("img");
+        // 判断该位置是否有图片
+        if (!$img.data("picture")) {
+            $img.data("operate", "add");
+        } else {
+            $img.data("operate", "modify");
+        }
+        $img.parent().find("input").click();
+    });
+
 });
+
+// 根据状态获取订单页面
+function openOrderPageByStatus(status) {
+    // 1-待付款 2-已支付 3-待收货 4-已完成 5-已过期 6-已取消
+    $.get("/order/order-status", {"status": status, "_": new Date().getTime()}, function (page) {
+        $("div.main").html("").html(page);
+        // 查询第一页数据
+        getStatusOrder(1, status);
+    });
+}
+
+// 根据状态获取订单
+function getStatusOrder(page, status) {
+    $.get("/order/statusorder/" + status + "/", {"page": page - 1, "size": 10}, function(result) {
+        if (result.code !== 0) {
+            return;
+        }
+        buildOrdersTable(result, status);
+        // 构建分页插件
+        buildPagePlugin("div.main ul", result.data.totalElements, result.data.size, function (page) {
+            getStatusOrder(page, status);
+        });
+    });
+}
+
+// 获取所有订单数据
+function getAllOrders(page) {
+    $.get("/order/all", {"page": page - 1, "size": 10}, function(result) {
+        if (result.code !== 0) {
+            return;
+        }
+        buildOrdersTable(result);
+        // 构建分页插件
+        buildPagePlugin("div.main ul", result.data.totalElements, result.data.size, function (page) {
+            getAllOrders(page);
+        });
+    });
+}
+
+// 构建订单表格
+function buildOrdersTable(result, status) {
+    // 构建table body
+    // 先清空
+    $("div.main tbody").html("");
+    // 新建
+    var orders = result.data.content;
+    var operateTd = "";
+    if (status) {
+        switch (status) {
+            // 1-待付款 2-已支付 3-待收货 4-已完成 5-已过期 6-已取消
+            case 1:
+                operateTd += "<button type='button' class='btn btn-link edit-price-btn'>修改金额</button>";
+                break;
+            case 2:
+                operateTd += "<button type='button' class='btn btn-link'>发货</button>";
+                break;
+            case 3:
+                operateTd += "-";
+                break;
+            case 4:
+                operateTd += "-";
+                break;
+            case 5:
+                operateTd += "-";
+                break;
+            case 6:
+                operateTd += "-";
+                break;
+            case 7:
+                operateTd += "-";
+                break;
+        }
+    }
+    var str = "";
+    $.each(orders, function(i, v) {
+        str = "";
+        str += "<tr>";
+        str += "<td>" + v.orderCode + "</td>";
+        str += "<td>" + v.glyUser.username + "</td>";
+        str += "<td>" + v.glyAddress.receiver + "</td>";
+        str += "<td>" + v.glyAddress.address + "</td>";
+        str += "<td>" + v.productNum + "</td>";
+        str += "<td>" + v.realPayment + "</td>";
+        str += "<td>" + formatOrderType(v.orderType) + "</td>";
+        str += "<td>" + formatOrderStatus(v.orderStatus) + "</td>";
+        str += "<td>" + formatTimestamp(v.validTime) + "</td>";
+        str += "<td>" + formatTimestamp(v.invalidTime) + "</td>";
+        str += "<td>" + formatIsValid(v.isValid) + "</td>";
+        str += "<td>" + formatTimestamp(v.creationTime) + "</td>";
+        str += "<td>" + formatTimestamp(v.updateTime) + "</td>";
+        if (operateTd) {
+            str += "<td>" + operateTd + "</td>";
+        }
+        str += "</tr>";
+        $("div.main tbody").append($(str));
+    });
+}
+
+// 构建分页插件
+function buildPagePlugin(selector, counts, size, onChange) {
+    if ($(selector + " li").length  > 0)
+        return;
+    $(selector).jqPaginator({
+        totalCounts: counts,
+        pageSize: size,
+        visiblePages: 10,
+        currentPage: 1,
+        first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+        prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
+        next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
+        last: '<li class="last"><a href="javascript:void(0);">尾页</a></li>',
+        page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+        onPageChange: function (page, type) {
+            if (type !== "init") {
+                onChange.call(this, page);
+            }
+        }
+    });
+}
+
+// 分页查询产品
+function getProductByPage(page) {
+    $.get("/product/query-product", {"page": page - 1, "size": 10, "_": new Date().getTime()}, function (result) {
+        if (result.code !== 0) {
+            return;
+        }
+        // 构建table body
+        // 先清空
+        $("div.main tbody").html("");
+        var products = result.data.content;
+        var str = "";
+        $.each(products, function(i, v) {
+            str = "";
+            str += "<tr>";
+            str += "<td>" + v.productId + "</td>";
+            str += "<td>" + v.productName + "</td>";
+            str += "<td>" + (v.productIntro.length > 8 ? (v.productIntro.substr(0, 6) + "...") : v.productIntro) + "</td>";
+            str += "<td>" + v.initialPrice + "</td>";
+            str += "<td>" + v.realPrice + "</td>";
+            str += "<td>" + v.discount + "</td>";
+            str += "<td>" + v.inventoryNumber + "</td>";
+            str += "<td>" + v.saleNumber + "</td>";
+            str += "<td>" + v.bookNumber + "</td>";
+            str += "<td>" + v.productOrder + "</td>";
+            str += "<td>" + formatIsValid(v.isValid) + "</td>";
+            str += "<td>" + formatTimestamp(v.creationTime) + "</td>";
+            str += "<td>" + formatTimestamp(v.updateTime) + "</td>";
+            str += "<td><button type='button' class='btn btn-link product_edit_btn'>修改</button>" +
+                "<button type='button' class='btn btn-link product_delete_btn'>删除</button></td>";
+            str += "</tr>";
+            $("div.main tbody").append($(str));
+        });
+        buildPagePlugin("div.main ul", result.data.totalElements, result.data.size, function (page) {
+            getProductByPage(page);
+        });
+        // 删除按钮绑定单击事件
+        $("div.main button.product_delete_btn").click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var _this = $(this);
+            $.post("/product/delete", {"productId":$.trim($(this).parent().parent().find("td").eq(0).text())}, function (result) {
+                if (result.code === 0) {
+                    _this.parent().parent().remove();
+                } else {
+                    alert("删除产品服务异常！");
+                }
+            });
+        });
+    });
+}
+
+function modifyAddOnchange(inputObject) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        var $img = $(inputObject).parent().parent().parent().find("img");
+        $img.attr("src", reader.result);
+        $img.data("picture_new", reader.result);
+    };
+    reader.readAsDataURL(inputObject.files[0]);
+}
+
+function modifyProductModalSubmit() {
+    $("#editProductModal");
+}
