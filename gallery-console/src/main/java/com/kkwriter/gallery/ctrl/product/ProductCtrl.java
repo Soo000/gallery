@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 @RestController
@@ -77,8 +78,14 @@ public class ProductCtrl {
 	}
 
 	@PostMapping("/modify")
-	public Result<?> modifyProduct() {
-		
+	public Result<?> modifyProduct(HttpServletRequest request) {
+
+		Enumeration<String> names = request.getParameterNames();
+		while (names.hasMoreElements()) {
+			String name = names.nextElement();
+			System.out.println(name + ": " + request.getParameter(name));
+		}
+
 		return ResultUtil.success();
 	}
 	

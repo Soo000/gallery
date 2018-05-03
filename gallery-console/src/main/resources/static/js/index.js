@@ -409,5 +409,112 @@ function modifyAddOnchange(inputObject) {
 }
 
 function modifyProductModalSubmit() {
-    $("#editProductModal");
+    var productName = $.trim($("#productName").val());
+    var productIntro = $.trim($("#productIntro").val());
+    var productDetail = $.trim($("#productDetail").val());
+    var initialPrice = $.trim($("#initialPrice").val());
+    var discount = $.trim($("#discount").val());
+    var inventoryNumber = $.trim($("#inventoryNumber").val());
+    var bookNumber = $.trim($("#bookNumber").val());
+    var productOrder = $.trim($("#productOrder").val());
+    var isValid = $("input[name='valid']:checked").val();
+    var productAttrs = [];
+    $("input[name='productAttrs']").each(function () {
+        if (this.checked) {
+            productAttrs.push($(this).val());
+        }
+    });
+    var productTypes = [];
+    $("input[name='productTypes']").each(function () {
+        if (this.checked) {
+            productTypes.push($(this).val());
+        }
+    });
+
+    if (!productName || !productIntro || !productDetail) {
+        return;
+    }
+    if (!initialPrice || !$.isNumeric(initialPrice)) {
+        return;
+    }
+    if (!discount || !$.isNumeric(discount)) {
+        return;
+    }
+    if (!inventoryNumber || !$.isNumeric(inventoryNumber)) {
+        return;
+    }
+    if (!bookNumber || !$.isNumeric(bookNumber)) {
+        return;
+    }
+    if (!productOrder || !$.isNumeric(productOrder)) {
+        return;
+    }
+
+    var params = {
+        "productName": productName,
+        "productIntro":productIntro,
+        "productDetail":productDetail,
+        "initialPrice":initialPrice,
+        "discount":discount,
+        "inventoryNumber":inventoryNumber,
+        "bookNumber":bookNumber,
+        "productOrder":productOrder,
+        "isValid":isValid
+    };
+
+    if (productAttrs.length !== 0) {
+        params.productAttrs = productAttrs;
+    }
+    if (productTypes.length !== 0) {
+        params.productTypes = productTypes;
+    }
+
+    var mainPictures = [];
+    $("#modifyProductModalForm div.main-picture-area img").each(function (index) {
+        var operateType = $(this).data("operate");
+        if (operateType && operateType !== "-1") {
+            var img = {};
+            img.position = index;
+            img.operateType = operateType;
+            if (operateType !== "delete") {
+                img.newPicture = $(this).data("picture_new");
+            }
+            if (operateType !== "add") {
+                img.oldPicture = $(this).data("picture");
+            }
+            mainPictures.push(img);
+        }
+    });
+    if (mainPictures.length !== 0) {
+        params.mainPictures = mainPictures;
+    }
+
+    var detailPictures = [];
+    $("#modifyProductModalForm div.detail-picture-area img").each(function (index) {
+        var operateType = $(this).data("operate");
+        if (operateType && operateType !== "-1") {
+            var img = {};
+            img.position = index;
+            img.operateType = operateType;
+            if (operateType !== "delete") {
+                img.newPicture = $(this).data("picture_new");
+            }
+            if (operateType !== "add") {
+                img.oldPicture = $(this).data("picture");
+            }
+            detailPictures.push(img);
+        }
+    });
+    if (detailPictures.length !== 0) {
+        params.detailPictures = detailPictures;
+    }
+
+    $.post("/product/modify", {"params":JSON.stringify(params)}, function (result) {
+        if (result.code === 0) {
+            $("#editProductModal").modal('toggle');
+            alert("修改成功！");
+        } else {
+            alert("修改失败！");
+        }
+    }, 'json');
 }
