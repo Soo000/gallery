@@ -23,7 +23,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author lisha
@@ -68,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
 	private GlyProductTypeRepository glyProductTypeRepository;
 	
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void uploadProductFile(MultipartFile file) {
 		try (InputStream in = file.getInputStream(); Workbook wb = WorkbookFactory.create(in)) {
 			Sheet sheet = wb.getSheetAt(0);
@@ -116,6 +114,7 @@ public class ProductServiceImpl implements ProductService {
 					case 9:
 						pictures = cell.getStringCellValue().trim().split("\\|");
 						break;
+					default:
 					}
 				}
 				product.setRealPrice(product.getInitialPrice() * product.getDiscount() / 10);
@@ -172,7 +171,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void addProduct(MultipartFile[] productPics, HttpServletRequest request) {
 		// 参数校验
 		String productName = request.getParameter("productName");
@@ -298,9 +297,8 @@ public class ProductServiceImpl implements ProductService {
 		return glyProductTypeRepository.findAll(new Sort(Direction.DESC, "creationTime", "parentProductTypeId"));
 	}
 
-	@Transactional
-	protected int getProductId() {
-		Integer productId = 1;
+	private int getProductId() {
+		int productId = 1;
 		Page<GlyProduct> page = glyProductRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "productId")));
 		Iterator<GlyProduct> iterator = page.iterator();
 		if (iterator.hasNext()) {
@@ -309,8 +307,7 @@ public class ProductServiceImpl implements ProductService {
 		return productId;
 	}
 
-	@Transactional
-	protected int getProductAttrRelationId() {
+	private int getProductAttrRelationId() {
 		int id = 1;
 		Page<GlyRProductProps> propPage = glyRProductPropsRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "id")));
 		Iterator<GlyRProductProps> iterator = propPage.iterator();
@@ -320,8 +317,7 @@ public class ProductServiceImpl implements ProductService {
 		return id;
 	}
 
-	@Transactional
-	protected int getProductTypesRelationId() {
+	private int getProductTypesRelationId() {
 		int id = 1;
 		Page<GlyRProductTypeProduct> typePage = glyProductTypeProductRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "id")));
 		Iterator<GlyRProductTypeProduct> iterator = typePage.iterator();
@@ -331,8 +327,7 @@ public class ProductServiceImpl implements ProductService {
 		return id;
 	}
 
-	@Transactional
-	protected Integer getProductPictureId() {
+	private Integer getProductPictureId() {
 		int id = 1;
 		Page<GlyProductPicture> picturePage = glyProductPictureRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "productPictureCode")));
 		Iterator<GlyProductPicture> iterator = picturePage.iterator();
