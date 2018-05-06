@@ -124,7 +124,7 @@ public class OrderCtrl extends BaseCtrl {
 		
 		try {
 			// 查询用户
-			String username = getUserDetails().getUsername();
+			String username = getUsername();
 			GlyUser user = userService.queryUserByName(username);
 			modelAndView.addObject("user", user);
 			
@@ -174,7 +174,7 @@ public class OrderCtrl extends BaseCtrl {
 		}
 		
 		// 获取当前登录用户
-		String username = getUserDetails().getUsername();
+		String username = getUsername();
 		GlyUser glyUser = userService.queryUserByName(username);
 		
 		// 如果是从购物车提交订单，首先查询购物车中的产品是是否存在，如果不存在，则是点击返回按钮过来的；subType 提交方式：addToCart-加入购物车，buyNow-立即购买
@@ -282,7 +282,7 @@ public class OrderCtrl extends BaseCtrl {
 		
 		try {
 			// 查询我的订单
-			String username = getUserDetails().getUsername();
+			String username = getUsername();
 			GlyUser user = userService.queryUserByName(username);
 			List<GlyOrder> orders = orderService.getMyOrder(user.getUserId());
 			

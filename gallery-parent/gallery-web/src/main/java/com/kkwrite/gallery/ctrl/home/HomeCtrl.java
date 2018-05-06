@@ -73,7 +73,10 @@ public class HomeCtrl extends BaseCtrl {
 	    	int saveResult = userService.saveUser(glyUserNew);
 	    	logger.info("[ run ] HomeCtrl.prePage(), 创建 openId = " + openId + " 的新用户结果 saveResult = " + saveResult);
 	    }
-	    logger.info("[ run ] HomeCtrl.prePage(), openId = " + openId + " 的用户已经存在，准备设置其登录"); // TODO 默认登录逻辑处理
+	    
+	    String username = glyUser != null ? glyUser.getUsername() : openId;
+	    logger.info("[ run ] HomeCtrl.prePage(), Session中设置用户名 username = " + username);
+	    request.getSession().setAttribute("username", username);
 	    
 		logger.debug("[ begin ] HomeCtrl.prePage().");
 		return "forward:/homectrl/pagectrl";

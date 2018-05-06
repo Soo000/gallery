@@ -33,7 +33,7 @@ public class MyselfCtrl extends BaseCtrl {
 		logger.debug("[ begin ] HomeCtrl.pageCtrl().");
 		
 		ModelAndView modelAndView = new ModelAndView("/myself/myself");
-		String username = getUserDetails().getUsername();
+		String username = getUsername();
 		modelAndView.addObject("username", username);
 		
 		// 获取用户信息

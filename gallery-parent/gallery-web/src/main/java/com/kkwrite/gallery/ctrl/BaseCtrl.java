@@ -7,12 +7,23 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class BaseCtrl {
 
+	@Autowired
 	private HttpServletRequest request;
+	
+	public String getUsername() {
+		UserDetails userDetails = getUserDetails();
+		if (userDetails != null) {
+			return userDetails.getUsername();
+		}
+		
+		return (String) request.getSession().getAttribute("username");
+	}
 	
 	public UserDetails getUserDetails() {
 		Object userObject = SecurityContextHolder.getContext()  
