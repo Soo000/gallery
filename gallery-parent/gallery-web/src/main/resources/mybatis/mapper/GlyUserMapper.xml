@@ -80,7 +80,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, username, phone_num, email, user_type, user_level, score, is_valid, creation_time, 
+    user_id, username, phone_num, email, open_id, user_type, user_level, score, is_valid, creation_time, 
     creator, update_time, updator, ext_0, ext_1, ext_2, ext_3, ext_4
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.user.GlyUserExample" >

@@ -253,6 +253,7 @@ public class OrderCtrl extends BaseCtrl {
 		modelAndView.addObject("acount", acount);
 		modelAndView.addObject("count", count);
 		modelAndView.addObject("orderCode", orderCode);
+		modelAndView.addObject("openId", glyUser.getOpenId());
 		
 		logger.info("[ end ] OrderCtrl.submitOrder().");
 		return modelAndView;

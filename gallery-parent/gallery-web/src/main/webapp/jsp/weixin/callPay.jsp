@@ -24,8 +24,8 @@
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 	
     // 获取 openId
-    String openId = (String) session.getAttribute("openId");
-    System.out.println("进行支付页面中，从 session 获取 openId 值为，openId = " + openId);
+    String openId = (String) request.getParameter("openId");
+    System.out.println("进行支付页面中，从 request 获取 openId 值为，openId = " + openId);
     
     // TODO 参数校验 支付金额
     String acount = request.getParameter("acount");
