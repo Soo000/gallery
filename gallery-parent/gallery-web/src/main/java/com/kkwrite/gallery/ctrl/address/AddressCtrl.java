@@ -49,7 +49,7 @@ public class AddressCtrl extends BaseCtrl {
 		
 		try {
 			// 查询用户
-			String username = getUserDetails().getUsername();
+			String username = getUsername();
 			GlyUser user = userService.queryUserByName(username);
 			modelAndView.addObject("user", user);
 			
@@ -230,7 +230,7 @@ public class AddressCtrl extends BaseCtrl {
 		
 		GlyUser user = null;
 		try {
-			String username = getUserDetails().getUsername();
+			String username = getUsername();
 			user = userService.queryUserByName(username);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

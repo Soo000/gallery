@@ -51,12 +51,14 @@
         	   WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
         	   OrderService orderService = (OrderService) context.getBean("orderService");
         	   System.out.println("orderService = " + orderService);
-        	   int updateResult = orderService.setOrderStatus(outTradeNo, BasePojo.OrderDict.ORDER_STATUS_PAYED);
+        	   int updateResult = orderService.setOrderStatus(outTradeNo, BasePojo.OrderDict.ORDER_STATUS_WAITING_RECV);
         	   System.out.println("updateResult = " + updateResult);
            }
            
-           response.setContentType("text/xml; charset=UTF-8");
-           response.getWriter().println("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[支付成功]]></return_msg></xml>");
+           response.getWriter().write("SUCCESS");
+           response.getWriter().flush();
+           System.out.println("写回 SUCCESS");
+           System.out.println("-------------------");
 		%>
 	</body>
 </html>

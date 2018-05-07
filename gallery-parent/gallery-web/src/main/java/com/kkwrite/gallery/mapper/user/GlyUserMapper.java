@@ -20,6 +20,8 @@ public interface GlyUserMapper {
 
     GlyUser selectByPrimaryKey(Integer userId);
     
+    GlyUser selectByOpenId(String openId);
+    
     List<GlyUser> selectSelective(GlyUser record);
 
     int updateByExampleSelective(@Param("record") GlyUser record, @Param("example") GlyUserExample example);

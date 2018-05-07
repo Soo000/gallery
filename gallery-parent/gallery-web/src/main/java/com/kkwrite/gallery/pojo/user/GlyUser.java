@@ -10,6 +10,10 @@ public class GlyUser {
     private String phoneNum;
 
     private String email;
+    
+    private String openId;
+    
+    private String password;
 
     private Integer userType;
 
@@ -69,7 +73,23 @@ public class GlyUser {
         this.email = email == null ? null : email.trim();
     }
 
-    public Integer getUserType() {
+    public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getUserType() {
         return userType;
     }
 

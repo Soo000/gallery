@@ -7,10 +7,14 @@ import com.kkwrite.gallery.pojo.user.GlyUser;
 
 public interface UserService {
 
-	public GlyUser queryUserByUserId(int userId) throws ServiceException;
+	GlyUser queryUserByUserId(int userId) throws ServiceException;
 	
-	public GlyUser queryUserByName(String username) throws ServiceException;
+	GlyUser queryUserByName(String username) throws ServiceException;
+	
+	GlyUser queryUserByOpenId(String openId) throws ServiceException;
 
-	public List<GlyUser> queryUsers(GlyUser record) throws ServiceException;
+	List<GlyUser> queryUsers(GlyUser record) throws ServiceException;
+	
+	int saveUser(GlyUser glyUser) throws ServiceException;
 	
 }
