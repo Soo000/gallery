@@ -512,6 +512,7 @@ function modifyProductModalSubmit() {
 
     $.post("/product/modify", {"params":JSON.stringify(params)}, function (result) {
         if (result.code === 0) {
+            $("#edit_product_bar").click();
             $("#editProductModal").modal('toggle');
             alert("修改成功！");
         } else {
