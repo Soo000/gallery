@@ -44,7 +44,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -510,9 +510,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private static <T extends Number> String rounding(T number) {
-		NumberFormat nf = NumberFormat.getNumberInstance();
-		nf.setMaximumFractionDigits(2);
-		return nf.format(number);
+		DecimalFormat df = new DecimalFormat("#.##");
+		return df.format(number);
 	}
 
 }
