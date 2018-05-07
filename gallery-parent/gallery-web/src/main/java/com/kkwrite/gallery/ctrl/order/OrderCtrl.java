@@ -291,6 +291,7 @@ public class OrderCtrl extends BaseCtrl {
 			List<OrderProducts> ordersProducts = orderService.getOrdersProducts(orders);
 			modelAndView.addObject("ordersProducts", ordersProducts);
 			modelAndView.addObject("orderStatus", orderStatus);
+			modelAndView.addObject("openId", user.getOpenId());
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
