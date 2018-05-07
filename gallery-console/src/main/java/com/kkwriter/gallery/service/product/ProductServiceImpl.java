@@ -79,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
 		glyProductTypeProductRepository.deleteByProductId(productId);
 		// 删除产品配图
 		// 获取所有图片信息
-		final List<GlyProductPicture> pictureList = glyProductPictureRepository.findAllByProductId(productId, new Sort(Direction.DESC));
+		final List<GlyProductPicture> pictureList = glyProductPictureRepository.findAllByProductId(productId, new Sort(Direction.DESC, "creationTime"));
 		// 遍历删除
 		pictureList.forEach(this::deleteProductPicture);
 		// 删除产品
