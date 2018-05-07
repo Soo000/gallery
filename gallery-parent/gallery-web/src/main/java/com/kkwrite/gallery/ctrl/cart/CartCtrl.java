@@ -34,7 +34,7 @@ public class CartCtrl extends BaseCtrl {
 		
 		try {
 			// 查询产品
-			String username = getUserDetails().getUsername();
+			String username = getUsername();
 			List<Product> products = cartService.queryCartProducts(username);
 			// 查询产品配图
 			products = productService.queryProductsPictures(products);
@@ -71,7 +71,7 @@ public class CartCtrl extends BaseCtrl {
 		BaseCtrlResult result = new BaseCtrlResult();
 		try {
 			// 判断购物车中是否已经有该商品
-			Product product = cartService.queryCartProduct(getUserDetails().getUsername(), productId);
+			Product product = cartService.queryCartProduct(getUsername(), productId);
 			if (product != null) {
 				result.setRetCode("1001");
 				throw new ServiceException("宝贝已经在您的购物车里面了，不用重新添加！");
@@ -86,7 +86,7 @@ public class CartCtrl extends BaseCtrl {
 				}
 			}
 			// 添加到购物车
-			boolean isAdded = cartService.addToCart(getUserDetails().getUsername(), productId, productPropId, productNum);
+			boolean isAdded = cartService.addToCart(getUsername(), productId, productPropId, productNum);
 			if (!isAdded) {
 				result.setRetCode("1002");
 				throw new ServiceException("宝贝加入购物车失败，请稍后重试！");
@@ -117,7 +117,7 @@ public class CartCtrl extends BaseCtrl {
 			for (int i = 0; i < tmpProductIds.length; i++) {
 				productIds[i] = Integer.parseInt(tmpProductIds[i]);
 			}
-			cartService.removeFromCart(getUserDetails().getUsername(), productIds);
+			cartService.removeFromCart(getUsername(), productIds);
 		} catch (Exception e) {
 			logger.error("[ run ] CartCtrl.removeFromCart(), 移除购物车内产品出错！");
 			e.printStackTrace();

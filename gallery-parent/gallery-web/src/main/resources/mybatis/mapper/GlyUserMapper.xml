@@ -6,6 +6,7 @@
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="phone_num" property="phoneNum" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
     <result column="user_type" property="userType" jdbcType="INTEGER" />
     <result column="user_level" property="userLevel" jdbcType="INTEGER" />
     <result column="score" property="score" jdbcType="INTEGER" />
@@ -79,7 +80,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, username, phone_num, email, user_type, user_level, score, is_valid, creation_time, 
+    user_id, username, phone_num, email, open_id, user_type, user_level, score, is_valid, creation_time, 
     creator, update_time, updator, ext_0, ext_1, ext_2, ext_3, ext_4
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.user.GlyUserExample" >
@@ -101,6 +102,12 @@
     <include refid="Base_Column_List" />
     from gly_user
     where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gly_user
+    where open_id = #{openId,jdbcType=VARCHAR}
   </select>
   <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.user.GlyUser">
   	select 
@@ -166,9 +173,15 @@
       <if test="email != null" >
         email,
       </if>
+      <if test="openId != null" >
+        open_id,
+      </if>      
       <if test="userType != null" >
         user_type,
       </if>
+      <if test="password != null" >
+        password,
+      </if>      
       <if test="userLevel != null" >
         user_level,
       </if>
@@ -219,9 +232,15 @@
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
       </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>      
       <if test="userType != null" >
         #{userType,jdbcType=INTEGER},
       </if>
+        <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>      
       <if test="userLevel != null" >
         #{userLevel,jdbcType=INTEGER},
       </if>

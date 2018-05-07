@@ -33,7 +33,7 @@ public class MyselfCtrl extends BaseCtrl {
 		logger.debug("[ begin ] HomeCtrl.pageCtrl().");
 		
 		ModelAndView modelAndView = new ModelAndView("/myself/myself");
-		String username = getUserDetails().getUsername();
+		String username = getUsername();
 		modelAndView.addObject("username", username);
 		
 		// 获取用户信息
@@ -58,6 +58,8 @@ public class MyselfCtrl extends BaseCtrl {
 		int waitingNum = 0;
 		// 已经支付
 		int paiedNum = 0;
+		// 待收货
+		int waitingRecv = 0;
 		// 已取消
 		int cancelNum = 0;
 		// 已完成
@@ -76,6 +78,9 @@ public class MyselfCtrl extends BaseCtrl {
 				case BasePojo.OrderDict.ORDER_STATUS_PAYED:
 					paiedNum++;
 				break;
+				case BasePojo.OrderDict.ORDER_STATUS_WAITING_RECV:
+					waitingRecv++;
+				break;
 				case BasePojo.OrderDict.ORDER_STATUS_CANCELED:
 					cancelNum++;
 				break;
@@ -89,6 +94,7 @@ public class MyselfCtrl extends BaseCtrl {
 		result.put("allNum", allNum);
 		result.put("waitingNum", waitingNum);
 		result.put("paiedNum", paiedNum);
+		result.put("waitingRecv", waitingRecv);
 		result.put("cancelNum", cancelNum);
 		result.put("finishedNum", finishedNum);
 		

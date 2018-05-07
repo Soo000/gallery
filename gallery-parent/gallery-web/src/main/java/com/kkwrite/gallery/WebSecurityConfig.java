@@ -57,6 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		// 禁用 csrf 保护
 		http.csrf().disable();
+		// 启用匿名认证, 并设置匿名用户权限
+		http.anonymous().authorities("ROLE_USER");
 		
 		// 注册页面
 		http.authorizeRequests().mvcMatchers("/jsp/signup/signup.jsp").access("permitAll");
@@ -86,6 +88,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().mvcMatchers("/sys/loginFail").access("permitAll");
 		// 登出不需要认证
 		http.authorizeRequests().mvcMatchers("/logout").access("permitAll");
+		
+		// 配置购物车页面需要的角色
+		http.authorizeRequests().mvcMatchers("/cartctrl/pagectrl").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/cartctrl/addtocart").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/cartctrl/removefromcart").hasRole("USER");
+		
+		// 配置我的需要的角色
+		http.authorizeRequests().mvcMatchers("/myselfctrl/pagectrl").hasRole("USER");
+		
+		// 配置订单需要的角色
+		http.authorizeRequests().mvcMatchers("/orderctrl/pagectrl").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/orderctrl/placeorder").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/orderctrl/submitorder").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/orderctrl/payorder").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/orderctrl/myorder").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/orderctrl/setorderstatus").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/orderctrl/deleteorder").hasRole("USER");
+		
+		// 配置收货地址需要的角色
+		http.authorizeRequests().mvcMatchers("/addressctrl/pagectrl").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/addressctrl/preadd").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/addressctrl/add").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/addressctrl/edit").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/addressctrl/deladd").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/addressctrl/save").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/addressctrl/getprocitvil").hasRole("USER");
+
+		// 配置调用支付的jsp页面权限
+		http.authorizeRequests().mvcMatchers("/jsp/weixin/callPay.jsp").hasRole("USER");
 		
 		// 其它都需要认证
 		http.authorizeRequests().antMatchers("/**").authenticated();

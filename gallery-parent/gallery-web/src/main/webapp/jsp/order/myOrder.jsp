@@ -141,9 +141,15 @@
 															type="button" class="btn btn-default btn-xs">
 															取消订单
 														</button>
+														<!-- 
 														<button id="payOrderBtn" type="button" class="btn btn-warning btn-xs">
 															去支付
 														</button>
+														-->
+														<a type="button" class="btn btn-warning btn-xs"
+														    href="<%=request.getContextPath()%>/jsp/weixin/callPay.jsp?orderCode=${orderProducts.orderCode }&acount=${orderProducts.realPayment }&count=${orderProducts.productNum }">
+														          去支付
+														</a>
 													</div>
 													<div class="clearfix"></div>
 												</div>

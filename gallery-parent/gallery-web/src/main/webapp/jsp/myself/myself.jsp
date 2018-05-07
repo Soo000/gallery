@@ -68,7 +68,7 @@
 								<div>
 									<i class="fa fa-archive fa-2x menu-icon"></i>
 								</div>
-								<div>待收货</div>
+								<div>待收货(${requestScope.orderInfo.waitingRecv })</div>
 							</a>
 						</div>
 						<div class="col-xs-3">

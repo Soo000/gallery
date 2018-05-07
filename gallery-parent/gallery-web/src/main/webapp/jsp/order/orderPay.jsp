@@ -6,6 +6,8 @@
 	String orderCode = (String) request.getAttribute("orderCode");
 	Float acount = (Float) request.getAttribute("acount");
 	Integer count = (Integer) request.getAttribute("count");
+	String openId = (String) request.getAttribute("openId");
+	System.out.println("[ orderPay.jsp ] openId = " + openId);
 %>
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -59,7 +61,7 @@
 			 * 支付按钮动作
 			 */
 			$("#payButton").on("click", function(evt) {
-				var callPayUrl = "<%=request.getContextPath()%>/jsp/weixin/callPay.jsp?orderCode=<%=orderCode%>&acount=<%=acount%>&count=<%=count%>";
+				var callPayUrl = "<%=request.getContextPath()%>/jsp/weixin/callPay.jsp?orderCode=<%=orderCode%>&acount=<%=acount%>&count=<%=count%>&openId=<%=openId%>";
 				window.location.href = callPayUrl;
 			});
 		});
