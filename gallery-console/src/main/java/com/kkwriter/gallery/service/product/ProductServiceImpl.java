@@ -413,7 +413,7 @@ public class ProductServiceImpl implements ProductService {
 		productPicture.setProductId(product.getProductId());
 		for (int i = 0; i < productPics.length; i++) {
 			productPicture.setProductPictureCode(getProductPictureId());
-			String fileName = "product" + File.separator + product.getProductId() + File.separator + productPics[i].getOriginalFilename();
+			String fileName = "product" + File.separator + product.getProductId() + File.separator + generatePictureName();
 			productPicture.setProductPictureFileName(fileName);
 			int pictureType = 11;
 			if (i != 0) {
