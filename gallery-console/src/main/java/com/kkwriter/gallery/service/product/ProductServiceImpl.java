@@ -1,5 +1,6 @@
 package com.kkwriter.gallery.service.product;
 
+import com.kkwriter.gallery.entity.json.ModifyProductJsonBean;
 import com.kkwriter.gallery.entity.product.GlyProduct;
 import com.kkwriter.gallery.entity.product.GlyProductPicture;
 import com.kkwriter.gallery.entity.product.GlyProductProp;
@@ -14,6 +15,7 @@ import com.kkwriter.gallery.repository.product.GlyProductTypeProductRepository;
 import com.kkwriter.gallery.repository.product.GlyProductTypeRepository;
 import com.kkwriter.gallery.repository.product.GlyRProductPropsRepository;
 import com.kkwriter.gallery.result.ReturnEnum;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +43,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -64,7 +69,151 @@ public class ProductServiceImpl implements ProductService {
 	private GlyProductPropRepository glyProductPropRepository;
 	@Resource(name = "glyProductTypeRepository")
 	private GlyProductTypeRepository glyProductTypeRepository;
-	
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void modifyProduct(ModifyProductJsonBean param) {
+		int productId = param.getProductId();
+		// 根据ID获取产品
+		GlyProduct product = glyProductRepository.findById(productId).orElse(null);
+		if (product == null) {
+			throw new GalleyConsoleException(ReturnEnum.UPDATE_FAILED);
+		}
+		// 设置新产品信息
+		product.setProductName(param.getProductName());
+		product.setProductIntro(param.getProductIntro());
+		product.setProductDetail(param.getProductDetail());
+		product.setInitialPrice(Float.valueOf(param.getInitialPrice()));
+		product.setDiscount(Float.valueOf(param.getDiscount()));
+		product.setRealPrice(Float.valueOf(rounding(product.getInitialPrice() * product.getDiscount() / 10)));
+		product.setInventoryNumber(Integer.valueOf(param.getInventoryNumber()));
+		product.setBookNumber(Integer.valueOf(param.getBookNumber()));
+		product.setResidueNumber(product.getInventoryNumber() - product.getBookNumber() - product.getSaleNumber());
+		product.setProductOrder(Float.valueOf(param.getProductOrder()));
+		product.setIsValid(Integer.valueOf(param.getIsValid()));
+		product.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+		// 更新产品信息
+		glyProductRepository.saveAndFlush(product);
+		// 操作属性
+		List<String> attrList = param.getProductAttrs();
+		if (attrList != null && !attrList.isEmpty()) {
+			// 删除产品属性
+			glyRProductPropsRepository.deleteByProductId(productId);
+			// 新建产品属性
+			attrList.forEach((attr) -> {
+				GlyRProductProps props = new GlyRProductProps();
+				props.setId(getProductAttrRelationId());
+				props.setProductId(productId);
+				props.setPropId(Integer.valueOf(attr));
+				// 保存
+				glyRProductPropsRepository.saveAndFlush(props);
+			});
+		}
+		// 操作类型
+		List<String> typeList = param.getProductTypes();
+		if (typeList != null && !typeList.isEmpty()) {
+			// 删除产品类型
+			glyProductTypeProductRepository.deleteByProductId(productId);
+			// 新建产品类型
+			typeList.forEach((type) -> {
+				GlyRProductTypeProduct types = new GlyRProductTypeProduct();
+				types.setId(getProductTypesRelationId());
+				types.setProductId(productId);
+				types.setProductTypeId(Integer.valueOf(type));
+				// 保存
+				glyProductTypeProductRepository.saveAndFlush(types);
+			});
+		}
+		// 产品主图
+		List<ModifyProductJsonBean.PictureInfo> mainPictures = param.getMainPictures();
+		if (mainPictures != null && !mainPictures.isEmpty()) {
+			toOperatePicture(mainPictures, productId, 11);
+		}
+		// 产品详情图
+		List<ModifyProductJsonBean.PictureInfo> detailPictures = param.getDetailPictures();
+		if (detailPictures != null && !detailPictures.isEmpty()) {
+			toOperatePicture(detailPictures, productId, 21);
+		}
+	}
+
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	void toOperatePicture(final List<ModifyProductJsonBean.PictureInfo> pictures, final int productId, final int type) {
+		pictures.forEach((picture) -> {
+			String operateType = picture.getOperateType();
+			switch (operateType) {
+				case "add":
+					addProductPicture(productId, type, picture);
+					break;
+				case "delete":
+					deleteProductPicture(picture);
+					break;
+				case "modify":
+					deleteProductPicture(picture);
+					addProductPicture(productId, type, picture);
+					break;
+				default:
+			}
+		});
+	}
+
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	void addProductPicture(final int productId, final int type, final ModifyProductJsonBean.PictureInfo picture) {
+		// 图片保存到相应主机目录
+		String pictureName = savePicture2Disk(productId, picture.getNewPicture());
+		// 入库
+		GlyProductPicture glyPicture = new GlyProductPicture();
+		glyPicture.setProductPictureCode(getProductPictureId());
+		glyPicture.setProductId(productId);
+		glyPicture.setProductPictureFileName("product" + File.separator + productId + File.separator + pictureName);
+		glyPicture.setProductPictureType(type);
+		glyPicture.setProductPictureOrder((float) picture.getPosition());
+		glyPicture.setIsValid(1);
+		glyProductPictureRepository.saveAndFlush(glyPicture);
+	}
+
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	void deleteProductPicture(final ModifyProductJsonBean.PictureInfo picture) {
+		GlyProductPicture glyOldPicture = picture.getOldPicture();
+		// 文件系统中删除
+		File file = new File(PICTURE_BASE_PATH + glyOldPicture.getProductPictureFileName());
+		if (!file.delete()) {
+			throw new RuntimeException("删除图片失败！");
+		}
+		// 数据库删除
+		glyProductPictureRepository.delete(glyOldPicture);
+	}
+
+	private String savePicture2Disk(final int productId, final String newPicture) {
+		byte[] b = Base64.decodeBase64(newPicture.substring(23));
+		for (int i = 0; i < b.length; ++i) {
+			// 调整异常数据
+			if (b[i] < 0) {
+				b[i] += 256;
+			}
+		}
+		String pictureName = generatePictureName();
+		String imgPath = PICTURE_BASE_PATH + "product" + File.separator + productId;
+		File pictureDirectory = new File(imgPath);
+		if (!pictureDirectory.exists()) {
+			if (!pictureDirectory.mkdirs()) {
+				throw new RuntimeException("文件路径创建失败！");
+			}
+		}
+		imgPath += File.separator + pictureName;
+		try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(imgPath))) {
+			bos.write(b);
+			bos.flush();
+		} catch (IOException e) {
+			logger.error("savePicture2Disk()保存图片发生异常！异常信息：" + e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
+		return pictureName;
+	}
+
+	private String generatePictureName() {
+		return System.currentTimeMillis() + ".jpg";
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void uploadProductFile(MultipartFile file) {
@@ -335,6 +484,12 @@ public class ProductServiceImpl implements ProductService {
 			id = iterator.next().getProductPictureCode() + 1;
 		}
 		return id;
+	}
+
+	private static <T extends Number> String rounding(T number) {
+		NumberFormat nf = NumberFormat.getNumberInstance();
+		nf.setMaximumFractionDigits(2);
+		return nf.format(number);
 	}
 
 }

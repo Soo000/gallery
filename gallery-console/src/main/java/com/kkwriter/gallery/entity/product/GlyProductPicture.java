@@ -99,5 +99,19 @@ public class GlyProductPicture extends BaseEntity {
 	public void setIsValid(Integer isValid) {
 		this.isValid = isValid;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "GlyProductPicture{" +
+				"productPictureCode=" + productPictureCode +
+				", productId=" + productId +
+				", productPictureName='" + productPictureName + '\'' +
+				", productPictureFileName='" + productPictureFileName + '\'' +
+				", productPictureWidth='" + productPictureWidth + '\'' +
+				", productPictureHeight='" + productPictureHeight + '\'' +
+				", productPictureType=" + productPictureType +
+				", productPictureOrder=" + productPictureOrder +
+				", isValid=" + isValid +
+				'}';
+	}
 }

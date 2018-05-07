@@ -4,7 +4,8 @@ public enum ReturnEnum {
 	SUCCESS(0, "成功！"), 
 	UNKNOWN_ERROR(-1001, "未知错误！"),
 	DO_NOT_HAVE_DATA(1001, "执行成功！返回数据为空！"),
-	PARAM_ERROR(1002, "入参异常！");
+	PARAM_ERROR(1002, "入参异常！"),
+	UPDATE_FAILED(1003, "更新数据失败！");
 	
 	private int retCode;
 	private String retMsg;

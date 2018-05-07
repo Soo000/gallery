@@ -451,6 +451,7 @@ function modifyProductModalSubmit() {
     }
 
     var params = {
+        "productId": $("#productId").val(),
         "productName": productName,
         "productIntro":productIntro,
         "productDetail":productDetail,

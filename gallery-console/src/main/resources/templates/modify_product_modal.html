@@ -7,6 +7,10 @@
             </div>
             <div class="modal-body">
                 <form id="modifyProductModalForm">
+                    <div class="form-group" style="display: none">
+                        <label for="productId">产品ID</label>
+                        <input data-th-value="${productId}" id="productId" style="display: none">
+                    </div>
                     <div class="form-group">
                         <label for="productName">商品名称</label>
                         <input type="text" class="form-control" id="productName" placeholder="商品名称" data-th-value="${product.productName}" />

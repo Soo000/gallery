@@ -2,6 +2,7 @@ package com.kkwriter.gallery.service.product;
 
 import java.util.List;
 
+import com.kkwriter.gallery.entity.json.ModifyProductJsonBean;
 import com.kkwriter.gallery.entity.product.GlyProduct;
 import com.kkwriter.gallery.entity.product.GlyProductPicture;
 import org.springframework.data.domain.Page;
@@ -63,4 +64,11 @@ public interface ProductService {
 	 * @return 指定商品的所有配图
 	 */
     List<GlyProductPicture> getAllPictures(int productId);
+
+	/**
+	 * 修改产品信息
+	 * @param param 参数
+	 */
+	void modifyProduct(ModifyProductJsonBean param);
+
 }

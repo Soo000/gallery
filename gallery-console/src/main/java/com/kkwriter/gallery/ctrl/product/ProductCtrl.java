@@ -1,5 +1,9 @@
 package com.kkwriter.gallery.ctrl.product;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.kkwriter.gallery.entity.json.ModifyProductJsonBean;
 import com.kkwriter.gallery.entity.product.GlyProduct;
 import com.kkwriter.gallery.entity.product.GlyProductPicture;
 import com.kkwriter.gallery.entity.product.GlyProductProp;
@@ -20,111 +24,116 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * @author lisha
+ */
 @RestController
 @RequestMapping("/product")
 public class ProductCtrl {
-	
-	@Resource(name = "productServiceImpl")
-	private ProductService productService;
-	
-	@PostMapping("/delete")
-	public Result<?> deleteProduct(int productId) {
-		
-		return ResultUtil.success();
-	}
 
-	@GetMapping("/pre-edit")
-	public ModelAndView preEdit() {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("edit_product");
-		return model;
-	}
+    @Resource(name = "productServiceImpl")
+    private ProductService productService;
 
-	@GetMapping("/query-product")
-	public Result<Page<GlyProduct>> queryProductByPage(@PageableDefault(sort = {"creationTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
-		return ResultUtil.success(productService.queryProductByPage(pageable));
-	}
+    @PostMapping("/delete")
+    public Result<?> deleteProduct(int productId) {
 
-	@GetMapping("/getProductById")
-	public ModelAndView queryById(int productId) {
-		// 查询商品信息
-		GlyProduct product = productService.getProductInfoById(productId);
-		// 查询所有属性
-		List<GlyProductProp> allProps = queryAllProps();
-		if (allProps == null) {
-			allProps = new ArrayList<>();
-		}
-		// 查询所有类型
-		List<GlyProductType> allTypes = queryAllTypes();
-		if (allTypes == null) {
-			allTypes = new ArrayList<>();
-		}
-		ModelAndView model = new ModelAndView("modify_product_modal");
-		model.addObject("product", product);
-		model.addObject("allTypes", allTypes);
-		model.addObject("allProps", allProps);
-		return model;
-	}
+        return ResultUtil.success();
+    }
 
-	@GetMapping(value = "/getProductPicturesByProductId")
-	public Result<List<GlyProductPicture>> getProductPicturesByProductId(int productId) {
-		// 查询商品配图
-		List<GlyProductPicture> pictures = productService.getAllPictures(productId);
-		return ResultUtil.success(pictures);
-	}
+    @GetMapping("/pre-edit")
+    public ModelAndView preEdit() {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("edit_product");
+        return model;
+    }
 
-	@PostMapping("/modify")
-	public Result<?> modifyProduct(HttpServletRequest request) {
+    @GetMapping("/query-product")
+    public Result<Page<GlyProduct>> queryProductByPage(@PageableDefault(sort = {"creationTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResultUtil.success(productService.queryProductByPage(pageable));
+    }
 
-		Enumeration<String> names = request.getParameterNames();
-		while (names.hasMoreElements()) {
-			String name = names.nextElement();
-			System.out.println(name + ": " + request.getParameter(name));
-		}
+    @GetMapping("/getProductById")
+    public ModelAndView queryById(int productId) {
+        // 查询商品信息
+        GlyProduct product = productService.getProductInfoById(productId);
+        // 查询所有属性
+        List<GlyProductProp> allProps = queryAllProps();
+        if (allProps == null) {
+            allProps = new ArrayList<>();
+        }
+        // 查询所有类型
+        List<GlyProductType> allTypes = queryAllTypes();
+        if (allTypes == null) {
+            allTypes = new ArrayList<>();
+        }
+        ModelAndView model = new ModelAndView("modify_product_modal");
+        model.addObject("product", product);
+        model.addObject("allTypes", allTypes);
+        model.addObject("allProps", allProps);
+        model.addObject("productId", productId);
+        return model;
+    }
 
-		return ResultUtil.success();
-	}
-	
-	@GetMapping("pre-add")
-	public ModelAndView preAdd() {
-		ModelAndView model = new ModelAndView("add_product");
-		// 查询所有属性
-		List<GlyProductProp> allProps = queryAllProps();
-		if (allProps == null) {
-			allProps = new ArrayList<>();
-		}
-		model.addObject("allProps", allProps);
-		// 查询所有类型
-		List<GlyProductType> allTypes = queryAllTypes();
-		if (allTypes == null) {
-			allTypes = new ArrayList<>();
-		}
-		model.addObject("allTypes", allTypes);
-		return model;
-	}
+    @GetMapping(value = "/getProductPicturesByProductId")
+    public Result<List<GlyProductPicture>> getProductPicturesByProductId(int productId) {
+        // 查询商品配图
+        List<GlyProductPicture> pictures = productService.getAllPictures(productId);
+        return ResultUtil.success(pictures);
+    }
 
-	@PostMapping("/add")
-	public Result<?> add(MultipartFile[] productPics, HttpServletRequest request) {
-		productService.addProduct(productPics, request);
-		return ResultUtil.success();
-	}
-	
-	@PostMapping("/upload")
-	public Result<?> importProduct(MultipartFile file) {
-		productService.uploadProductFile(file);
-		return ResultUtil.success();
-	}
-	
-	private List<GlyProductProp> queryAllProps() {
-		return productService.queryAllProps();
-	}
-	
-	private List<GlyProductType> queryAllTypes() {
-		return productService.queryAllTypes();
-	}
-	
+    @PostMapping("/modify")
+    public Result<?> modifyProduct(HttpServletRequest request) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<ModifyProductJsonBean>(){}.getType();
+        ModifyProductJsonBean bean = gson.fromJson(request.getParameter("params"), type);
+        productService.modifyProduct(bean);
+        return ResultUtil.success();
+    }
+
+    @GetMapping("pre-add")
+    public ModelAndView preAdd() {
+        ModelAndView model = new ModelAndView("add_product");
+        // 查询所有属性
+        List<GlyProductProp> allProps = queryAllProps();
+        if (allProps == null) {
+            allProps = new ArrayList<>();
+        }
+        model.addObject("allProps", allProps);
+        // 查询所有类型
+        List<GlyProductType> allTypes = queryAllTypes();
+        if (allTypes == null) {
+            allTypes = new ArrayList<>();
+        }
+        model.addObject("allTypes", allTypes);
+        return model;
+    }
+
+    @PostMapping("/add")
+    public Result<?> add(MultipartFile[] productPics, HttpServletRequest request) {
+        productService.addProduct(productPics, request);
+        return ResultUtil.success();
+    }
+
+    @PostMapping("/upload")
+    public Result<?> importProduct(MultipartFile file) {
+        productService.uploadProductFile(file);
+        return ResultUtil.success();
+    }
+
+    private List<GlyProductProp> queryAllProps() {
+        return productService.queryAllProps();
+    }
+
+    private List<GlyProductType> queryAllTypes() {
+        return productService.queryAllTypes();
+    }
+
 }
