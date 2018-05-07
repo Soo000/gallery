@@ -160,44 +160,6 @@
         });
     });
 
-    // 产品编辑页面，产品列表行单击事件
-    $("div.main").on("click", "#product_list_in_edit_page tbody tr", function (e) {
-        e.preventDefault();
-        var _this = $(this);
-        var productId = $.trim(_this.children().eq(0).text());
-        $.get("/product/getProductById", {"productId": productId, "_":new Date().getTime()}, function (page) {
-            if ($('#editProductModal').length > 0) {
-                $('#editProductModal').remove();
-            }
-            $("body").append(page);
-            $('#editProductModal').modal();
-            // 获取产品配图
-            $.get("/product/getProductPicturesByProductId", {"productId": productId, "_":new Date().getTime()}, function (result) {
-                var mainPictures = [], detailPictures = [];
-                // 分拣图片
-                $.each(result.data, function (i, picture) {
-                    if (picture.productPictureType === 11) {
-                        mainPictures.push(picture);
-                    } else if (picture.productPictureType === 21) {
-                        detailPictures.push(picture);
-                    }
-                });
-                // 替换主图
-                var $imgs = $("div.main-picture-area img");
-                $.each(mainPictures, function (i, picture) {
-                    $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
-                    $($imgs[i]).data("picture", picture);
-                });
-                // 替换详情图
-                $imgs = $("div.detail-picture-area img");
-                $.each(detailPictures, function (i, picture) {
-                    $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
-                    $($imgs[i]).data("picture", picture);
-                });
-            });
-        });
-    });
-
     // 修改产品页面，删除图片操作
     $("body").on("click", "div.caption a.delete-btn", function (e) {
         e.preventDefault();
@@ -381,6 +343,44 @@ function getProductByPage(page) {
         });
         buildPagePlugin("div.main ul", result.data.totalElements, result.data.size, function (page) {
             getProductByPage(page);
+        });
+        // 修改按钮绑定单击事件
+        $("div.main button.product_edit_btn").click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var _this = $(this);
+            var productId = $.trim(_this.parent().parent().find("td").eq(0).text());
+            $.get("/product/getProductById", {"productId": productId, "_":new Date().getTime()}, function (page) {
+                if ($('#editProductModal').length > 0) {
+                    $('#editProductModal').remove();
+                }
+                $("body").append(page);
+                $('#editProductModal').modal();
+                // 获取产品配图
+                $.get("/product/getProductPicturesByProductId", {"productId": productId, "_":new Date().getTime()}, function (result) {
+                    var mainPictures = [], detailPictures = [];
+                    // 分拣图片
+                    $.each(result.data, function (i, picture) {
+                        if (picture.productPictureType === 11) {
+                            mainPictures.push(picture);
+                        } else if (picture.productPictureType === 21) {
+                            detailPictures.push(picture);
+                        }
+                    });
+                    // 替换主图
+                    var $imgs = $("div.main-picture-area img");
+                    $.each(mainPictures, function (i, picture) {
+                        $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
+                        $($imgs[i]).data("picture", picture);
+                    });
+                    // 替换详情图
+                    $imgs = $("div.detail-picture-area img");
+                    $.each(detailPictures, function (i, picture) {
+                        $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
+                        $($imgs[i]).data("picture", picture);
+                    });
+                });
+            });
         });
         // 删除按钮绑定单击事件
         $("div.main button.product_delete_btn").click(function (e) {
