@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="zh-cn">
 	<head>
@@ -42,7 +42,7 @@
 				</div>
 				
 				<div class="reservation-bar">
-					目前已经有 ${requestScope.reservationCount } 人预约服务
+					目前已经有 ${reservationCount } 人预约服务
 				</div>
 			</div>
 			
@@ -59,7 +59,7 @@
 								<input type="text" id="reservationUsername" class="form-control" placeholder="您的姓名"/>
 							</div>
 							<div class="form-group">
-								<input type="tel" id="reservationPhoneNum" class="form-control" placeholder="您的手机"/>
+								<input type="tel" id="reservationPhoneNum" class="form-control" placeholder="您的手机号码"/>
 							</div>
 							<div class="form-group">
 								<select id="reservationType" class="form-control">

@@ -6,8 +6,8 @@ import com.kkwrite.gallery.pojo.reservation.GlyReservation;
 
 public interface ReservationService {
 
-	public int queryReservationCount() throws ServiceException;
+	int queryReservationCount() throws ServiceException;
 	
-	public boolean reservation(GlyOrder order, GlyReservation reservation) throws ServiceException;
+	boolean reservation(GlyOrder order, GlyReservation reservation) throws ServiceException;
 	
 }

@@ -56,11 +56,11 @@ public class ReservationCtrl extends BaseCtrl {
 	public Map<String, String> reservation(GlyReservation reservation) {
 		logger.debug("[ begin ] ReservationCtrl.reservation().");
 		
-		Map<String, String> resMap = new HashMap<String, String>();
+		Map<String, String> resMap = new HashMap<>(16);
 		
 		try {
-			int userId = 0;
-			String username = "guest";
+			int userId;
+			String username;
 			UserDetails userDetails = getUserDetails();
 			if (userDetails == null) {
 				resMap.put("retCode", "-1");

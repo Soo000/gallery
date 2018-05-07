@@ -1,43 +1,51 @@
 package com.kkwrite.gallery.ctrl.address;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.kkwrite.gallery.ctrl.BaseCtrl;
 import com.kkwrite.gallery.exception.ServiceException;
 import com.kkwrite.gallery.pojo.address.GlyAddress;
 import com.kkwrite.gallery.pojo.user.GlyUser;
 import com.kkwrite.gallery.service.address.AddressService;
 import com.kkwrite.gallery.service.user.UserService;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ *
+ * @author lisha
+ */
 @Controller
 @RequestMapping("/addressctrl")
 public class AddressCtrl extends BaseCtrl {
-	
+
 	private Logger logger = Logger.getLogger(AddressCtrl.class);
+	private static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
+	private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^1[3-9][0-9]{9}$");
+	private static final String ADDRESS_TYPE_DEFAULT = "1";
+	private static final String ADDRESS_TYPE_NONE_DEFAULT = "0";
+	private static final Set<String> ADDRESS_LEVEL_TYPES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("0", "1", "2")));
 	
-	@Autowired
+	@Resource(name = "userService")
 	private UserService userService;
-	@Autowired
+	@Resource(name = "addressService")
 	private AddressService addressService;
 	
 	/**
 	 * 登录以及登录失败
-	 * @param error
-	 * @param model
-	 * @return
 	 */
 	@RequestMapping("/pagectrl")
 	public ModelAndView pageCtrl(HttpServletRequest request) {
@@ -57,7 +65,7 @@ public class AddressCtrl extends BaseCtrl {
 			List<GlyAddress> addresses = addressService.queryAddresses(user.getUserId());
 			modelAndView.addObject("addresses", addresses);
 			
-			if (from != null && from.equals("order")) {
+			if ("order".equals(from)) {
 				modelAndView.addObject("productIds", productIds.split("-"));
 				modelAndView.addObject("from", from);
 			}
@@ -71,18 +79,12 @@ public class AddressCtrl extends BaseCtrl {
 	
 	@RequestMapping("/preadd")
 	public ModelAndView preAdd() {
-		
-		ModelAndView modelAndView = new ModelAndView("/address/addressEdit");
-		
-		return modelAndView;
+		return new ModelAndView("/address/addressEdit");
 	}
 	
 	@RequestMapping("/add")
 	public ModelAndView add() {
-		
-		ModelAndView modelAndView = new ModelAndView("/address/address");
-		
-		return modelAndView;
+		return new ModelAndView("/address/address");
 	}
 	
 	@RequestMapping("/preedit")
@@ -139,16 +141,8 @@ public class AddressCtrl extends BaseCtrl {
 		}
 		
 		// 如果isDefaultAddress值为1，则修改原默认地址为非默认
-		if (isDefaultAddress.equals("1")) {
-			try {
-				// 先查找现有的默认地址，若没有默认地址，则跳过该步骤
-				Integer id = addressService.queryDefAddrId();
-				if (id != null) {
-					addressService.cancelDefaultAddr(id);
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-				modelAndView.addObject("errorMsg", "服务异常！" + e.toString());
+		if (isDefaultAddress.equals(ADDRESS_TYPE_DEFAULT)) {
+			if (changeDefaultAddress(modelAndView)) {
 				return modelAndView;
 			}
 		}
@@ -162,7 +156,8 @@ public class AddressCtrl extends BaseCtrl {
 		address.setCityId(Long.parseLong(cityId));
 		address.setCountyId(Long.parseLong(countyId));
 		address.setAddress(addressDetail);
-		address.setIsDefault(Integer.parseInt(isDefaultAddress)); // 0-非默认 1-默认
+		// 0-非默认 1-默认
+		address.setIsDefault(Integer.parseInt(isDefaultAddress));
 		address.setIsValid(1);
 		
 		try {
@@ -176,13 +171,28 @@ public class AddressCtrl extends BaseCtrl {
 		modelAndView.setViewName("forward:/addressctrl/pagectrl");
 		return modelAndView;
 	}
-	
+
+	private boolean changeDefaultAddress(ModelAndView modelAndView) {
+		try {
+			// 先查找现有的默认地址，若没有默认地址，则跳过该步骤
+			Integer id = addressService.queryDefAddrId();
+			if (id != null) {
+				addressService.cancelDefaultAddr(id);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			modelAndView.addObject("errorMsg", "服务异常！" + e.toString());
+			return true;
+		}
+		return false;
+	}
+
 	@RequestMapping("/deladd")
 	public ModelAndView delete(String id) {
 		
 		ModelAndView modelAndView = new ModelAndView("forward:/addressctrl/pagectrl");
 		
-		if (id == null || !Pattern.compile("^\\d+$").matcher(id).matches()) {
+		if (id == null || !NUMBER_PATTERN.matcher(id).matches()) {
 			modelAndView.addObject("errorMsg", "请求参数不合法!");
 			return modelAndView;
 		}
@@ -228,7 +238,7 @@ public class AddressCtrl extends BaseCtrl {
 			return modelAndView;
 		}
 		
-		GlyUser user = null;
+		GlyUser user;
 		try {
 			String username = getUsername();
 			user = userService.queryUserByName(username);
@@ -239,16 +249,8 @@ public class AddressCtrl extends BaseCtrl {
 		}
 		
 		// 如果isDefaultAddress值为1，则修改原默认地址为非默认
-		if (isDefaultAddress.equals("1")) {
-			try {
-				// 先查找现有的默认地址，若没有默认地址，则跳过该步骤
-				Integer id = addressService.queryDefAddrId();
-				if (id != null) {
-					addressService.cancelDefaultAddr(id);
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-				modelAndView.addObject("errorMsg", "服务异常！" + e.toString());
+		if (isDefaultAddress.equals(ADDRESS_TYPE_DEFAULT)) {
+			if (changeDefaultAddress(modelAndView)) {
 				return modelAndView;
 			}
 		}
@@ -258,7 +260,8 @@ public class AddressCtrl extends BaseCtrl {
 		address.setReceiver(receiver);
 		address.setPhoneNum(phoneNum);
 		address.setAddressLabels(addressLable);
-		address.setIsDefault(Integer.parseInt(isDefaultAddress)); // 0-非默认 1-默认
+		// 0-非默认 1-默认
+		address.setIsDefault(Integer.parseInt(isDefaultAddress));
 		address.setProvinceId(Integer.parseInt(provinceId));
 		address.setCityId(Long.parseLong(cityId));
 		address.setCountyId(Long.parseLong(countyId));
@@ -281,15 +284,14 @@ public class AddressCtrl extends BaseCtrl {
 	@ResponseBody
 	public Map<String, Object> getProCitVil(String type, String provinceId, String cityId) {
 		
-		Map<String, Object> retMap = new HashMap<>();
+		Map<String, Object> retMap = new HashMap<>(16);
 		boolean isSuccess = true;
 		String retMsg = null;
 		List<Map<String, String>> list = null;
-		if (type == null || type.isEmpty() || !(type.equals("0") || type.equals("1") || type.equals("2"))) {
+		if ("".equals(type) || !ADDRESS_LEVEL_TYPES.contains(type)) {
 			isSuccess = false;
 			retMsg = "请求参数不合法！type为空或值不合法！";
 		} else {
-			Pattern pattern = Pattern.compile("^\\d+$");
 			switch (type) {
 			case "0":
 				try {
@@ -301,8 +303,8 @@ public class AddressCtrl extends BaseCtrl {
 				}
 				break;
 			case "1":
-				Matcher isNum = pattern.matcher(provinceId);
-				if (provinceId == null || provinceId.isEmpty() || !isNum.matches()) {
+				Matcher isNum = NUMBER_PATTERN.matcher(provinceId);
+				if (provinceId.isEmpty() || !isNum.matches()) {
 					isSuccess = false;
 					retMsg = "请求参数不合法！provinceId为空或值不合法！";
 					break;
@@ -316,8 +318,8 @@ public class AddressCtrl extends BaseCtrl {
 				}
 				break;
 			case "2":
-				Matcher isNum2 = pattern.matcher(cityId);
-				if (cityId == null || cityId.isEmpty() || !isNum2.matches()) {
+				Matcher isNum2 = NUMBER_PATTERN.matcher(cityId);
+				if (cityId.isEmpty() || !isNum2.matches()) {
 					isSuccess = false;
 					retMsg = "请求参数不合法！cityId为空或值不合法！";
 					break;
@@ -330,9 +332,10 @@ public class AddressCtrl extends BaseCtrl {
 					retMsg = e.toString();
 				}
 				break;
+			default:
 			}
 		}
-		
+
 		if (isSuccess) {
 			retMap.put("retCode", "0");
 			retMap.put("retMsg", "成功！");
@@ -352,30 +355,32 @@ public class AddressCtrl extends BaseCtrl {
 		if (receiver == null || receiver.isEmpty()) {
 			throw new Exception("收货人为空或不合法！");
 		}
-		
-		Pattern pattern = Pattern.compile("^1[3-9][0-9]{9}$");
-		if (phoneNum == null || !pattern.matcher(phoneNum).matches()) {
+
+		if (phoneNum == null || !PHONE_NUMBER_PATTERN.matcher(phoneNum).matches()) {
 			throw new Exception("手机号为空或不合法！");
 		}
-		
-		Pattern numPattern = Pattern.compile("^\\d+$");
-		if (provinceId == null || !numPattern.matcher(provinceId).matches()) {
+
+		if (provinceId == null || !NUMBER_PATTERN.matcher(provinceId).matches()) {
 			throw new Exception("省份为空或不合法！");
 		}
 		
-		if (cityId == null || !numPattern.matcher(cityId).matches()) {
+		if (cityId == null || !NUMBER_PATTERN.matcher(cityId).matches()) {
 			throw new Exception("城市为空或不合法！");
 		}
 		
-		if (countyId == null || !numPattern.matcher(countyId).matches()) {
+		if (countyId == null || !NUMBER_PATTERN.matcher(countyId).matches()) {
 			throw new Exception("区县为空或不合法！");
 		}
 		
 		if (addressDetail == null || addressDetail.isEmpty()) {
 			throw new Exception("详细地址为空或不合法！");
 		}
-		
-		if (isDefaultAddress == null || (!isDefaultAddress.equals("0") && !isDefaultAddress.equals("1"))) {
+
+		if (isDefaultAddress == null) {
+			throw new Exception("默认地址参数不合法！");
+		}
+
+		if (!isDefaultAddress.equals(ADDRESS_TYPE_DEFAULT) && !isDefaultAddress.equals(ADDRESS_TYPE_NONE_DEFAULT)) {
 			throw new Exception("默认地址参数不合法！");
 		}
 	}
