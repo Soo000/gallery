@@ -72,6 +72,22 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void deleteProduct(int productId) {
+		// 删除产品属性
+		glyRProductPropsRepository.deleteByProductId(productId);
+		// 删除产品类型
+		glyProductTypeProductRepository.deleteByProductId(productId);
+		// 删除产品配图
+		// 获取所有图片信息
+		final List<GlyProductPicture> pictureList = glyProductPictureRepository.findAllByProductId(productId, new Sort(Direction.DESC));
+		// 遍历删除
+		pictureList.forEach(this::deleteProductPicture);
+		// 删除产品
+		glyProductRepository.deleteById(productId);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void modifyProduct(ModifyProductJsonBean param) {
 		int productId = param.getProductId();
 		// 根据ID获取产品
@@ -173,14 +189,21 @@ public class ProductServiceImpl implements ProductService {
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	void deleteProductPicture(final ModifyProductJsonBean.PictureInfo picture) {
-		GlyProductPicture glyOldPicture = picture.getOldPicture();
-		// 文件系统中删除
-		File file = new File(PICTURE_BASE_PATH + glyOldPicture.getProductPictureFileName());
-		if (!file.delete()) {
-			throw new RuntimeException("删除图片失败！");
-		}
+		deleteProductPicture(picture.getOldPicture());
+	}
+
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	void deleteProductPicture(final GlyProductPicture picture) {
 		// 数据库删除
-		glyProductPictureRepository.delete(glyOldPicture);
+		glyProductPictureRepository.delete(picture);
+		// 文件系统中删除
+		File file = new File(PICTURE_BASE_PATH + picture.getProductPictureFileName());
+		// 判断图片是否存在
+		if (file.exists()) {
+			if (!file.delete()) {
+				logger.error("删除图片失败！图片信息：{}", picture.getProductPictureFileName());
+			}
+		}
 	}
 
 	private String savePicture2Disk(final int productId, final String newPicture) {

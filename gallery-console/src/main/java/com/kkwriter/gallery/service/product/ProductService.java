@@ -71,4 +71,9 @@ public interface ProductService {
 	 */
 	void modifyProduct(ModifyProductJsonBean param);
 
+	/**
+	 * 根据ID删除产品
+	 * @param productId 产品ID
+	 */
+    void deleteProduct(int productId);
 }

@@ -2,7 +2,6 @@ package com.kkwriter.gallery.ctrl.product;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import com.kkwriter.gallery.entity.json.ModifyProductJsonBean;
 import com.kkwriter.gallery.entity.product.GlyProduct;
 import com.kkwriter.gallery.entity.product.GlyProductPicture;
@@ -24,13 +23,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author lisha
@@ -44,7 +39,7 @@ public class ProductCtrl {
 
     @PostMapping("/delete")
     public Result<?> deleteProduct(int productId) {
-
+        productService.deleteProduct(productId);
         return ResultUtil.success();
     }
 

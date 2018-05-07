@@ -15,6 +15,7 @@ public interface GlyProductPictureRepository extends JpaRepository<GlyProductPic
     /**
      * 根据产品ID查询产品所有配图
      * @param productId 产品ID
+     * @param sort 排序
      * @return 产品的所有配图
      */
     List<GlyProductPicture> findAllByProductId(int productId, Sort sort);
