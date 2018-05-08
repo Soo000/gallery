@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,14 +59,7 @@ public class ReservationCtrl extends BaseCtrl {
 		
 		try {
 			int userId;
-			String username;
-			UserDetails userDetails = getUserDetails();
-			if (userDetails == null) {
-				resMap.put("retCode", "-1");
-				resMap.put("retMsg", "当前会话已失效，请重新登录！");
-				return resMap;
-			}
-			username = getUserDetails().getUsername();
+			String username = getUsername();
 			userId = userService.queryUserByName(username).getUserId();
 			
 			// 生效时间

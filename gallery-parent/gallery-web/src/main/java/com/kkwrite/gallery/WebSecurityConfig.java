@@ -89,6 +89,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// 登出不需要认证
 		http.authorizeRequests().mvcMatchers("/logout").access("permitAll");
 		
+		// 配置预约页面需要的角色
+		http.authorizeRequests().mvcMatchers("/reservationctrl/pagectrl").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/reservationctrl/reservation").hasRole("USER");
+		
 		// 配置购物车页面需要的角色
 		http.authorizeRequests().mvcMatchers("/cartctrl/pagectrl").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/cartctrl/addtocart").hasRole("USER");
