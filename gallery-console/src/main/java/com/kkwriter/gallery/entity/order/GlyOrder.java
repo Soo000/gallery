@@ -7,6 +7,7 @@ import org.springframework.data.domain.Persistable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -28,8 +29,9 @@ public class GlyOrder extends BaseEntity implements Persistable<String> {
     private Float realPayment;
     private Integer productNum;
     private Integer isValid;
-    @
+    @Transient
     private GlyUser glyUser;
+    @Transient
     private GlyAddress glyAddress;
 
     public GlyAddress getGlyAddress() {
