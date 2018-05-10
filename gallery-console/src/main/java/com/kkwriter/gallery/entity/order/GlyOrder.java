@@ -28,6 +28,7 @@ public class GlyOrder extends BaseEntity implements Persistable<String> {
     private Float realPayment;
     private Integer productNum;
     private Integer isValid;
+    @
     private GlyUser glyUser;
     private GlyAddress glyAddress;
 
