@@ -71,6 +71,11 @@
         openOrderPageByStatus(6)
     });
 
+    // 侧边栏首页模块管理按钮单击
+    $("#home_module_manage").click(function () {
+        openHomeModuleManagePage();
+    });
+
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
@@ -519,4 +524,59 @@ function modifyProductModalSubmit() {
             alert("修改失败！");
         }
     }, 'json');
+}
+
+function openHomeModuleManagePage() {
+    $.get("/module/openHomeModuleManagePage", function (page) {
+        $("div.main").html("").html(page);
+        // 模态框注册事件
+        $("#editModuleModal").on("hidden.bs.modal", function (e) {
+            $("#moduleId").val("-1");
+            $("#moduleName").val("");
+            $("#parentModuleId").val("");
+            $("#moduleDescription").val("");
+        });
+    });
+}
+
+function editModuleSubmit() {
+    var formData = new FormData($("#editModuleModalForm")[0]);
+    $.ajax({
+        "url": "/module/saveModule",
+        "type": "post",
+        "data": formData,
+        "dataType": "json",
+        "catch": false,
+        "contentType": false,
+        "processData": false
+    }).done(function (result) {
+        if (result.code === 0) {
+            $("#editModuleModal").modal('hide');
+            alert("提交成功！");
+            $("#home_module_manage").click();
+        } else {
+            alert(result.msg);
+        }
+    });
+}
+
+function preUpdateModule(element) {
+    var $tr = $(element).parent().parent();
+    $("#moduleId").val($.trim($tr.children().eq(0).text()));
+    $("#moduleName").val($.trim($tr.children().eq(1).text()));
+    $("#parentModuleId").val($.trim($tr.children().eq(2).text()));
+    $("#moduleDescription").val($.trim($tr.children().eq(4).text()));
+    $("#editModuleModal").modal('show');
+}
+
+function deleteModule(element) {
+    var $tr = $(element).parent().parent();
+    var id = $tr.children().eq(0).text();
+    $.post("/module/deleteModule", {"id": id}, function (result) {
+        if (result.code === 0) {
+            $tr.remove();
+        } else {
+            alert("删除失败！");
+        }
+    });
 }
