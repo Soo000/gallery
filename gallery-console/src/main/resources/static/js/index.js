@@ -615,6 +615,7 @@ function moduleItemEditSubmit() {
     }).done(function (result) {
         if (result.code === 0) {
             $("#moduleItemManageModal").modal('hide');
+            alert("提交成功！");
             var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
             $span.parent().find("a").click();
         } else {
