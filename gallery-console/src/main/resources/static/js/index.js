@@ -652,3 +652,15 @@ function modifyModuleItem(element) {
     $("#editModuleItemForm input[name='valid']").eq(valid).attr("checked", true);
     $("#moduleItemManageModal").modal('show');
 }
+
+function deleteModuleItem(element) {
+    var $tr = $(element).parent().parent();
+    var itemId = $.trim($tr.children().eq(1).text());
+    $.post("/module/deleteModuleItem/" + itemId, function (result) {
+        if (result.code === 0) {
+            $tr.remove();
+        } else {
+            alert("删除失败！");
+        }
+    });
+}

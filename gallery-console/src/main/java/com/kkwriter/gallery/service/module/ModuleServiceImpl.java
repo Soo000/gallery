@@ -82,4 +82,9 @@ public class ModuleServiceImpl implements IModuleService {
         item.setModuleItemImage(glyPicture.getProductPictureFileName());
         moduleItemRepository.saveAndFlush(item);
     }
+
+    @Override
+    public void deleteModuleItemByItemId(int id) {
+        moduleItemRepository.deleteById(id);
+    }
 }

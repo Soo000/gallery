@@ -62,6 +62,12 @@ public class ModuleController {
         return ResultUtil.success();
     }
 
+    @PostMapping(value = "/deleteModuleItem/{id}")
+    public Result deleteModuleItemByItemId(@PathVariable int id) {
+        moduleService.deleteModuleItemByItemId(id);
+        return ResultUtil.success();
+    }
+
     @GetMapping(value = "/openHomeModuleManagePage")
     public ModelAndView openHomeModuleManagePage() {
         ModelAndView model = new ModelAndView("home_module_manage");

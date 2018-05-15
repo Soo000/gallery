@@ -31,7 +31,7 @@ public interface IModuleService {
     void deleteModuleById(Integer id);
 
     /**
-     * 根据模块Id查询所有的模块项
+     * 根据模块Id查询所有的模块内商品
      * @param id 模块ID
      * @return moduleItem list
      */
@@ -45,8 +45,14 @@ public interface IModuleService {
     String findModuleNameById(int id);
 
     /**
-     * 保存一个模块项
-     * @param item 需要保存的项目
+     * 保存一个模块内商品
+     * @param item 需要保存的商品
      */
     void saveModuleItem(GlyModuleItem item);
+
+    /**
+     * 根据moduleItemID删除模块内商品
+     * @param id moduleItem ID
+     */
+    void deleteModuleItemByItemId(int id);
 }
