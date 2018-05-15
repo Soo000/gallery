@@ -47,7 +47,7 @@ public class ModuleController {
 
     @PostMapping(value = "/saveModuleItem")
     public Result saveModuleItem(Integer moduleId, Integer productId, String moduleItemName,
-                                 Integer moduleItemType, Float moduleItemOrder, Integer valid) {
+                                 Integer moduleItemType, Float moduleItemOrder, Integer valid, Integer moduleItemId) {
         GlyModuleItem item = new GlyModuleItem();
         item.setModuleId(moduleId);
         item.setProductId(productId);
@@ -55,6 +55,9 @@ public class ModuleController {
         item.setModuleItemType(moduleItemType);
         item.setModuleItemOrder(moduleItemOrder);
         item.setValid(valid);
+        if (moduleItemId != -1) {
+            item.setModuleItemId(moduleItemId);
+        }
         moduleService.saveModuleItem(item);
         return ResultUtil.success();
     }

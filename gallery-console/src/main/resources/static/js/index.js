@@ -597,7 +597,8 @@ function selectModule2Manage(element) {
         $("div.module-item-list").html("").html(moduleList);
         // 注册modal事件
         $("#moduleItemManageModal").on("hidden.bs.modal", function (e) {
-            $("#editModuleItemForm").reset();
+            $("#editModuleItemForm")[0].reset();
+            $("#moduleItemId").val("-1");
         });
     });
 }
@@ -614,8 +615,40 @@ function moduleItemEditSubmit() {
     }).done(function (result) {
         if (result.code === 0) {
             $("#moduleItemManageModal").modal('hide');
+            var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
+            $span.parent().find("a").click();
         } else {
             alert(result.msg);
         }
     });
+}
+
+function modifyModuleItem(element) {
+    var $tr = $(element).parent().parent();
+    $("#moduleItemId").val($.trim($tr.children().eq(1).text()));
+    $("#productId").val($.trim($tr.children().eq(2).text()));
+    $("#moduleItemName").val($.trim($tr.children().eq(3).text()));
+    $("#moduleItemOrder").val($.trim($tr.children().eq(5).text()));
+    var type = $.trim($tr.children().eq(4).text());
+    switch (type) {
+        case "广告":
+            type = 0;
+            break;
+        case "物品":
+            type = 2;
+            break;
+        default:
+            type = 1;
+    }
+    $("#editModuleItemForm input[name='moduleItemType']").eq(type).attr("checked", true);
+    var valid = $.trim($tr.children().eq(6).text());
+    switch (valid) {
+        case "无效":
+            valid = 0;
+            break;
+        default:
+            valid = 1;
+    }
+    $("#editModuleItemForm input[name='valid']").eq(valid).attr("checked", true);
+    $("#moduleItemManageModal").modal('show');
 }
