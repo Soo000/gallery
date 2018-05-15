@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-th-each="module : ${modules}">
+            <tr data-th-each="module : ${modules}" onclick="gotoModuleItemManage(this);">
                 <td data-th-text="${module.moduleId}"></td>
                 <td data-th-text="${module.moduleName}"></td>
                 <td data-th-text="${module.parentModuleId}"></td>

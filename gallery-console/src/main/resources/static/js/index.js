@@ -566,15 +566,20 @@ function editModuleSubmit() {
 }
 
 function preUpdateModule(element) {
+    var event = window.event || arguments.callee.caller.arguments[0];
+    event.stopPropagation();
     var $tr = $(element).parent().parent();
     $("#moduleId").val($.trim($tr.children().eq(0).text()));
     $("#moduleName").val($.trim($tr.children().eq(1).text()));
     $("#parentModuleId").val($.trim($tr.children().eq(2).text()));
     $("#moduleDescription").val($.trim($tr.children().eq(4).text()));
     $("#editModuleModal").modal('show');
+    return false;
 }
 
 function deleteModule(element) {
+    var event = window.event || arguments.callee.caller.arguments[0];
+    event.stopPropagation();
     var $tr = $(element).parent().parent();
     var id = $tr.children().eq(0).text();
     $.post("/module/deleteModule", {"id": id}, function (result) {
@@ -584,16 +589,26 @@ function deleteModule(element) {
             alert("删除失败！");
         }
     });
+    return false;
 }
 
-function openHomeModuleItemManagePage() {
+function openHomeModuleItemManagePage(callBack) {
     $.get("/module/openHomeModuleItemManagePage", function (page) {
         $("div.main").html("").html(page);
+        if (typeof callBack === 'function') {
+            callBack();
+        }
     });
 }
 
 function selectModule2Manage(element) {
-    $.get("/module/getModuleItemListPage/" + $.trim($(element).parent().children("span").text()), function (moduleList) {
+    var moduleId;
+    if (typeof element !== "number") {
+        moduleId = $.trim($(element).parent().children("span").text());
+    } else {
+        moduleId = element;
+    }
+    $.get("/module/getModuleItemListPage/" + moduleId, function (moduleList) {
         $("div.module-item-list").html("").html(moduleList);
         // 注册modal事件
         $("#moduleItemManageModal").on("hidden.bs.modal", function (e) {
@@ -663,5 +678,11 @@ function deleteModuleItem(element) {
         } else {
             alert("删除失败！");
         }
+    });
+}
+
+function gotoModuleItemManage(element) {
+    openHomeModuleItemManagePage(function () {
+        selectModule2Manage(parseInt($.trim($(element).find("td").eq(0).text()), 0));
     });
 }
