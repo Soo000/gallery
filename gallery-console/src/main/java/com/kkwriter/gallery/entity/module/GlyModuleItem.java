@@ -4,6 +4,8 @@ import com.kkwriter.gallery.entity.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -16,6 +18,7 @@ public class GlyModuleItem extends BaseEntity {
     private static final long serialVersionUID = 8388166088093318327L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "module_item_id")
     private Integer moduleItemId;
     @Column(name = "module_id")

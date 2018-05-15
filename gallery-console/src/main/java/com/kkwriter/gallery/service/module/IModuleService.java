@@ -1,6 +1,7 @@
 package com.kkwriter.gallery.service.module;
 
 import com.kkwriter.gallery.entity.module.GlyModule;
+import com.kkwriter.gallery.entity.module.GlyModuleItem;
 
 import java.util.List;
 
@@ -28,4 +29,24 @@ public interface IModuleService {
      * @param id 模块ID
      */
     void deleteModuleById(Integer id);
+
+    /**
+     * 根据模块Id查询所有的模块项
+     * @param id 模块ID
+     * @return moduleItem list
+     */
+    List<GlyModuleItem> findAllModuleItemByModuleId(int id);
+
+    /**
+     * 根据模块ID获取模块名
+     * @param id 模块ID
+     * @return 模块名
+     */
+    String findModuleNameById(int id);
+
+    /**
+     * 保存一个模块项
+     * @param item 需要保存的项目
+     */
+    void saveModuleItem(GlyModuleItem item);
 }

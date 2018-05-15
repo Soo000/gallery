@@ -591,3 +591,31 @@ function openHomeModuleItemManagePage() {
         $("div.main").html("").html(page);
     });
 }
+
+function selectModule2Manage(element) {
+    $.get("/module/getModuleItemListPage/" + $.trim($(element).parent().children("span").text()), function (moduleList) {
+        $("div.module-item-list").html("").html(moduleList);
+        // 注册modal事件
+        $("#moduleItemManageModal").on("hidden.bs.modal", function (e) {
+            $("#editModuleItemForm").reset();
+        });
+    });
+}
+
+function moduleItemEditSubmit() {
+    $.ajax({
+        "url": "/module/saveModuleItem",
+        "type": "post",
+        "data": new FormData($("#editModuleItemForm")[0]),
+        "dataType": "json",
+        "catch": false,
+        "contentType": false,
+        "processData": false
+    }).done(function (result) {
+        if (result.code === 0) {
+            $("#moduleItemManageModal").modal('hide');
+        } else {
+            alert(result.msg);
+        }
+    });
+}
