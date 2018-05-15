@@ -53,7 +53,7 @@ public class ModuleServiceImpl implements IModuleService {
 
     @Override
     public List<GlyModuleItem> findAllModuleItemByModuleId(int id) {
-        return moduleItemRepository.findAllByModuleId(id);
+        return moduleItemRepository.findAllByModuleId(id, new Sort(Sort.Direction.ASC, "moduleItemOrder"));
     }
 
     @Override

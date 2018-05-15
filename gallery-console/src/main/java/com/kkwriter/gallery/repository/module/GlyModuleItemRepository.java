@@ -1,6 +1,7 @@
 package com.kkwriter.gallery.repository.module;
 
 import com.kkwriter.gallery.entity.module.GlyModuleItem;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,7 +15,8 @@ public interface GlyModuleItemRepository extends JpaRepository<GlyModuleItem, In
     /**
      * 根据moduleId查询所有的moduleItem
      * @param id moduleId
+     * @param sort 排序
      * @return moduleItem list
      */
-    List<GlyModuleItem> findAllByModuleId(int id);
+    List<GlyModuleItem> findAllByModuleId(int id, Sort sort);
 }
