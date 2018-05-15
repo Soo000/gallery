@@ -76,6 +76,11 @@
         openHomeModuleManagePage();
     });
 
+    // 侧边栏首页分模块管理按钮单击
+    $("#home_module_item_manage").click(function () {
+        openHomeModuleItemManagePage();
+    });
+
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
@@ -578,5 +583,11 @@ function deleteModule(element) {
         } else {
             alert("删除失败！");
         }
+    });
+}
+
+function openHomeModuleItemManagePage() {
+    $.get("/module/openHomeModuleItemManagePage", function (page) {
+        $("div.main").html("").html(page);
     });
 }
