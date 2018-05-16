@@ -65,7 +65,7 @@ public class ModuleServiceImpl implements IModuleService {
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveModuleItem(GlyModuleItem item) {
         // 查询商品配图
-        List<GlyProductPicture> pictureList = pictureRepository.findAllByProductId(item.getProductId(), new Sort(Sort.Direction.ASC, "creationTime"));
+        List<GlyProductPicture> pictureList = pictureRepository.findAllByProductId(item.getProductId(), new Sort(Sort.Direction.ASC, "productPictureType", "productPictureOrder"));
         if (pictureList == null || pictureList.isEmpty()) {
             throw new RuntimeException("该商品没有配图，请先添加商品配图！");
         }
