@@ -557,8 +557,9 @@ function editModuleSubmit() {
     }).done(function (result) {
         if (result.code === 0) {
             $("#editModuleModal").modal('hide');
-            alert("提交成功！");
-            $("#home_module_manage").click();
+            setTimeout(function () {
+                $("#home_module_manage").click();
+            }, 500);
         } else {
             alert(result.msg);
         }
@@ -630,9 +631,10 @@ function moduleItemEditSubmit() {
     }).done(function (result) {
         if (result.code === 0) {
             $("#moduleItemManageModal").modal('hide');
-            alert("提交成功！");
-            var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
-            $span.parent().find("a").click();
+            setTimeout(function () {
+                var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
+                $span.parent().find("a").click();
+            }, 500);
         } else {
             alert(result.msg);
         }
