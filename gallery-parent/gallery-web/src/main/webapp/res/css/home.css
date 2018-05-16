@@ -11,21 +11,20 @@
 }
 
 .area {
-	
+	margin-top: 10px;
 }
 
 .area .area-title {
-	position: relative;
-	width: 200px;
-	height: 50px;
-	margin: auto;
+	line-height: 35px;
+	background-color: rgb(255,255,255);
+	font-size: 18px;
+	padding-left: 10px;
+	font-family: '隶书';
 }
 
-.area .area-pic {
-	background-image: url(../img/common/area_bg.png);
-	height: 30px;
-	width: 200px;
-	margin-top: 10px;
+.area .area-single-pic {
+	height: 130px;
+	width: 100%;
 }
 
 .area .area-text {
@@ -34,6 +33,15 @@
 	left: 80px;
 	font-size: 14px;
 	color: rgb(255,0,0);
+}
+
+.area .area-footer {
+}
+
+.area .area-footer .area-footer-text {
+	line-height: 35px;
+	background-color: rgb(255,255,255);
+	text-align: center;
 }
 
 #reservationBtn {

@@ -1,13 +1,7 @@
 body {
 	font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
-	background: rgb(244,244,244);
+	background: rgb(245,245,245);
 	font-size: 12px;
-	margin-top: 50px;
-}
-
-.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6,
-	.col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
-	padding: 0;
 }
 
 a:link {text-decoration:none;}
