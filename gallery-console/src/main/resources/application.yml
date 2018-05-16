@@ -10,7 +10,7 @@ server:
 spring:
   thymeleaf:
     mode: HTML
-    cache: true
+    cache: false
   datasource:
     url: jdbc:mysql://111.231.220.72:3306/gallery?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
