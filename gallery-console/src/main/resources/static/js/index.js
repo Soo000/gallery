@@ -643,7 +643,7 @@ function moduleItemEditSubmit() {
             $("#moduleItemManageModal").modal('hide');
             setTimeout(function () {
                 var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
-                $span.parent().find("a").click();
+                $span.siblings('a').click();
             }, 500);
         } else {
             alert(result.msg);
