@@ -1,32 +1,23 @@
 package com.kkwrite.gallery.mapper.module;
 
-import com.kkwrite.gallery.pojo.module.GlyModuleItem;
-import com.kkwrite.gallery.pojo.module.GlyModuleItemExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
+
+import com.kkwrite.gallery.pojo.module.GlyModuleItemDO;
+import com.kkwrite.gallery.service.home.ModuleItemQuery;
 
 public interface GlyModuleItemMapper {
-    int countByExample(GlyModuleItemExample example);
-
-    int deleteByExample(GlyModuleItemExample example);
 
     int deleteByPrimaryKey(Integer moduleItemId);
 
-    int insert(GlyModuleItem record);
+    int insert(GlyModuleItemDO record);
 
-    int insertSelective(GlyModuleItem record);
+    int insertSelective(GlyModuleItemDO record);
 
-    List<GlyModuleItem> selectByExample(GlyModuleItemExample example);
-    
-    List<GlyModuleItem> selectSelective(GlyModuleItem param);
+    List<GlyModuleItemDO> selectSelective(ModuleItemQuery moduleItemQuery);
 
-    GlyModuleItem selectByPrimaryKey(Integer moduleItemId);
+    GlyModuleItemDO selectByPrimaryKey(Integer moduleItemId);
 
-    int updateByExampleSelective(@Param("record") GlyModuleItem record, @Param("example") GlyModuleItemExample example);
+    int updateByPrimaryKeySelective(GlyModuleItemDO record);
 
-    int updateByExample(@Param("record") GlyModuleItem record, @Param("example") GlyModuleItemExample example);
-
-    int updateByPrimaryKeySelective(GlyModuleItem record);
-
-    int updateByPrimaryKey(GlyModuleItem record);
+    int updateByPrimaryKey(GlyModuleItemDO record);
 }

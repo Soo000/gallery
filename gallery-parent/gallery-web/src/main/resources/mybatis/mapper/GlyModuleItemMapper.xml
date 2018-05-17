@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kkwrite.gallery.mapper.module.GlyModuleItemMapper" >
-  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.module.GlyModuleItem" >
+  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.module.GlyModuleItemDO" >
     <id column="module_item_id" property="moduleItemId" jdbcType="INTEGER" />
     <result column="module_id" property="moduleId" jdbcType="INTEGER" />
     <result column="product_id" property="productId" jdbcType="INTEGER" />
@@ -9,7 +9,7 @@
     <result column="module_item_type" property="moduleItemType" jdbcType="INTEGER" />
     <result column="module_item_image" property="moduleItemImage" jdbcType="VARCHAR" />
     <result column="module_item_order" property="moduleItemOrder" jdbcType="REAL" />
-    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="is_valid" property="valid" jdbcType="INTEGER" />
     <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
     <result column="creator" property="creator" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -20,102 +20,27 @@
     <result column="ext_3" property="ext3" jdbcType="VARCHAR" />
     <result column="ext_4" property="ext4" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List" >
     module_item_id, module_id, product_id, module_item_name, module_item_type, module_item_image, 
     module_item_order, is_valid, creation_time, creator, update_time, updator, ext_0, 
     ext_1, ext_2, ext_3, ext_4
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItemExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from gly_module_item
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from gly_module_item
     where module_item_id = #{moduleItemId,jdbcType=INTEGER}
   </select>
-  <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItem">
+  <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.service.home.ModuleItemQuery">
   	select 
     <include refid="Base_Column_List" />
     from gly_module_item
     <where>
-    	<if test="moduleItemId != null">
-    		module_item_id = #{moduleItemId,jdbcType=INTEGER}
-    	</if>
     	<if test="moduleId != null">
-    		and module_id = #{moduleId,jdbcType=INTEGER}
+    		module_id = #{moduleId,jdbcType=INTEGER}
     	</if>
-    	<if test="isValid != null">
-    		and is_valid = #{isValid,jdbcType=INTEGER}
+    	<if test="valid != null">
+    		and is_valid = #{valid,jdbcType=INTEGER}
     	</if>
     </where>
     order by module_item_order
@@ -124,13 +49,7 @@
     delete from gly_module_item
     where module_item_id = #{moduleItemId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItemExample" >
-    delete from gly_module_item
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItem" >
+  <insert id="insert" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItemDO" >
     insert into gly_module_item (module_item_id, module_id, product_id, 
       module_item_name, module_item_type, module_item_image, 
       module_item_order, is_valid, creation_time, 
@@ -139,12 +58,12 @@
       ext_4)
     values (#{moduleItemId,jdbcType=INTEGER}, #{moduleId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
       #{moduleItemName,jdbcType=VARCHAR}, #{moduleItemType,jdbcType=INTEGER}, #{moduleItemImage,jdbcType=VARCHAR}, 
-      #{moduleItemOrder,jdbcType=REAL}, #{isValid,jdbcType=INTEGER}, #{creationTime,jdbcType=TIMESTAMP}, 
+      #{moduleItemOrder,jdbcType=REAL}, #{valid,jdbcType=INTEGER}, #{creationTime,jdbcType=TIMESTAMP}, 
       #{creator,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updator,jdbcType=VARCHAR}, 
       #{ext0,jdbcType=VARCHAR}, #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, 
       #{ext4,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItem" >
+  <insert id="insertSelective" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItemDO" >
     insert into gly_module_item
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="moduleItemId != null" >
@@ -168,7 +87,7 @@
       <if test="moduleItemOrder != null" >
         module_item_order,
       </if>
-      <if test="isValid != null" >
+      <if test="valid != null" >
         is_valid,
       </if>
       <if test="creationTime != null" >
@@ -221,8 +140,8 @@
       <if test="moduleItemOrder != null" >
         #{moduleItemOrder,jdbcType=REAL},
       </if>
-      <if test="isValid != null" >
-        #{isValid,jdbcType=INTEGER},
+      <if test="valid != null" >
+        #{valid,jdbcType=INTEGER},
       </if>
       <if test="creationTime != null" >
         #{creationTime,jdbcType=TIMESTAMP},
@@ -253,95 +172,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItemExample" resultType="java.lang.Integer" >
-    select count(*) from gly_module_item
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update gly_module_item
-    <set >
-      <if test="record.moduleItemId != null" >
-        module_item_id = #{record.moduleItemId,jdbcType=INTEGER},
-      </if>
-      <if test="record.moduleId != null" >
-        module_id = #{record.moduleId,jdbcType=INTEGER},
-      </if>
-      <if test="record.productId != null" >
-        product_id = #{record.productId,jdbcType=INTEGER},
-      </if>
-      <if test="record.moduleItemName != null" >
-        module_item_name = #{record.moduleItemName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.moduleItemType != null" >
-        module_item_type = #{record.moduleItemType,jdbcType=INTEGER},
-      </if>
-      <if test="record.moduleItemImage != null" >
-        module_item_image = #{record.moduleItemImage,jdbcType=VARCHAR},
-      </if>
-      <if test="record.moduleItemOrder != null" >
-        module_item_order = #{record.moduleItemOrder,jdbcType=REAL},
-      </if>
-      <if test="record.isValid != null" >
-        is_valid = #{record.isValid,jdbcType=INTEGER},
-      </if>
-      <if test="record.creationTime != null" >
-        creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.creator != null" >
-        creator = #{record.creator,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updator != null" >
-        updator = #{record.updator,jdbcType=VARCHAR},
-      </if>
-      <if test="record.ext0 != null" >
-        ext_0 = #{record.ext0,jdbcType=VARCHAR},
-      </if>
-      <if test="record.ext1 != null" >
-        ext_1 = #{record.ext1,jdbcType=VARCHAR},
-      </if>
-      <if test="record.ext2 != null" >
-        ext_2 = #{record.ext2,jdbcType=VARCHAR},
-      </if>
-      <if test="record.ext3 != null" >
-        ext_3 = #{record.ext3,jdbcType=VARCHAR},
-      </if>
-      <if test="record.ext4 != null" >
-        ext_4 = #{record.ext4,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update gly_module_item
-    set module_item_id = #{record.moduleItemId,jdbcType=INTEGER},
-      module_id = #{record.moduleId,jdbcType=INTEGER},
-      product_id = #{record.productId,jdbcType=INTEGER},
-      module_item_name = #{record.moduleItemName,jdbcType=VARCHAR},
-      module_item_type = #{record.moduleItemType,jdbcType=INTEGER},
-      module_item_image = #{record.moduleItemImage,jdbcType=VARCHAR},
-      module_item_order = #{record.moduleItemOrder,jdbcType=REAL},
-      is_valid = #{record.isValid,jdbcType=INTEGER},
-      creation_time = #{record.creationTime,jdbcType=TIMESTAMP},
-      creator = #{record.creator,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      updator = #{record.updator,jdbcType=VARCHAR},
-      ext_0 = #{record.ext0,jdbcType=VARCHAR},
-      ext_1 = #{record.ext1,jdbcType=VARCHAR},
-      ext_2 = #{record.ext2,jdbcType=VARCHAR},
-      ext_3 = #{record.ext3,jdbcType=VARCHAR},
-      ext_4 = #{record.ext4,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItem" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItemDO" >
     update gly_module_item
     <set >
       <if test="moduleId != null" >
@@ -362,8 +193,8 @@
       <if test="moduleItemOrder != null" >
         module_item_order = #{moduleItemOrder,jdbcType=REAL},
       </if>
-      <if test="isValid != null" >
-        is_valid = #{isValid,jdbcType=INTEGER},
+      <if test="valid != null" >
+        is_valid = #{valid,jdbcType=INTEGER},
       </if>
       <if test="creationTime != null" >
         creation_time = #{creationTime,jdbcType=TIMESTAMP},
@@ -395,7 +226,7 @@
     </set>
     where module_item_id = #{moduleItemId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItem" >
+  <update id="updateByPrimaryKey" parameterType="com.kkwrite.gallery.pojo.module.GlyModuleItemDO" >
     update gly_module_item
     set module_id = #{moduleId,jdbcType=INTEGER},
       product_id = #{productId,jdbcType=INTEGER},
@@ -403,7 +234,7 @@
       module_item_type = #{moduleItemType,jdbcType=INTEGER},
       module_item_image = #{moduleItemImage,jdbcType=VARCHAR},
       module_item_order = #{moduleItemOrder,jdbcType=REAL},
-      is_valid = #{isValid,jdbcType=INTEGER},
+      is_valid = #{valid,jdbcType=INTEGER},
       creation_time = #{creationTime,jdbcType=TIMESTAMP},
       creator = #{creator,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},

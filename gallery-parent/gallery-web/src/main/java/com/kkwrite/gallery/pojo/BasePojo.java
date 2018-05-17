@@ -12,6 +12,14 @@ public class BasePojo {
 	public static final int IS_VALID_Y = 1;
 	
 	/**
+	 * GlyModule 字段常量
+	 */
+	public static enum Module {
+		module_template_carousel,
+		module_template_single_pic
+	}
+	
+	/**
 	 * 产品类型字典类
 	 */
 	public static final class ProductType {

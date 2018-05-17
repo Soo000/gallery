@@ -2,7 +2,14 @@ package com.kkwrite.gallery.pojo.module;
 
 import java.util.Date;
 
-public class GlyModuleItem extends ModuleItem {
+import com.kkwrite.gallery.pojo.BasePojo;
+
+/**
+ *  GlyModuleItemDO 类
+ * @author Ke.Wang
+ * @date 2018年5月17日 上午11:31:48
+ */
+public class GlyModuleItemDO extends BasePojo {
     private Integer moduleItemId;
 
     private Integer moduleId;
@@ -17,7 +24,7 @@ public class GlyModuleItem extends ModuleItem {
 
     private Float moduleItemOrder;
 
-    private Integer isValid;
+    private Integer valid;
 
     private Date creationTime;
 
@@ -93,12 +100,12 @@ public class GlyModuleItem extends ModuleItem {
         this.moduleItemOrder = moduleItemOrder;
     }
 
-    public Integer getIsValid() {
-        return isValid;
+    public Integer getValid() {
+        return valid;
     }
 
-    public void setIsValid(Integer isValid) {
-        this.isValid = isValid;
+    public void setValid(Integer valid) {
+        this.valid = valid;
     }
 
     public Date getCreationTime() {
@@ -172,4 +179,14 @@ public class GlyModuleItem extends ModuleItem {
     public void setExt4(String ext4) {
         this.ext4 = ext4 == null ? null : ext4.trim();
     }
+
+	@Override
+	public String toString() {
+		return "GlyModuleItemDO [moduleItemId=" + moduleItemId + ", moduleId=" + moduleId + ", productId=" + productId
+				+ ", moduleItemName=" + moduleItemName + ", moduleItemType=" + moduleItemType + ", moduleItemImage="
+				+ moduleItemImage + ", moduleItemOrder=" + moduleItemOrder + ", valid=" + valid + ", creationTime="
+				+ creationTime + ", creator=" + creator + ", updateTime=" + updateTime + ", updator=" + updator
+				+ ", ext0=" + ext0 + ", ext1=" + ext1 + ", ext2=" + ext2 + ", ext3=" + ext3 + ", ext4=" + ext4 + "]";
+	}
+    
 }

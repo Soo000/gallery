@@ -1,5 +1,6 @@
 package com.kkwrite.gallery.ctrl.home;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,13 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kkwrite.gallery.common.JsonUtil;
-import com.kkwrite.gallery.common.ModuleDict;
 import com.kkwrite.gallery.common.https.HttpsUtil;
 import com.kkwrite.gallery.ctrl.BaseCtrl;
-import com.kkwrite.gallery.exception.ServiceException;
-import com.kkwrite.gallery.pojo.module.GlyModuleItem;
+import com.kkwrite.gallery.pojo.BasePojo;
 import com.kkwrite.gallery.pojo.user.GlyUser;
 import com.kkwrite.gallery.service.home.HomeService;
+import com.kkwrite.gallery.service.home.ModuleBO;
+import com.kkwrite.gallery.service.home.ModuleItemBO;
+import com.kkwrite.gallery.service.home.ModuleItemQuery;
+import com.kkwrite.gallery.service.home.ModuleQuery;
 import com.kkwrite.gallery.service.user.UserService;
 
 @Controller
@@ -85,77 +88,73 @@ public class HomeCtrl extends BaseCtrl {
 	@RequestMapping("/pagectrl")
 	public ModelAndView pageCtrl() {
 		logger.debug("[ begin ] HomeCtrl.pageCtrl().");
-		
 		ModelAndView modelAndView = new ModelAndView("/home/home");
 		
-		/*// WeiXin appId
-		String appId = WeiXinTokenUtil.getAppId();
-		modelAndView.addObject("appId", appId);
-		logger.info("[ run ] HomeCtrl.pageCtrl()，appId = " + appId);
-		
-		String nonceStr = "1";
-		String timestamp = "1";
-		String url = "http://artlyt.com.cn"  
-			    + request.getContextPath() // 项目名称  
-			    + request.getServletPath() // 请求页面或其他地址  
-				+ "?" + (request.getQueryString()); // 参数
-			System.out.println("获取到 url = " + url);
-		String signature = WeiXinTokenUtil.signature(nonceStr, timestamp, url);
-		modelAndView.addObject("signature", signature);
-		logger.info("[ run ] HomeCtrl.pageCtrl()，signature = " + signature);*/
-		
-		// 查询首页轮播图模块
-		try {
-			List<GlyModuleItem> carouselItems = qryCarousel(ModuleDict.ModuleIds.MODULE_HOME_CAROUSEL);
-			modelAndView.addObject("carouselItems", carouselItems);
-		} catch (ServiceException e) {
-			logger.error("[ run ] HomeCtrl.pageCtrl(), 查询首页轮播图出错");
-			e.printStackTrace();
+		// 查询首页模块
+		List<ModuleBO> modules = qryHomeModule(0); // TODO 参数写死了;
+		if (modules == null || modules.isEmpty()) {
+			modelAndView.setViewName("/error"); // TODO 跳转到错误页面；
 		}
 		
-		// 查询上新区模块
-		try {
-			GlyModuleItem newAreaModuleItem = qryArea(ModuleDict.ModuleIds.MODULE_HOME_NEWAREA);
-			modelAndView.addObject("newAreaModuleItem", newAreaModuleItem);
-		} catch (ServiceException e) {
-			logger.error("[ run ] HomeCtrl.pageCtrl(), 查询上新区模块出错");
-			e.printStackTrace();
-		}
-		
-		// 查询折扣区模块
-		try {
-			GlyModuleItem discountModuleItem = qryArea(ModuleDict.ModuleIds.MODULE_HOME_DISCOUNT_AREA);
-			modelAndView.addObject("discountModuleItem", discountModuleItem);
-		} catch (ServiceException e) {
-			logger.error("[ run ] HomeCtrl.pageCtrl(), 查询折扣区模块出错");
-			e.printStackTrace();
-		}
-		
-		// 查询生活好物模块
-		try {
-			GlyModuleItem goodsModuleItem = qryArea(ModuleDict.ModuleIds.MODULE_HOME_GOODS_AREA);
-			modelAndView.addObject("goodsModuleItem", goodsModuleItem);
-		} catch (ServiceException e) {
-			logger.error("[ run ] HomeCtrl.pageCtrl(), 查询生活好物模块出错");
-			e.printStackTrace();
-		}
+		// 查询首页每个模块的模块项
+		List<HomeModuleVO> homeModuleVOs = qryModuleItem(modules);
+		modelAndView.addObject("homeModuleVOs", homeModuleVOs);
 		
 		logger.debug("[ end ] HomeCtrl.pageCtrl().");
 		return modelAndView;
 	}
 	
 	/**
-	 * 查询首页轮播图
-	 * @param moduleId
+	 * 查询首页模块
+	 * @param pModuleId
 	 * @return
 	 */
-	private List<GlyModuleItem> qryCarousel(int moduleId) throws ServiceException  {
-		List<GlyModuleItem> carouselItems = homeService.queryModuleItems(moduleId);
-		return carouselItems;
+	private List<ModuleBO> qryHomeModule(int pModuleId) {
+		ModuleQuery moduleQuery = new ModuleQuery();
+		moduleQuery.setPModuleId(pModuleId);
+		moduleQuery.setValid(BasePojo.IS_VALID_Y);
+		return homeService.queryModuleByPModuleId(moduleQuery); 
 	}
 	
-	private GlyModuleItem qryArea(int moduleId) throws ServiceException {
-		return homeService.queryModuleItem(moduleId);
+	/**
+	 * 查询每一个模块下的模块项
+	 * @param modules
+	 * @return
+	 */
+	private List<HomeModuleVO> qryModuleItem(List<ModuleBO> moduleBOs) {
+		List<HomeModuleVO> homeModuleVOs = new ArrayList<HomeModuleVO>();
+		for (ModuleBO moduleBO: moduleBOs) {
+			HomeModuleVO homeModuleVO = new HomeModuleVO();
+			homeModuleVO.setModuleId(moduleBO.getModuleId());
+			homeModuleVO.setModuleName(moduleBO.getModuleName());
+			homeModuleVO.setModuleTitle(moduleBO.getModuleTitle());
+			homeModuleVO.setModuleTemplate(moduleBO.getModuleTemplate());
+			homeModuleVO.setModuleOrder(moduleBO.getModuleOrder());
+			
+			// 查询模块下的模块项
+			ModuleItemQuery moduleItemQuery = new ModuleItemQuery();
+			moduleItemQuery.setModuleId(moduleBO.getModuleId());
+			moduleItemQuery.setValid(BasePojo.IS_VALID_Y);
+			List<ModuleItemBO> moduleItemBOs = homeService.queryModuleItems(moduleItemQuery);
+			if (moduleItemBOs == null || moduleItemBOs.isEmpty()) {
+				return null;
+			}
+			
+			List<HomeModuleItemVO> homeModuleItemVOs = new ArrayList<HomeModuleItemVO>();
+			for (ModuleItemBO moduleItemBO: moduleItemBOs) {
+				HomeModuleItemVO homeModuleItemVO = new HomeModuleItemVO();
+				homeModuleItemVO.setModuleItemId(moduleItemBO.getModuleId());
+				homeModuleItemVO.setModuleItemName(moduleItemBO.getModuleItemName());
+				homeModuleItemVO.setModuleItemImage(moduleItemBO.getModuleItemImage());
+				homeModuleItemVO.setModuleItemOrder(moduleItemBO.getModuleItemOrder());
+				homeModuleItemVO.setModuleItemType(moduleItemBO.getModuleItemType());
+				homeModuleItemVOs.add(homeModuleItemVO);
+			}
+			homeModuleVO.setHomeModuleItemVOs(homeModuleItemVOs);
+			
+			homeModuleVOs.add(homeModuleVO);
+		}
+		return homeModuleVOs;
 	}
 
 }
