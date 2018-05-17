@@ -7,7 +7,10 @@
                 <th scope="col">模块名</th>
                 <th scope="col">父模块ID</th>
                 <th scope="col">父模块名</th>
+                <th scope="col">模块标题</th>
+                <th scope="col">模板编号</th>
                 <th scope="col">模块描述</th>
+                <th scope="col">模块排序</th>
                 <th scope="col">是否有效</th>
                 <th scope="col">创建时间</th>
                 <th scope="col">更新时间</th>
@@ -20,7 +23,10 @@
                 <td data-th-text="${module.moduleName}"></td>
                 <td data-th-text="${module.parentModuleId}"></td>
                 <td data-th-text="${module.parentModuleName}"></td>
+                <td data-th-text="${module.moduleTitle}"></td>
+                <td data-th-text="${module.moduleTemplate}"></td>
                 <td data-th-text="${module.moduleDescription}"></td>
+                <td data-th-text="${module.moduleOrder}"></td>
                 <!-- 0-无效，1-有效 -->
                 <td data-th-text="${module.valid} == 0 ? '无效' : '有效'"></td>
                 <td data-th-text="${module.creationTime}"></td>
@@ -50,17 +56,43 @@
             </div>
             <div class="modal-body">
                 <form id="editModuleModalForm" name="editModuleModalForm">
-                    <input id="moduleId" name="moduleId" type="text" style="display: none;" value="-1">
+                    <div class="form-group" style="display: none">
+                        <label class="sr-only" for="moduleId">模块ID</label>
+                        <input id="moduleId" name="moduleId" type="text" style="display: none;" value="-1" required readonly>
+                    </div>
                     <div class="form-group row">
                         <label for="moduleName" class="col-3 col-form-label">模块名</label>
                         <div class="col-9">
-                            <input type="text" class="form-control" id="moduleName" name="moduleName" placeholder="模块名">
+                            <input type="text" class="form-control" id="moduleName" name="moduleName" placeholder="模块名" required>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="parentModuleId" class="col-3 col-form-label">父模块ID</label>
                         <div class="col-9">
-                            <input type="number" class="form-control" id="parentModuleId" name="parentModuleId" placeholder="父模块ID">
+                            <input type="number" class="form-control" id="parentModuleId" name="parentModuleId" placeholder="父模块ID" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="moduleTitle" class="col-3 col-form-label">模块标题</label>
+                        <div class="col-9">
+                            <input type="text" class="form-control" id="moduleTitle" name="moduleTitle" placeholder="模块标题">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="moduleTemplate" class="col-3 col-form-label">模板</label>
+                        <div class="col-9">
+                            <select class="form-control" id="moduleTemplate" name="moduleTemplate">
+                                <option value="0">轮播图</option>
+                                <option value="11" selected>单图</option>
+                                <option value="21">水平双图</option>
+                                <option value="22">垂直双图</option>
+                                <option value="31">水平三图</option>
+                                <option value="32">左一右二图</option>
+                                <option value="33">垂直三图</option>
+                                <option value="34">左二右一图</option>
+                                <option value="41">上二下二</option>
+                                <option value="51">上一下四</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -69,6 +101,27 @@
                             <input type="text" class="form-control" id="moduleDescription" name="moduleDescription" placeholder="模块描述">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label for="moduleOrder" class="col-3 col-form-label">模块排序</label>
+                        <div class="col-9">
+                            <input type="number" class="form-control" id="moduleOrder" name="moduleOrder" placeholder="模块排序" required step="0.1">
+                        </div>
+                    </div>
+                    <fieldset class="form-group">
+                        <div class="row">
+                            <label class="col-3 col-form-label">是否有效</label>
+                            <div class="col-9">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="valid" id="valid0" value="0">
+                                    <label class="form-check-label" for="valid0">无效</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="valid" id="valid1" value="1" checked>
+                                    <label class="form-check-label" for="valid1">有效</label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
             <div class="modal-footer">

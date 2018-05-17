@@ -536,10 +536,8 @@ function openHomeModuleManagePage() {
         $("div.main").html("").html(page);
         // 模态框注册事件
         $("#editModuleModal").on("hidden.bs.modal", function (e) {
+            $("#editModuleModalForm")[0].reset();
             $("#moduleId").val("-1");
-            $("#moduleName").val("");
-            $("#parentModuleId").val("");
-            $("#moduleDescription").val("");
         });
     });
 }
@@ -573,7 +571,19 @@ function preUpdateModule(element) {
     $("#moduleId").val($.trim($tr.children().eq(0).text()));
     $("#moduleName").val($.trim($tr.children().eq(1).text()));
     $("#parentModuleId").val($.trim($tr.children().eq(2).text()));
-    $("#moduleDescription").val($.trim($tr.children().eq(4).text()));
+    $("#moduleDescription").val($.trim($tr.children().eq(6).text()));
+    $("#moduleTitle").val($.trim($tr.children().eq(4).text()));
+    $("#moduleTemplate").val($.trim($tr.children().eq(5).text()));
+    $("#moduleOrder").val($.trim($tr.children().eq(7).text()));
+    var valid = $.trim($tr.children().eq(8).text());
+    switch (valid) {
+        case "无效":
+            valid = 0;
+            break;
+        default:
+            valid = 1;
+    }
+    $("#valid" + valid).attr("checked", true);
     $("#editModuleModal").modal('show');
     return false;
 }

@@ -30,7 +30,7 @@ public class ModuleServiceImpl implements IModuleService {
 
     @Override
     public List<GlyModule> findAllModule() {
-        return moduleRepository.findAll(new Sort(Sort.Direction.ASC, "creationTime"));
+        return moduleRepository.findAll(new Sort(Sort.Direction.ASC, "moduleOrder"));
     }
 
     @Override
@@ -42,7 +42,6 @@ public class ModuleServiceImpl implements IModuleService {
             name = moduleRepository.findById(module.getParentModuleId()).orElseThrow(null).getModuleName();
         }
         module.setParentModuleName(name);
-        module.setValid(1);
         moduleRepository.saveAndFlush(module);
     }
 
