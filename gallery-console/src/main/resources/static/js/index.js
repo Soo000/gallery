@@ -171,7 +171,7 @@
     });
 
     // 修改产品页面，删除图片操作
-    $("body").on("click", "div.caption a.delete-btn", function (e) {
+    $("body").on("click", "div.card a.delete-btn", function (e) {
         e.preventDefault();
         // 获取到img元素
         var $img = $(this).parent().parent().parent().find("img");
@@ -185,7 +185,7 @@
     });
 
     // 修改产品页面，添加图片操作
-    $("body").on("click", "div.caption a.add-btn", function (e) {
+    $("body").on("click", "div.card a.add-btn", function (e) {
         e.preventDefault();
         // 获取到img元素
         var $img = $(this).parent().parent().parent().find("img");
