@@ -27,8 +27,14 @@ public class GlyModule extends BaseEntity {
     private Integer parentModuleId;
     @Column(name = "p_module_name", length = 30)
     private String parentModuleName;
+    @Column(name = "module_title", length = 30)
+    private String moduleTitle;
+    @Column(name = "module_template")
+    private Integer moduleTemplate;
     @Column(name = "module_desc", length = 10)
     private String moduleDescription;
+    @Column(name = "module_order")
+    private float moduleOrder;
     @Column(name = "is_valid")
     private Integer valid;
 
@@ -80,6 +86,30 @@ public class GlyModule extends BaseEntity {
         this.valid = valid;
     }
 
+    public String getModuleTitle() {
+        return moduleTitle;
+    }
+
+    public void setModuleTitle(String moduleTitle) {
+        this.moduleTitle = moduleTitle;
+    }
+
+    public Integer getModuleTemplate() {
+        return moduleTemplate;
+    }
+
+    public void setModuleTemplate(Integer moduleTemplate) {
+        this.moduleTemplate = moduleTemplate;
+    }
+
+    public float getModuleOrder() {
+        return moduleOrder;
+    }
+
+    public void setModuleOrder(float moduleOrder) {
+        this.moduleOrder = moduleOrder;
+    }
+
     @Override
     public String toString() {
         return "GlyModule{" +
@@ -87,7 +117,10 @@ public class GlyModule extends BaseEntity {
                 ", moduleName='" + moduleName + '\'' +
                 ", parentModuleId=" + parentModuleId +
                 ", parentModuleName='" + parentModuleName + '\'' +
+                ", moduleTitle='" + moduleTitle + '\'' +
+                ", moduleTemplate=" + moduleTemplate +
                 ", moduleDescription='" + moduleDescription + '\'' +
+                ", moduleOrder=" + moduleOrder +
                 ", valid=" + valid +
                 '}';
     }

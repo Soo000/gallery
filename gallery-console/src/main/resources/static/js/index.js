@@ -171,7 +171,7 @@
     });
 
     // 修改产品页面，删除图片操作
-    $("body").on("click", "div.caption a.delete-btn", function (e) {
+    $("body").on("click", "div.card a.delete-btn", function (e) {
         e.preventDefault();
         // 获取到img元素
         var $img = $(this).parent().parent().parent().find("img");
@@ -185,7 +185,7 @@
     });
 
     // 修改产品页面，添加图片操作
-    $("body").on("click", "div.caption a.add-btn", function (e) {
+    $("body").on("click", "div.card a.add-btn", function (e) {
         e.preventDefault();
         // 获取到img元素
         var $img = $(this).parent().parent().parent().find("img");
@@ -536,10 +536,8 @@ function openHomeModuleManagePage() {
         $("div.main").html("").html(page);
         // 模态框注册事件
         $("#editModuleModal").on("hidden.bs.modal", function (e) {
+            $("#editModuleModalForm")[0].reset();
             $("#moduleId").val("-1");
-            $("#moduleName").val("");
-            $("#parentModuleId").val("");
-            $("#moduleDescription").val("");
         });
     });
 }
@@ -573,7 +571,19 @@ function preUpdateModule(element) {
     $("#moduleId").val($.trim($tr.children().eq(0).text()));
     $("#moduleName").val($.trim($tr.children().eq(1).text()));
     $("#parentModuleId").val($.trim($tr.children().eq(2).text()));
-    $("#moduleDescription").val($.trim($tr.children().eq(4).text()));
+    $("#moduleDescription").val($.trim($tr.children().eq(6).text()));
+    $("#moduleTitle").val($.trim($tr.children().eq(4).text()));
+    $("#moduleTemplate").val($.trim($tr.children().eq(5).text()));
+    $("#moduleOrder").val($.trim($tr.children().eq(7).text()));
+    var valid = $.trim($tr.children().eq(8).text());
+    switch (valid) {
+        case "无效":
+            valid = 0;
+            break;
+        default:
+            valid = 1;
+    }
+    $("#valid" + valid).attr("checked", true);
     $("#editModuleModal").modal('show');
     return false;
 }
@@ -632,8 +642,7 @@ function moduleItemEditSubmit() {
         if (result.code === 0) {
             $("#moduleItemManageModal").modal('hide');
             setTimeout(function () {
-                var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
-                $span.parent().find("a").click();
+                $("#module-select-dropdown-span-" + $("#moduleId").val()).siblings('a').click();
             }, 500);
         } else {
             alert(result.msg);

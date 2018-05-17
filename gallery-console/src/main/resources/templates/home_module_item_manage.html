@@ -6,7 +6,7 @@
         <div class="dropdown-menu">
             <div data-th-each="module : ${modules}">
                 <a class="dropdown-item" href="#" onclick="selectModule2Manage(this);" data-th-text="${module.moduleName}"></a>
-                <span style="display: none;" data-th-text="${module.moduleId}"></span>
+                <span style="display: none;" data-th-text="${module.moduleId}" data-th-id="'module-select-dropdown-span-' + ${module.moduleId}"></span>
             </div>
         </div>
     </div>
