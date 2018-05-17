@@ -137,7 +137,7 @@ public class HomeCtrl extends BaseCtrl {
 			moduleItemQuery.setValid(BasePojo.IS_VALID_Y);
 			List<ModuleItemBO> moduleItemBOs = homeService.queryModuleItems(moduleItemQuery);
 			if (moduleItemBOs == null || moduleItemBOs.isEmpty()) {
-				return null;
+				continue;
 			}
 			
 			List<HomeModuleItemVO> homeModuleItemVOs = new ArrayList<HomeModuleItemVO>();

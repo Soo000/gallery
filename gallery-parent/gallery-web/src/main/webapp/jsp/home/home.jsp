@@ -99,7 +99,7 @@
                 </c:forEach>
             </c:when>
             <c:otherwise>
-	                        首页空空如也
+                                     <div style="text-align: center;">首页空空如也</div>
             </c:otherwise>
         </c:choose>
         
