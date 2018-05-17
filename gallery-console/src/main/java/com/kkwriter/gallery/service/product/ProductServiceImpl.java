@@ -8,6 +8,7 @@ import com.kkwriter.gallery.entity.product.GlyProductType;
 import com.kkwriter.gallery.entity.product.GlyRProductProps;
 import com.kkwriter.gallery.entity.product.GlyRProductTypeProduct;
 import com.kkwriter.gallery.exception.GalleyConsoleException;
+import com.kkwriter.gallery.repository.product.GlyProductEvaluateRepository;
 import com.kkwriter.gallery.repository.product.GlyProductPictureRepository;
 import com.kkwriter.gallery.repository.product.GlyProductPropRepository;
 import com.kkwriter.gallery.repository.product.GlyProductRepository;
@@ -69,6 +70,8 @@ public class ProductServiceImpl implements ProductService {
 	private GlyProductPropRepository glyProductPropRepository;
 	@Resource(name = "glyProductTypeRepository")
 	private GlyProductTypeRepository glyProductTypeRepository;
+	@Resource(name = "glyProductEvaluateRepository")
+	private GlyProductEvaluateRepository glyProductEvaluateRepository;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -82,6 +85,8 @@ public class ProductServiceImpl implements ProductService {
 		final List<GlyProductPicture> pictureList = glyProductPictureRepository.findAllByProductId(productId, new Sort(Direction.DESC, "creationTime"));
 		// 遍历删除
 		pictureList.forEach(this::deleteProductPicture);
+		// 删除产品评价
+		glyProductEvaluateRepository.deleteAllByProductId(productId);
 		// 删除产品
 		glyProductRepository.deleteById(productId);
 	}
