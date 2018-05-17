@@ -642,8 +642,7 @@ function moduleItemEditSubmit() {
         if (result.code === 0) {
             $("#moduleItemManageModal").modal('hide');
             setTimeout(function () {
-                var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
-                $span.siblings('a').click();
+                $("#module-select-dropdown-span-" + $("#moduleId").val()).siblings('a').click();
             }, 500);
         } else {
             alert(result.msg);
