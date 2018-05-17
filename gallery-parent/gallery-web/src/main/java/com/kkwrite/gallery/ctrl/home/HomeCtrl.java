@@ -148,6 +148,7 @@ public class HomeCtrl extends BaseCtrl {
 				homeModuleItemVO.setModuleItemImage(moduleItemBO.getModuleItemImage());
 				homeModuleItemVO.setModuleItemOrder(moduleItemBO.getModuleItemOrder());
 				homeModuleItemVO.setModuleItemType(moduleItemBO.getModuleItemType());
+				homeModuleItemVO.setProductId(moduleItemBO.getProductId());
 				homeModuleItemVOs.add(homeModuleItemVO);
 			}
 			homeModuleVO.setHomeModuleItemVOs(homeModuleItemVOs);
