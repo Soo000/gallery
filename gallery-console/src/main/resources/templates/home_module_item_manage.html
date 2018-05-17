@@ -1,16 +1,14 @@
-<h1 class="page-header">首页模块内容管理</h1>
 <div class="row module-select-dropdown-div">
-    <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="moduleSelectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <div class="btn-group">
+        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             模块选择
-            <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="moduleSelectDropdown">
-            <li data-th-each="module : ${modules}">
-                <a href="#" onclick="selectModule2Manage(this);" data-th-text="${module.moduleName}"></a>
+        <div class="dropdown-menu">
+            <div data-th-each="module : ${modules}">
+                <a class="dropdown-item" href="#" onclick="selectModule2Manage(this);" data-th-text="${module.moduleName}"></a>
                 <span style="display: none;" data-th-text="${module.moduleId}"></span>
-            </li>
-        </ul>
+            </div>
+        </div>
     </div>
 </div>
 <div class="row module-item-list">

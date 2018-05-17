@@ -250,7 +250,7 @@ function buildOrdersTable(result, status) {
         switch (status) {
             // 1-待付款 2-已支付 3-待收货 4-已完成 5-已过期 6-已取消
             case 1:
-                operateTd += "<button type='button' class='btn btn-link edit-price-btn'>修改金额</button>";
+                operateTd += "<button type='button' class='btn btn-link edit-price-btn'>修改<br/>金额</button>";
                 break;
             case 2:
                 operateTd += "<button type='button' class='btn btn-link'>发货</button>";
@@ -276,7 +276,7 @@ function buildOrdersTable(result, status) {
     $.each(orders, function(i, v) {
         str = "";
         str += "<tr>";
-        str += "<td>" + v.orderCode + "</td>";
+        str += "<th>" + v.orderCode + "</th>";
         str += "<td>" + v.glyUser.username + "</td>";
         str += "<td>" + v.glyAddress.receiver + "</td>";
         str += "<td>" + v.glyAddress.address + "</td>";
@@ -306,11 +306,11 @@ function buildPagePlugin(selector, counts, size, onChange) {
         pageSize: size,
         visiblePages: 10,
         currentPage: 1,
-        first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
-        prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
-        next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
-        last: '<li class="last"><a href="javascript:void(0);">尾页</a></li>',
-        page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+        first: '<li class="page-item first"><a class="page-link" href="javascript:void(0);">首页</a></li>',
+        prev: '<li class="page-item prev"><a class="page-link" href="javascript:void(0);">上一页</a></li>',
+        next: '<li class="page-item next"><a class="page-link" href="javascript:void(0);">下一页</a></li>',
+        last: '<li class="page-item last"><a class="page-link" href="javascript:void(0);">尾页</a></li>',
+        page: '<li class="page-item"><a class="page-link" href="javascript:void(0);">{{page}}</a></li>',
         onPageChange: function (page, type) {
             if (type !== "init") {
                 onChange.call(this, page);
@@ -557,8 +557,9 @@ function editModuleSubmit() {
     }).done(function (result) {
         if (result.code === 0) {
             $("#editModuleModal").modal('hide');
-            alert("提交成功！");
-            $("#home_module_manage").click();
+            setTimeout(function () {
+                $("#home_module_manage").click();
+            }, 500);
         } else {
             alert(result.msg);
         }
@@ -630,9 +631,10 @@ function moduleItemEditSubmit() {
     }).done(function (result) {
         if (result.code === 0) {
             $("#moduleItemManageModal").modal('hide');
-            alert("提交成功！");
-            var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
-            $span.parent().find("a").click();
+            setTimeout(function () {
+                var $span = $("div.module-select-dropdown-div span:contains('" + $("#moduleId").val() + "')");
+                $span.parent().find("a").click();
+            }, 500);
         } else {
             alert(result.msg);
         }
@@ -683,6 +685,6 @@ function deleteModuleItem(element) {
 
 function gotoModuleItemManage(element) {
     openHomeModuleItemManagePage(function () {
-        selectModule2Manage(parseInt($.trim($(element).find("td").eq(0).text()), 0));
+        selectModule2Manage(parseInt($.trim($(element).find("th").eq(0).text()), 0));
     });
 }

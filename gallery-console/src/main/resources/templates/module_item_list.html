@@ -1,103 +1,97 @@
-<h4 data-th-text="${moduleName}"></h4>
+<h4 data-th-text="${moduleName}"></h4>&nbsp;&nbsp;
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#moduleItemManageModal">添加模块项</button>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th></th>
-            <th>ID</th>
-            <th>商品ID</th>
-            <th>模块项名</th>
-            <th>类型</th>
-            <th>排序</th>
-            <th>是否有效</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr data-th-each="item : ${moduleItems}">
-            <td width="100px">
-                <img data-th-src="@{http://www.artlyt.com.cn/res/img/{detail}(detail=${item.moduleItemImage})}" width="100px" height="100px">
-            </td>
-            <td data-th-text="${item.moduleItemId}"></td>
-            <td data-th-text="${item.productId}"></td>
-            <td data-th-text="${item.moduleItemName}"></td>
-            <td data-th-if="${item.moduleItemType == 0}">广告</td>
-            <td data-th-if="${item.moduleItemType == 1}">画</td>
-            <td data-th-if="${item.moduleItemType == 2}">物品</td>
-            <td data-th-text="${item.moduleItemOrder}"></td>
-            <!--0-无效，1-有效-->
-            <td data-th-text="${item.valid} == 0 ? '无效' : '有效'"></td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm" onclick="modifyModuleItem(this);">
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="deleteModuleItem(this);">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">ID</th>
+                <th scope="col">商品ID</th>
+                <th scope="col">模块项名</th>
+                <th scope="col">类型</th>
+                <th scope="col">排序</th>
+                <th scope="col">是否有效</th>
+                <th scope="col">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-th-each="item : ${moduleItems}">
+                <td width="100px">
+                    <img data-th-src="@{http://www.artlyt.com.cn/res/img/{detail}(detail=${item.moduleItemImage})}" width="100px" height="100px">
+                </td>
+                <td data-th-text="${item.moduleItemId}"></td>
+                <td data-th-text="${item.productId}"></td>
+                <td data-th-text="${item.moduleItemName}"></td>
+                <td data-th-if="${item.moduleItemType == 0}">广告</td>
+                <td data-th-if="${item.moduleItemType == 1}">画</td>
+                <td data-th-if="${item.moduleItemType == 2}">物品</td>
+                <td data-th-text="${item.moduleItemOrder}"></td>
+                <!--0-无效，1-有效-->
+                <td data-th-text="${item.valid} == 0 ? '无效' : '有效'"></td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="modifyModuleItem(this);">
+                        修改
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteModuleItem(this);">
+                        删除
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 <!-- Modal -->
-<div class="modal fade" id="moduleItemManageModal" tabindex="-1" role="dialog" aria-labelledby="moduleItemManageModalLabel">
+<div class="modal fade" id="moduleItemManageModal" tabindex="-1" role="dialog" aria-labelledby="moduleItemManageModalTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="moduleItemManageModalLabel">模块项目编辑</h4>
+                <h5 class="modal-title" id="moduleItemManageModalTitle">模块项目编辑</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" id="editModuleItemForm">
+                <form id="editModuleItemForm">
                     <input id="moduleId" name="moduleId" type="text" data-th-value="${moduleId}" readonly required style="display: none;">
                     <input id="moduleItemId" name="moduleItemId" type="text" value="-1" readonly required style="display: none;">
                     <div class="form-group">
-                        <label for="productId" class="col-sm-2 control-label">商品ID</label>
-                        <div class="col-sm-10">
-                            <input type="number" class="form-control" id="productId" name="productId" placeholder="商品ID">
-                        </div>
+                        <label for="productId">商品ID</label>
+                        <input type="number" class="form-control" id="productId" name="productId" placeholder="商品ID">
                     </div>
                     <div class="form-group">
-                        <label for="moduleItemName" class="col-sm-2 control-label">模块项名</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="moduleItemName" name="moduleItemName" placeholder="模块项名">
-                        </div>
+                        <label for="moduleItemName">模块项名</label>
+                        <input type="text" class="form-control" id="moduleItemName" name="moduleItemName" placeholder="模块项名">
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">类型</label>
-                        <div class="radio col-sm-10">
-                            <label>
-                                <input type="radio" name="moduleItemType" value="0"> 广告
-                            </label>
-                            <label>
-                                <input type="radio" name="moduleItemType" value="1" checked> 画
-                            </label>
-                            <label>
-                                <input type="radio" name="moduleItemType" value="2"> 物品
-                            </label>
-                        </div>
+                        <label for="moduleItemOrder">排序</label>
+                        <input type="text" class="form-control" id="moduleItemOrder" name="moduleItemOrder" placeholder="排序">
                     </div>
-                    <div class="form-group">
-                        <label for="moduleItemOrder" class="col-sm-2 control-label">排序</label>
-                        <div class="col-sm-10">
-                            <input type="number" class="form-control" id="moduleItemOrder" name="moduleItemOrder" placeholder="排序">
-                        </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="moduleItemType" id="itemTypeRadio0" value="0">
+                        <label class="form-check-label" for="itemTypeRadio0">广告</label>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">是否生效</label>
-                        <div class="radio col-sm-10">
-                            <label>
-                                <input type="radio" name="valid" value="0"> 否
-                            </label>
-                            <label>
-                                <input type="radio" name="valid" value="1" checked> 是
-                            </label>
-                        </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="moduleItemType" id="itemTypeRadio1" value="1" checked>
+                        <label class="form-check-label" for="itemTypeRadio1">画</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="moduleItemType" id="itemTypeRadio2" value="2">
+                        <label class="form-check-label" for="itemTypeRadio2">物品</label>
+                    </div>
+                    <br/>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="valid" id="valid0" value="0">
+                        <label class="form-check-label" for="valid0">无效</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="valid" id="valid1" value="1" checked>
+                        <label class="form-check-label" for="valid1">有效</label>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary" onclick="moduleItemEditSubmit();">提交</button>
             </div>
         </div>
