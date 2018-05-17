@@ -470,7 +470,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private int getProductId() {
-		int productId = 1;
+		int productId = 10001;
 		Page<GlyProduct> page = glyProductRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "productId")));
 		Iterator<GlyProduct> iterator = page.iterator();
 		if (iterator.hasNext()) {
