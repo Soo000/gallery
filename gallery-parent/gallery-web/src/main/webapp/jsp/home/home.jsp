@@ -53,7 +53,23 @@
 	                   31
                     </c:if>
                     <c:if test="${homeModuleVO.moduleTemplate == 32 }">
-                       32
+				        <div class="container area">
+				            <div class="row">
+				                <div class="col-xs-6" style="padding: 0 1px 0 0">
+				                    <img src="<%=request.getContextPath() %>/res/img/product/10015/001.jpg" class="img-responsive" />
+				                </div>
+				                <div class="col-xs-6">
+				                    <div class="row">
+				                        <div class="col-xs-12" style="padding: 0 0 0 1px">
+				                            <img src="<%=request.getContextPath() %>/res/img/product/10003/001.jpg" class="img-responsive"/>
+				                        </div>
+				                        <div class="col-xs-12" style="padding: 0 0 0 1px">
+				                            <img src="<%=request.getContextPath() %>/res/img/product/10003/002.jpg" class="img-responsive"/>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>                       
                     </c:if>
                     <c:if test="${homeModuleVO.moduleTemplate == 33 }">
                        33
