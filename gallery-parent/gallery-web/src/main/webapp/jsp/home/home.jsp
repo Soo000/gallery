@@ -36,7 +36,7 @@
                         <!-- 1图模块 -->
 				        <div class="area">
 				            <div>
-				                <img class="area-single-pic" src="<%=request.getContextPath() %>/res/img/product/10003/002.jpg"/>
+				                <img class="area-single-pic" src="<%=request.getContextPath() %>/res/img/product/00006/001.jpg"/>
 				            </div>
 				        </div>
                     </c:if>
