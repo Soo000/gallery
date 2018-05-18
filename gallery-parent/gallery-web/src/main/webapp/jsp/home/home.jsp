@@ -69,17 +69,25 @@
 				                <div class="col-xs-6" style="padding: 0 1px 0 0">
 				                    <c:if test="${homeModuleVO.homeModuleItemVOs[0] != null}">
 				                        <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[0].productId }">
-						                    <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].moduleItemImage}" class="img-responsive" />
+						                    <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].moduleItemImage}" class="img-responsive" style="height: 323px;"/>
 				                        </a>
 				                    </c:if>
 				                </div>
 				                <div class="col-xs-6">
 				                    <div class="row">
 				                        <div class="col-xs-12" style="padding: 0 0 0 1px">
-				                            <img src="<%=request.getContextPath() %>/res/img/product/10003/001.jpg" class="img-responsive"/>
+				                            <c:if test="${homeModuleVO.homeModuleItemVOs[1] != null}">
+		                                        <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[1].productId }">
+		                                            <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[1].moduleItemImage}" class="img-responsive" />
+		                                        </a>
+		                                    </c:if>
 				                        </div>
 				                        <div class="col-xs-12" style="padding: 0 0 0 1px">
-				                            <img src="<%=request.getContextPath() %>/res/img/product/10003/002.jpg" class="img-responsive"/>
+				                            <c:if test="${homeModuleVO.homeModuleItemVOs[2] != null}">
+		                                        <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[2].productId }">
+		                                            <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[2].moduleItemImage}" class="img-responsive" />
+		                                        </a>
+		                                    </c:if>
 				                        </div>
 				                    </div>
 				                </div>

@@ -39,17 +39,6 @@
 		    <version>2.2</version>
 		    <scope>provided</scope>
 		</dependency>
-		<!-- tomcat (如果不加的话，无法解析jsp，访问时会当作一个文件下载) -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<!-- jstl -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -88,6 +77,17 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
         </dependency>
+        <!-- tomcat (如果不加的话，无法解析jsp，访问时会当作一个文件下载) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
+        </dependency>        
 		<!-- spring-boot-devtools 热部署包 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

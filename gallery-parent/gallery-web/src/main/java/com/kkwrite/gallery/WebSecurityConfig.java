@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,16 +14,18 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import com.kkwrite.gallery.security.JdbcUserDetailsService;
+import com.kkwrite.gallery.service.user.UserService;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private DataSource dataSource;
+	private UserService userService;
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -35,20 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 * 自定义jdbc权限认证，使用自定义表
 	 */
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		JdbcUserDetailsManager judm = auth.jdbcAuthentication().dataSource(dataSource).getUserDetailsService();
-		judm.setEnableGroups(false); // TODO 不启用组权限
-		
-		//judm.setRolePrefix("ROLE_"); // 设置权限名称的前缀，这里设置了，数据库的该字段可以不用加 ROLE_
-		
-		// 查询用户
-		String selectUsersSql = "select username, password, is_valid " // 这3个字段名字可以自定义，单顺序不能改变，数量也不能少
-				+ "from gly_user where username = ? and is_valid = 1";
-		judm.setUsersByUsernameQuery(selectUsersSql);
-		
-		// 查询用户权限
-		String selectAuthsSql = "select username, authority from gly_authority where username = ?";
-		judm.setAuthoritiesByUsernameQuery(selectAuthsSql);
+	protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		// 设置 UserDetailsService 自定义认证
+		authenticationManagerBuilder.userDetailsService(new JdbcUserDetailsService(userService));
 	}
 	
 	/**
@@ -89,12 +79,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// 登出不需要认证
 		http.authorizeRequests().mvcMatchers("/logout").access("permitAll");
 		
+		// TODO 临时测试用
+		http.authorizeRequests().mvcMatchers("/homectrl/pagectrl").hasRole("USER");
+		
 		// 配置预约页面需要的角色
 		http.authorizeRequests().mvcMatchers("/reservationctrl/pagectrl").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/reservationctrl/reservation").hasRole("USER");
 		
 		// 配置购物车页面需要的角色
 		http.authorizeRequests().mvcMatchers("/cartctrl/pagectrl").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/cartctrl/init").access("permitAll");
 		http.authorizeRequests().mvcMatchers("/cartctrl/addtocart").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/cartctrl/removefromcart").hasRole("USER");
 		
