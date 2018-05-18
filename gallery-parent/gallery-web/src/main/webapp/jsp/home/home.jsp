@@ -36,7 +36,18 @@
                         <!-- 1图模块 -->
 				        <div class="area">
 				            <div>
-				                <img class="area-single-pic" src="<%=request.getContextPath() %>/res/img/product/00006/001.jpg"/>
+				                <!-- 如果是广告连接 -->
+				                <c:if test="${homeModuleVO.homeModuleItemVOs[0].moduleItemType == 0 }">
+				                    <a href="<%=request.getContextPath()%>/reservationctrl/pagectrl">
+						                <img class="area-single-pic" src="<%=request.getContextPath() %>/res/img/product/00006/001.jpg"/>
+				                    </a>
+				                </c:if>
+				                <!-- 如果是产品 -->
+				                <c:if test="${homeModuleVO.homeModuleItemVOs[0].moduleItemType == 1 }">
+				                    <a href="<%=request.getContextPath()%>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[0].productId}">
+                                        <img class="area-single-pic" src="<%=request.getContextPath() %>/res/img/product/00006/001.jpg"/>
+                                    </a>
+				                </c:if>
 				            </div>
 				        </div>
                     </c:if>
@@ -56,7 +67,11 @@
 				        <div class="container area">
 				            <div class="row">
 				                <div class="col-xs-6" style="padding: 0 1px 0 0">
-				                    <img src="<%=request.getContextPath() %>/res/img/product/10015/001.jpg" class="img-responsive" />
+				                    <c:if test="${homeModuleVO.homeModuleItemVOs[0] != null}">
+				                        <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[0].productId }">
+						                    <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].moduleItemImage}" class="img-responsive" />
+				                        </a>
+				                    </c:if>
 				                </div>
 				                <div class="col-xs-6">
 				                    <div class="row">
@@ -93,18 +108,18 @@
 						            <div class="col-xs-12">
 						                <div class="row">
 						                    <div class="col-xs-6" style="padding: 0 0 0 1px">
-						                        <img src="<%=request.getContextPath() %>/res/img/product/10002/001.jpg" class="img-responsive"/>
+						                        <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
 						                    </div>
 						                    <div class="col-xs-6" style="padding: 0 0 0 1px">
-						                        <img src="<%=request.getContextPath() %>/res/img/product/10002/002.jpg" class="img-responsive"/>
+						                        <img src="<%=request.getContextPath() %>/res/img/product/10002/1526610598068.jpg" class="img-responsive"/>
 						                    </div>
 						                </div>
 						                <div class="row">
 						                    <div class="col-xs-6" style="padding: 0 0 0 1px">
-						                        <img src="<%=request.getContextPath() %>/res/img/product/10002/002.jpg" class="img-responsive"/>
+						                        <img src="<%=request.getContextPath() %>/res/img/product/10002/1526610598068.jpg" class="img-responsive"/>
 						                    </div>
 						                    <div class="col-xs-6" style="padding: 0 0 0 1px">
-						                        <img src="<%=request.getContextPath() %>/res/img/product/10002/001.jpg" class="img-responsive"/>
+						                        <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
 						                    </div>
 						                </div>
 						            </div>
