@@ -77,11 +77,16 @@ public class ModuleController {
     }
 
     @PostMapping(value = "/saveModule")
-    public Result saveOrUpdateModule(String moduleName, int parentModuleId, String moduleDescription, Integer moduleId) {
+    public Result saveOrUpdateModule(Integer moduleId, String moduleName, int parentModuleId, String moduleDescription,
+                String moduleTitle, Integer moduleTemplate, Float moduleOrder, Integer valid) {
         GlyModule module = new GlyModule();
         module.setModuleName(moduleName);
         module.setParentModuleId(parentModuleId);
         module.setModuleDescription(moduleDescription);
+        module.setModuleTitle(moduleTitle);
+        module.setModuleTemplate(moduleTemplate);
+        module.setModuleOrder(moduleOrder);
+        module.setValid(valid);
         if (moduleId != -1) {
             module.setModuleId(moduleId);
         }
