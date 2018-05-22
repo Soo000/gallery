@@ -133,18 +133,20 @@ public class GlyActivityServiceImpl implements IGlyActivityService {
         // 先删除数据库记录
         glyActivityRepository.deleteById(id);
         // 后删除硬盘数据
-        String path = PICTURE_BASE_PATH + pictureFileName;
-        File file = new File(path);
-        if (file.exists()) {
-            if (!file.delete()) {
-                throw new RuntimeException("删除图片异常！");
+        if (!DEFAULT_PICTURE_FILENAME.equals(pictureFileName)) {
+            String path = PICTURE_BASE_PATH + pictureFileName;
+            File file = new File(path);
+            if (file.exists()) {
+                if (!file.delete()) {
+                    throw new RuntimeException("删除图片异常！");
+                }
             }
-        }
-        file = file.getParentFile();
-        String[] fileNames = file.list();
-        if (fileNames != null && fileNames.length == 0) {
-            if (!file.delete()) {
-                logger.error("删除目录：{} 失败！", file.getPath());
+            file = file.getParentFile();
+            String[] fileNames = file.list();
+            if (fileNames != null && fileNames.length == 0) {
+                if (!file.delete()) {
+                    logger.error("删除目录：{} 失败！", file.getPath());
+                }
             }
         }
     }
