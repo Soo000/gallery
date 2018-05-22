@@ -124,4 +124,36 @@ public class GlyActivity extends BaseEntity {
                 ", valid=" + valid +
                 '}';
     }
+
+    public void updateMe(GlyActivity that) {
+        if (that.getActivityName() != null) {
+            this.setActivityName(that.getActivityName());
+        }
+        if (that.getPictureFileName() != null) {
+            this.setPictureFileName(that.getPictureFileName());
+        }
+        if (that.getActivityUrl() != null) {
+            this.setActivityUrl(that.getActivityUrl());
+        }
+        if (that.getActivityType() != null) {
+            this.setActivityType(that.getActivityType());
+        }
+        if (that.getActivityBeginTime() != null) {
+            this.setActivityBeginTime(that.getActivityBeginTime());
+        }
+        if (that.getActivityEndTime() != null) {
+            this.setActivityEndTime(that.getActivityEndTime());
+        }
+        if (that.getActivityDescription() != null) {
+            this.setActivityDescription(that.getActivityDescription());
+        }
+        if (that.getValid() != null) {
+            this.setValid(that.getValid());
+        }
+        if (that.getCreationTime() != null) {
+            this.setCreationTime(that.getCreationTime());
+        }
+        this.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+    }
+
 }

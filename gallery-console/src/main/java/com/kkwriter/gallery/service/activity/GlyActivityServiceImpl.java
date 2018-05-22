@@ -43,8 +43,12 @@ public class GlyActivityServiceImpl implements IGlyActivityService {
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveActivity(GlyActivity activity, String activityTime, String picture) {
         if (activity.getActivityId() == null) {
-            // 添加广告活动时避免数据库非空检查，先给默认值
+            // 添加广告活动时，先给默认值
             activity.setPictureFileName(DEFAULT_PICTURE_FILENAME);
+        } else {
+            GlyActivity oldActivity = glyActivityRepository.findById(activity.getActivityId()).orElseThrow(null);
+            oldActivity.updateMe(activity);
+            activity = oldActivity;
         }
         if (activityTime != null) {
             setActivityTime(activity, activityTime);
