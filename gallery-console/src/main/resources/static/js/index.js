@@ -81,6 +81,12 @@
         openHomeModuleItemManagePage();
     });
 
+    // 广告活动管理导航按钮单击事件
+    $("#activity_manage_bar").click(function (e) {
+        e.preventDefault();
+        openActivityManagePage();
+    });
+
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
@@ -695,5 +701,131 @@ function deleteModuleItem(element) {
 function gotoModuleItemManage(element) {
     openHomeModuleItemManagePage(function () {
         selectModule2Manage(parseInt($.trim($(element).find("th").eq(0).text()), 0));
+    });
+}
+
+function resetEditActivityForm() {
+    $("#editActivityForm")[0].reset();
+    $("#activityId").val("-1");
+    $("#addImg").attr("src", "/img/add_picture.jpg");
+    $("#addImg").data("picture", null);
+    $('#activityTime').val(formatDatetimeLocal(new Date()) + " - " + formatDatetimeLocal(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)));
+}
+
+function openActivityManagePage() {
+    $.get("/activity/managePage", function (page) {
+        $("div.main").html("").html(page);
+        // 初始化日期选择控件
+        laydate.render({
+            elem: '#activityTime',
+            type: 'datetime',
+            range: true,
+            calendar: true,
+            value: formatDatetimeLocal(new Date()) + " - " + formatDatetimeLocal(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+        });
+        // modal hidden事件
+        $("#activityManageModal").on("hidden.bs.modal", function () {
+            resetEditActivityForm();
+        });
+    });
+}
+
+function formatDatetimeLocal(datetime) {
+    if (!datetime instanceof Date) {
+        return;
+    }
+    var year = datetime.getFullYear();
+    var month = datetime.getMonth() + 1;
+    month = month >= 10 ? month : "0" + month;
+    var day = datetime.getDate();
+    day = day >= 10 ? day : "0" + day;
+    var hour = datetime.getHours();
+    hour = hour >= 10 ? hour : "0" + hour;
+    var minute = datetime.getMinutes();
+    minute = minute >= 10 ? minute : "0" + minute;
+    var seconds = datetime.getSeconds();
+    seconds = seconds >= 10 ? seconds : "0" + seconds;
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + seconds;
+}
+
+function addActivityPicture(element) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        var $img = $("#addImg");
+        $img.attr("src", reader.result);
+        $img.data("picture", reader.result);
+    };
+    reader.readAsDataURL(element.files[0]);
+}
+
+function editActivitySubmit() {
+    var activityId = $.trim($("#activityId").val());
+    var activityName = $.trim($("#activityName").val());
+    var activityUrl = $.trim($("#activityUrl").val());
+    var activityType = $("input[name='activityType']:checked").val();
+    var activityTime = $.trim($("#activityTime").val());
+    var activityDescription = $.trim($("#activityDescription").val());
+    var valid = $("input[name='valid']:checked").val();
+    var picture = $("#addImg").data("picture");
+
+    var params = {};
+    if (activityId !== "-1") {
+        params.activityId = activityId;
+    }
+    if (activityName) {
+        params.activityName = activityName;
+    }
+    if (activityUrl) {
+        params.activityUrl = activityUrl;
+    }
+    if (activityType) {
+        params.activityType = activityType;
+    }
+    if (activityTime) {
+        params.activityTime = activityTime;
+    }
+    if (activityDescription) {
+        params.activityDescription = activityDescription;
+    }
+    if (valid) {
+        params.valid = valid;
+    }
+    if (picture) {
+        params.picture = picture;
+    }
+
+    $.post("/activity/save", params, function (result) {
+        if (result.code === 0) {
+            $("#activityManageModal").modal('hide');
+            resetEditActivityForm();
+            setTimeout(function () {
+                $("#activity_manage_bar").click();
+            }, 500);
+        } else {
+            alert(result.msg);
+        }
+    });
+}
+
+function preEditActivity(element) {
+    var $tds = $(element).parent().parent().children();
+    $("#addImg").attr("src", $($tds.eq(0)).find("img").attr("src"));
+    $("#activityId").val($($tds.eq(1)).text());
+    $("#activityName").val($($tds.eq(2)).text());
+    $("#activityUrl").val($($tds.eq(3)).text());
+    $("#activityType" + $($tds.eq(4)).attr("value")).prop("checked", true);
+    $("#activityTime").val($($tds.eq(5)).text().substr(0, 19) + " - " + $($tds.eq(6)).text().substr(0, 19));
+    $("#activityDescription").val($($tds.eq(7)).text());
+    $("#valid" + $($tds.eq(8)).attr("value")).prop("checked", true);
+    $("#activityManageModal").modal('show');
+}
+
+function deleteActivity(element) {
+    $.post("/activity/delete/", {"id": $($(element).parent().parent().children().eq(1)).text()}, function (result) {
+        if (result.code === 0) {
+            $(element).parent().parent().remove();
+        } else {
+            alert(result.msg);
+        }
     });
 }
