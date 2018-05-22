@@ -29,6 +29,7 @@ public class GlyActivityServiceImpl implements IGlyActivityService {
 
     private static final String PICTURE_BASE_PATH = File.separator + "home" + File.separator + "gallery" +
             File.separator + "apps" + File.separator + "gallery-web" + File.separator + "res" + File.separator + "img" + File.separator;
+    private static final String DEFAULT_PICTURE_FILENAME = "add_picture.jpg";
 
     @Resource(name = "glyActivityRepository")
     private GlyActivityRepository glyActivityRepository;
@@ -41,17 +42,39 @@ public class GlyActivityServiceImpl implements IGlyActivityService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveActivity(GlyActivity activity, String activityTime, String picture) {
-        // 避免数据库非空检查，先给默认值
-        activity.setPictureFileName("/img/add_picture.jpg");
+        if (activity.getActivityId() == null) {
+            // 添加广告活动时避免数据库非空检查，先给默认值
+            activity.setPictureFileName(DEFAULT_PICTURE_FILENAME);
+        }
         if (activityTime != null) {
             setActivityTime(activity, activityTime);
         }
         saveActivity(activity);
         if (picture != null) {
+            // 若为更新先获取旧图名
+            String oldFileName = null;
+            if (!DEFAULT_PICTURE_FILENAME.equals(activity.getPictureFileName())) {
+                oldFileName = PICTURE_BASE_PATH + activity.getPictureFileName();
+            }
+            // 再保存新图
             String pictureFileName = generateFileName(activity.getActivityId(), getPictureExtension(picture));
             activity.setPictureFileName(pictureFileName);
             saveActivity(activity);
             savePicture2Disk(pictureFileName, picture, activity.getActivityId());
+            // 最后删除旧图
+            if (oldFileName != null) {
+                // 捕获异常，确保此步骤不会导致事务回滚
+                try {
+                    File file = new File(oldFileName);
+                    if (file.exists()) {
+                        if (!file.delete()) {
+                            throw new Exception("更新图片时删除旧图失败！");
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("更新图片时删除旧图失败，旧图路径名：{}，异常信息：", oldFileName, e.getMessage());
+                }
+            }
         }
     }
 
