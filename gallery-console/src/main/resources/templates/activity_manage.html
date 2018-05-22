@@ -1,0 +1,120 @@
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#activityManageModal">
+    添加广告活动
+</button>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">ID</th>
+            <th scope="col">活动名</th>
+            <th scope="col">链接</th>
+            <th scope="col">类型</th>
+            <th scope="col">活动开始</th>
+            <th scope="col">活动结束</th>
+            <th scope="col">活动描述</th>
+            <th scope="col">是否生效</th>
+            <th scope="col">创建时间</th>
+            <th scope="col">更新时间</th>
+            <th scope="col">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-th-each="activity : ${activities}">
+            <th>
+                <img src="#" data-th-src="@{http://www.artlyt.com.cn/res/img/{detail}(detail=${activity.pictureFileName})}"
+                     class="img-thumbnail" width="150px">
+            </th>
+            <td data-th-text="${activity.activityId}"></td>
+            <td data-th-text="${activity.activityName}"></td>
+            <td data-th-text="${activity.activityUrl}"></td>
+            <!--1-广告 2-模块连接-->
+            <td data-th-text="${activity.activityType == 1 ? '广告' : '模块链接'}" data-th-value="${activity.activityType}"></td>
+            <td data-th-text="${activity.activityBeginTime}"></td>
+            <td data-th-text="${activity.activityEndTime}"></td>
+            <td data-th-text="${activity.activityDescription}"></td>
+            <!--0-无效 1-有效-->
+            <td data-th-text="${activity.valid} == 1 ? '有效' : '无效'" data-th-value="${activity.valid}"></td>
+            <td data-th-text="${activity.creationTime}"></td>
+            <td data-th-text="${activity.updateTime}"></td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" onclick="preEditActivity(this);">修改</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteActivity(this);">删除</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="activityManageModal" tabindex="-1" role="dialog" aria-labelledby="activityManageModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="activityManageModalTitle">添加广告活动</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editActivityForm">
+                    <div class="form-group" style="display: none;">
+                        <label for="activityId">ID</label>
+                        <input type="hidden" class="form-control" id="activityId" name="activityId" value="-1">
+                    </div>
+                    <div class="form-group">
+                        <label for="activityName">活动名</label>
+                        <input type="text" class="form-control" id="activityName" name="activityName" placeholder="活动名" required >
+                    </div>
+                    <div class="form-group">
+                        <label for="activityUrl">活动链接</label>
+                        <input type="text" class="form-control" id="activityUrl" name="activityUrl" placeholder="活动链接" required >
+                    </div>
+                    <div class="form-group">
+                        <label>类型</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="activityType" id="activityType1" value="1" checked>
+                                <label class="form-check-label" for="activityType1">广告</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="activityType" id="activityType2" value="2">
+                                <label class="form-check-label" for="activityType2">模块链接</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="activityTime">活动时间</label>
+                        <input type="text" class="form-control" id="activityTime" name="activityTime" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="activityDescription">活动描述</label>
+                        <input type="text" class="form-control" id="activityDescription" name="activityDescription" placeholder="活动描述">
+                    </div>
+                    <div class="form-group">
+                        <label>是否有效</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="valid" id="valid0" value="0">
+                                <label class="form-check-label" for="valid0">无效</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="valid" id="valid1" value="1" checked>
+                                <label class="form-check-label" for="valid1">有效</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>广告活动配图</label>
+                        <div class="card" style="width: 200px; height: 200px;">
+                            <img id="addImg" class="card-img-top" src="#" data-th-src="@{/img/add_picture.jpg}" onclick="$(this).siblings('input').click();">
+                            <input type="file" name="activityPicture" style="display: none;" onchange="addActivityPicture(this);">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="editActivitySubmit();">提交</button>
+            </div>
+        </div>
+    </div>
+</div>

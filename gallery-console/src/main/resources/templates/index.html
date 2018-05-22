@@ -55,6 +55,9 @@
                         <a id="edit_product_bar" class="dropdown-item" href="#">编辑商品</a>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a id="activity_manage_bar" class="nav-link" href="#">广告活动管理</a>
+                </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -79,6 +82,8 @@
     <script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
     <!-- page -->
     <script th:src="@{/lib/jqpaginator/jqpaginator.min.js}"></script>
+    <!--lay-date-->
+    <script th:src="@{/lib/lay-ui/lay-date/laydate.js}"></script>
     <!-- common -->
     <script th:src="@{/js/common.js}"></script>
     <!--custom js-->
