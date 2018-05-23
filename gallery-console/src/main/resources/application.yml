@@ -1,5 +1,5 @@
 server:
-  port: 1044
+  port: 1045
   error:
     whitelabel:
       enabled: false
