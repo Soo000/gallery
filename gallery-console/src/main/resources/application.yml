@@ -1,10 +1,10 @@
 server:
-  port: 1045
+  port: 1044
   error:
     whitelabel:
       enabled: false
   servlet:
-    context-path: /
+    context-path: /crm
     session:
       timeout: 1800s
 spring:
