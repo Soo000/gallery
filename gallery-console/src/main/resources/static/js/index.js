@@ -112,6 +112,7 @@
 	// 添加商品页面，保存按钮单击事件
 	$("div.main").on("click", "#add_a_product_btn", function(e) {
 		e.preventDefault();
+		var _this = this;
 		// 参数校验，一定要校验文件是否为图片
 		var files = $("#add_product_div input[name='productPics']")[0].files;
 		var allowPicTypes = ["image/jpg", "image/jpeg","image/png","image/x-png","image/bmp"];
@@ -146,7 +147,8 @@
 			"contentType": false
 		}).done(function(res) {
 			if (res.code === 0) {
-				alert("添加商品成功！");
+                $(_this).siblings('button').click();
+			    alert("添加商品成功！");
 			} else {
 				alert("添加商品失败！" + res.msg);
 			}
@@ -403,13 +405,16 @@ function getProductByPage(page) {
             e.preventDefault();
             e.stopPropagation();
             var _this = $(this);
-            $.post("/product/delete", {"productId":$.trim($(this).parent().parent().find("td").eq(0).text())}, function (result) {
-                if (result.code === 0) {
-                    _this.parent().parent().remove();
-                } else {
-                    alert("删除产品服务异常！");
-                }
-            });
+            if (confirm("删除操作数据不可恢复，是否继续？")) {
+                $.post("/product/delete", {"productId":$.trim($(this).parent().parent().find("td").eq(0).text())}, function (result) {
+                    if (result.code === 0) {
+                        _this.parent().parent().remove();
+                    } else {
+                        alert("删除产品服务异常！");
+                    }
+                });
+            } else {
+            }
         });
     });
 }
