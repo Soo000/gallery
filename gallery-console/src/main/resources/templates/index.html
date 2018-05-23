@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="renderer" content="webkit"/>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
     <title>管理台</title>
     <!-- Loading Bootstrap -->
     <link th:href="@{/lib/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
@@ -76,10 +76,8 @@
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script th:src="@{/lib/jquery/jquery-3.3.1.min.js}"></script>
-    <!-- Bootstrap 4 requires Popper.js -->
-    <script th:src="@{/lib/bootstrap/js/popper.min.js}"></script>
     <!--Bootstrap js-->
-    <script th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/lib/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <!-- page -->
     <script th:src="@{/lib/jqpaginator/jqpaginator.min.js}"></script>
     <!--lay-date-->
