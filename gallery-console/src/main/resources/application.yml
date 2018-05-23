@@ -4,9 +4,9 @@ server:
     whitelabel:
       enabled: false
   servlet:
-    context-path: /crm
+    context-path: /
     session:
-      timeout: 1800s
+      timeout: 3600s
 spring:
   thymeleaf:
     mode: HTML
