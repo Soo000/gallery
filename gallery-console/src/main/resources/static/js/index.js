@@ -109,54 +109,6 @@
         }
     });
 
-	// 添加商品页面，保存按钮单击事件
-	$("div.main").on("click", "#add_a_product_btn", function(e) {
-		e.preventDefault();
-		var _this = this;
-		// 参数校验，一定要校验文件是否为图片
-		var files = $("#add_product_div input[name='productPics']")[0].files;
-		var allowPicTypes = ["image/jpg", "image/jpeg","image/png","image/x-png","image/bmp"];
-		if (files.length === 0) {
-			alert("请选择图片！");
-			return;
-		}
-		var acceptN = 0;
-		for (var i=0; i<files.length; i++) {
-			var fileType = files[i].type;
-			var typeAccepted = false;
-			for (var j=0; j<allowPicTypes.length; j++) {
-				if (fileType === allowPicTypes[j]) {
-					typeAccepted = true;
-				}
-			}
-			if (typeAccepted) {
-				acceptN++;
-			}
-		}
-		if (acceptN !== files.length) {
-			alert("请检查图片类型是否正确！");
-			return;
-		}
-		// 提交操作
-		$.ajax({
-			"url": "/product/add",
-			"type": "post",
-			"data": new FormData($("#add_product_div form")[0]),
-			"cache": false,
-			"processData": false,
-			"contentType": false
-		}).done(function(res) {
-			if (res.code === 0) {
-                $(_this).siblings('button').click();
-			    alert("添加商品成功！");
-			} else {
-				alert("添加商品失败！" + res.msg);
-			}
-		}).fail(function() {
-			alert("添加商品失败！");
-		});
-	});
-
 	// 添加商品页面，导入按钮单击事件
     $("div.main").on("click", "#import_product_btn", function (e) {
         e.preventDefault();
@@ -850,5 +802,103 @@ function deleteActivity(element) {
         } else {
             alert(result.msg);
         }
+    });
+}
+
+function addProductSubmit() {
+    var _this = this;
+    // 参数校验，一定要校验文件是否为图片
+    if (!$("#product_name").val()) {
+        $("#product_name").focus();
+        return;
+    }
+    if (!$("#product_intro").val()) {
+        $("#product_intro").focus();
+        return;
+    }
+    if (!$("#product_detail").val()) {
+        $("#product_detail").focus();
+        return;
+    }
+    if (!$("#init_price").val()) {
+        $("#init_price").focus();
+        return;
+    }
+    if (!$("#discount").val()) {
+        $("#discount").val(10);
+    }
+    if (!$("#inventory_number").val()) {
+        $("#inventory_number").focus();
+        return;
+    }
+    if (!$("#product_order").val()) {
+        $("#product_order").val(999);
+    }
+
+    var total = 0;
+    var productAttrInputs = $("input[name='productAttrs']");
+    for (var i = 0; i < productAttrInputs.length; i++) {
+        if ($(productAttrInputs[i]).prop("checked")) {
+            total++;
+        }
+    }
+    if (total === 0) {
+        alert("请选择产品属性！");
+        return;
+    }
+    total = 0;
+    var productTypeInputs = $("input[name='productTypes']");
+    for (var i = 0; i < productTypeInputs.length; i++) {
+        if ($(productTypeInputs[i]).prop("checked")) {
+            total++;
+        }
+    }
+    if (total === 0) {
+        alert("请选择产品类型！");
+        return;
+    }
+
+    var files = $("#add_product_div input[name='productPics']")[0].files;
+    var allowPicTypes = ["image/jpg", "image/jpeg","image/png","image/x-png","image/bmp"];
+    if (files.length === 0) {
+        alert("请选择图片！");
+        return;
+    }
+    var acceptN = 0;
+    for (var i=0; i<files.length; i++) {
+        var fileType = files[i].type;
+        var typeAccepted = false;
+        for (var j=0; j<allowPicTypes.length; j++) {
+            if (fileType === allowPicTypes[j]) {
+                typeAccepted = true;
+                break;
+            }
+        }
+        if (typeAccepted) {
+            acceptN++;
+        }
+    }
+    if (acceptN !== files.length) {
+        alert("请检查图片类型是否正确！");
+        return;
+    }
+
+    // 提交操作
+    $.ajax({
+        "url": "/product/add",
+        "type": "post",
+        "data": new FormData($("#add_product_div form")[0]),
+        "cache": false,
+        "processData": false,
+        "contentType": false
+    }).done(function(res) {
+        if (res.code === 0) {
+            $(_this).siblings('button').click();
+            alert("添加商品成功！");
+        } else {
+            alert("添加商品失败！" + res.msg);
+        }
+    }).fail(function() {
+        alert("添加商品失败！");
     });
 }
