@@ -805,8 +805,8 @@ function deleteActivity(element) {
     });
 }
 
-function addProductSubmit() {
-    var _this = this;
+function addProductSubmit(element) {
+    var _this = element;
     // 参数校验，一定要校验文件是否为图片
     if (!$("#product_name").val()) {
         $("#product_name").focus();
