@@ -2,6 +2,11 @@ package com.kkwriter.gallery.result;
 
 import java.io.Serializable;
 
+/**
+ * 用于包装返回值
+ * @param <T> 返回所携带的数据类型
+ * @author lisha
+ */
 public class Result<T> implements Serializable {
 	private static final long serialVersionUID = -3552451381406005998L;
 	private int code;

@@ -7,6 +7,9 @@ import javax.persistence.Id;
 
 import com.kkwriter.gallery.entity.BaseEntity;
 
+/**
+ * @author lisha
+ */
 @Entity
 public class SysRole extends BaseEntity {
 	private static final long serialVersionUID = 733772900802072213L;

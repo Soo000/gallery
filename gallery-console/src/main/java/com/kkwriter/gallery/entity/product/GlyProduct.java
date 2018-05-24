@@ -5,6 +5,9 @@ import javax.persistence.Id;
 
 import com.kkwriter.gallery.entity.BaseEntity;
 
+/**
+ * @author lisha
+ */
 @Entity
 public class GlyProduct extends BaseEntity {
 

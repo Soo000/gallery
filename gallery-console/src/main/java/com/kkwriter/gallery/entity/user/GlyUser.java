@@ -7,6 +7,9 @@ import javax.persistence.Id;
 
 import com.kkwriter.gallery.entity.BaseEntity;
 
+/**
+ * @author lisha
+ */
 @Entity
 public class GlyUser extends BaseEntity {
     private static final long serialVersionUID = -2152461446126742748L;

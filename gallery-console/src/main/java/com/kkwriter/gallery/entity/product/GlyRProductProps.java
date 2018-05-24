@@ -5,6 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * @author lisha
+ */
 @Entity(name = "gly_r_product_props")
 public class GlyRProductProps implements Serializable {
 	private static final long serialVersionUID = 2506820335828094102L;

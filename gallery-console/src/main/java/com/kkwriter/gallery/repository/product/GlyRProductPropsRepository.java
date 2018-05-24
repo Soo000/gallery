@@ -6,6 +6,9 @@ import com.kkwriter.gallery.entity.product.GlyRProductProps;
 
 import java.util.List;
 
+/**
+ * @author lisha
+ */
 public interface GlyRProductPropsRepository extends JpaRepository<GlyRProductProps, Integer> {
 
     /**
