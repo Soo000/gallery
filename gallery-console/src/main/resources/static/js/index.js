@@ -373,29 +373,47 @@ function getProductByPage(page) {
                     $('#editProductModal').remove();
                 }
                 $("body").append(page);
-                $('#editProductModal').modal();
-                // 获取产品配图
-                $.get("/product/getProductPicturesByProductId", {"productId": productId, "_":new Date().getTime()}, function (result) {
-                    var mainPictures = [], detailPictures = [];
-                    // 分拣图片
-                    $.each(result.data, function (i, picture) {
-                        if (picture.productPictureType === 11) {
-                            mainPictures.push(picture);
-                        } else if (picture.productPictureType === 21) {
-                            detailPictures.push(picture);
+                // 取出type值和attr值做设置
+                $.get("/product/getTypeAndAttr/" + productId + "?_=" + new Date().getTime(), function (result) {
+                    if (result.code === 0) {
+                        var types = result.data.types;
+                        var props = result.data.props;
+                        if (types instanceof Array && types.length !== 0) {
+                            $.each(types, function (i, v) {
+                                $("#productTypes-" + v).prop("checked", true);
+                            });
                         }
-                    });
-                    // 替换主图
-                    var $imgs = $("div.main-picture-area img");
-                    $.each(mainPictures, function (i, picture) {
-                        $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
-                        $($imgs[i]).data("picture", picture);
-                    });
-                    // 替换详情图
-                    $imgs = $("div.detail-picture-area img");
-                    $.each(detailPictures, function (i, picture) {
-                        $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
-                        $($imgs[i]).data("picture", picture);
+                        if (props instanceof Array && props.length !== 0) {
+                            $.each(props, function (i, v) {
+                                $("#productAttrs-" + v).prop("checked", true);
+                            });
+                        }
+                    }
+                    // 获取产品配图
+                    $.get("/product/getProductPicturesByProductId", {"productId": productId, "_":new Date().getTime()}, function (result) {
+                        var mainPictures = [], detailPictures = [];
+                        // 分拣图片
+                        $.each(result.data, function (i, picture) {
+                            if (picture.productPictureType === 11) {
+                                mainPictures.push(picture);
+                            } else if (picture.productPictureType === 21) {
+                                detailPictures.push(picture);
+                            }
+                        });
+                        // 替换主图
+                        var $imgs = $("div.main-picture-area img");
+                        $.each(mainPictures, function (i, picture) {
+                            $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
+                            $($imgs[i]).data("picture", picture);
+                        });
+                        // 替换详情图
+                        $imgs = $("div.detail-picture-area img");
+                        $.each(detailPictures, function (i, picture) {
+                            $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
+                            $($imgs[i]).data("picture", picture);
+                        });
+                        // 显示modal
+                        $('#editProductModal').modal();
                     });
                 });
             });

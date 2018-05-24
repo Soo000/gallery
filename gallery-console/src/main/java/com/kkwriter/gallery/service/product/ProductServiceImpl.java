@@ -46,8 +46,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author lisha
@@ -89,6 +92,19 @@ public class ProductServiceImpl implements ProductService {
 		glyProductEvaluateRepository.deleteAllByProductId(productId);
 		// 删除产品
 		glyProductRepository.deleteById(productId);
+	}
+
+	@Override
+	@Transactional(rollbackFor = RuntimeException.class)
+	public Map<String, List<Integer>> getProductTypeAndAttrByProductId(Integer productId) {
+		List<Integer> propList = glyRProductPropsRepository.findAllByProductId(productId)
+				.stream().map(GlyRProductProps::getPropId).collect(Collectors.toList());
+		List<Integer> typeList = glyProductTypeProductRepository.findAllByProductId(productId)
+				.stream().map(GlyRProductTypeProduct::getProductTypeId).collect(Collectors.toList());
+		Map<String, List<Integer>> map = new HashMap<>(2);
+		map.put("props", propList);
+		map.put("types", typeList);
+		return map;
 	}
 
 	@Override

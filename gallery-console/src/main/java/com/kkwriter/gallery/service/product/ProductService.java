@@ -1,6 +1,7 @@
 package com.kkwriter.gallery.service.product;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kkwriter.gallery.entity.json.ModifyProductJsonBean;
 import com.kkwriter.gallery.entity.product.GlyProduct;
@@ -76,4 +77,12 @@ public interface ProductService {
 	 * @param productId 产品ID
 	 */
     void deleteProduct(int productId);
+
+	/**
+	 * 根据产品ID查询其所有属性及类型
+	 * @param productId 产品ID
+	 * @return 所有属性及类型
+	 */
+	Map<String,List<Integer>> getProductTypeAndAttrByProductId(Integer productId);
+
 }
