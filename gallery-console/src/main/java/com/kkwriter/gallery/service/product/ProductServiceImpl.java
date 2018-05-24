@@ -117,18 +117,40 @@ public class ProductServiceImpl implements ProductService {
 			throw new GalleyConsoleException(ReturnEnum.UPDATE_FAILED);
 		}
 		// 设置新产品信息
-		product.setProductName(param.getProductName());
-		product.setProductIntro(param.getProductIntro());
-		product.setProductDetail(param.getProductDetail());
-		product.setInitialPrice(Float.valueOf(param.getInitialPrice()));
-		product.setDiscount(Float.valueOf(param.getDiscount()));
-		product.setRealPrice(Float.valueOf(rounding(product.getInitialPrice() * product.getDiscount() / 10)));
-		product.setInventoryNumber(Integer.valueOf(param.getInventoryNumber()));
-		product.setBookNumber(Integer.valueOf(param.getBookNumber()));
-		product.setResidueNumber(product.getInventoryNumber() - product.getBookNumber() - product.getSaleNumber());
-		product.setProductOrder(Float.valueOf(param.getProductOrder()));
-		product.setIsValid(Integer.valueOf(param.getIsValid()));
-		product.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+		GlyProduct newProduct = new GlyProduct();
+		newProduct.setProductName(param.getProductName());
+		newProduct.setProductIntro(param.getProductIntro());
+		newProduct.setProductDetail(param.getProductDetail());
+		if (param.getInitialPrice() == null) {
+			newProduct.setInitialPrice(product.getInitialPrice());
+		} else {
+			newProduct.setInitialPrice(Float.valueOf(param.getInitialPrice()));
+		}
+		if (param.getDiscount() == null) {
+			newProduct.setDiscount(product.getDiscount());
+		} else {
+			newProduct.setDiscount(Float.valueOf(param.getDiscount()));
+		}
+		newProduct.setRealPrice(Float.valueOf(rounding(newProduct.getInitialPrice() * newProduct.getDiscount() / 10)));
+		if (param.getInventoryNumber() == null) {
+			newProduct.setInventoryNumber(product.getInventoryNumber());
+		} else {
+			newProduct.setInventoryNumber(Integer.valueOf(param.getInventoryNumber()));
+		}
+		if (param.getBookNumber() == null) {
+			newProduct.setBookNumber(product.getBookNumber());
+		} else {
+			newProduct.setBookNumber(Integer.valueOf(param.getBookNumber()));
+		}
+		newProduct.setResidueNumber(newProduct.getInventoryNumber() - newProduct.getBookNumber() - product.getSaleNumber());
+		newProduct.setProductOrder(Float.valueOf(param.getProductOrder()));
+		newProduct.setIsValid(Integer.valueOf(param.getIsValid()));
+		newProduct.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+		try {
+			product.updateMe(newProduct);
+		} catch (IllegalAccessException e) {
+			logger.error(e.getMessage(), e);
+		}
 		// 更新产品信息
 		glyProductRepository.saveAndFlush(product);
 		// 操作属性

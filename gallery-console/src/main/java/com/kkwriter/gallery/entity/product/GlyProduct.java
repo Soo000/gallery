@@ -5,6 +5,9 @@ import javax.persistence.Id;
 
 import com.kkwriter.gallery.entity.BaseEntity;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+
 /**
  * @author lisha
  */
@@ -131,4 +134,42 @@ public class GlyProduct extends BaseEntity {
     public void setIsValid(Integer isValid) {
         this.isValid = isValid;
     }
+
+    @Override
+    public String toString() {
+        return "GlyProduct{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", productIntro='" + productIntro + '\'' +
+                ", productDetail='" + productDetail + '\'' +
+                ", initialPrice=" + initialPrice +
+                ", realPrice=" + realPrice +
+                ", discount=" + discount +
+                ", inventoryNumber=" + inventoryNumber +
+                ", saleNumber=" + saleNumber +
+                ", residueNumber=" + residueNumber +
+                ", bookNumber=" + bookNumber +
+                ", productOrder=" + productOrder +
+                ", isValid=" + isValid +
+                '}' + " | " + super.toString();
+    }
+
+    public void updateMe(GlyProduct that) throws IllegalAccessException {
+        GlyProduct obj = this;
+        Field[] field = that.getClass().getDeclaredFields();
+        Field[] superField = that.getClass().getSuperclass().getDeclaredFields();
+        Field[] result = Arrays.copyOf(field, field.length + superField.length);
+        System.arraycopy(superField, 0, result, field.length, superField.length);
+        for (Field f : result) {
+            if ("serialVersionUID".equals(f.getName())) {
+                continue;
+            }
+            f.setAccessible(true);
+            Object value = f.get(that);
+            if (value != null) {
+                f.set(obj, value);
+            }
+        }
+    }
+
 }

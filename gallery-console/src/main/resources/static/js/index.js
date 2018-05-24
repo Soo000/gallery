@@ -422,38 +422,36 @@ function modifyProductModalSubmit() {
         }
     });
 
-    if (!productName || !productIntro || !productDetail) {
-        return;
-    }
-    if (!initialPrice || !$.isNumeric(initialPrice)) {
-        return;
-    }
-    if (!discount || !$.isNumeric(discount)) {
-        return;
-    }
-    if (!inventoryNumber || !$.isNumeric(inventoryNumber)) {
-        return;
-    }
-    if (!bookNumber || !$.isNumeric(bookNumber)) {
-        return;
-    }
-    if (!productOrder || !$.isNumeric(productOrder)) {
-        return;
-    }
-
     var params = {
-        "productId": $("#productId").val(),
-        "productName": productName,
-        "productIntro":productIntro,
-        "productDetail":productDetail,
-        "initialPrice":initialPrice,
-        "discount":discount,
-        "inventoryNumber":inventoryNumber,
-        "bookNumber":bookNumber,
-        "productOrder":productOrder,
-        "isValid":isValid
+        "productId": $("#productId").val()
     };
-
+    if (productName) {
+        params.productName = productName;
+    }
+    if (productIntro) {
+        params.productIntro = productIntro;
+    }
+    if (productDetail) {
+        params.productDetail = productDetail;
+    }
+    if (initialPrice) {
+        params.initialPrice = initialPrice;
+    }
+    if (discount) {
+        params.discount = discount;
+    }
+    if (inventoryNumber) {
+        params.inventoryNumber = inventoryNumber;
+    }
+    if (bookNumber) {
+        params.bookNumber = bookNumber;
+    }
+    if (productOrder) {
+        params.productOrder = productOrder;
+    }
+    if (isValid) {
+        params.isValid = isValid;
+    }
     if (productAttrs.length !== 0) {
         params.productAttrs = productAttrs;
     }
