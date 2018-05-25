@@ -27,7 +27,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -47,7 +46,6 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -161,7 +159,6 @@ public class ProductServiceImpl implements ProductService {
 			// 新建产品属性
 			attrList.forEach((attr) -> {
 				GlyRProductProps props = new GlyRProductProps();
-				props.setId(getProductAttrRelationId());
 				props.setProductId(productId);
 				props.setPropId(Integer.valueOf(attr));
 				// 保存
@@ -176,7 +173,6 @@ public class ProductServiceImpl implements ProductService {
 			// 新建产品类型
 			typeList.forEach((type) -> {
 				GlyRProductTypeProduct types = new GlyRProductTypeProduct();
-				types.setId(getProductTypesRelationId());
 				types.setProductId(productId);
 				types.setProductTypeId(Integer.valueOf(type));
 				// 保存
@@ -355,10 +351,9 @@ public class ProductServiceImpl implements ProductService {
 				if (props == null) {
 					throw new RuntimeException("产品属性不能为空！");
 				}
-				GlyRProductProps productProps = new GlyRProductProps();
-				productProps.setProductId(product.getProductId());
 				for (String s : props) {
-					productProps.setId(getProductAttrRelationId());
+					GlyRProductProps productProps = new GlyRProductProps();
+					productProps.setProductId(product.getProductId());
 					productProps.setPropId(Integer.parseInt(s.trim()));
 					glyRProductPropsRepository.saveAndFlush(productProps);
 				}
@@ -366,10 +361,9 @@ public class ProductServiceImpl implements ProductService {
 				if (types == null) {
 					throw new RuntimeException("产品类型不能为空！");
 				}
-				GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
-				productType.setProductId(product.getProductId());
 				for (String s : types) {
-					productType.setId(getProductTypesRelationId());
+					GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
+					productType.setProductId(product.getProductId());
 					productType.setProductTypeId(Integer.parseInt(s.trim()));
 					glyProductTypeProductRepository.saveAndFlush(productType);
 				}
@@ -380,7 +374,6 @@ public class ProductServiceImpl implements ProductService {
 				for (String pic : pictures) {
 					GlyProductPicture productPicture = new GlyProductPicture();
 					productPicture.setProductId(product.getProductId());
-					
 					String[] args = pic.trim().split("-");
 					productPicture.setProductPictureFileName(args[0].trim());
 					productPicture.setProductPictureType(Integer.parseInt(args[1].trim()));
@@ -433,22 +426,18 @@ public class ProductServiceImpl implements ProductService {
 		// 保存产品
 		glyProductRepository.saveAndFlush(product);
 		// new 产品属性
-		GlyRProductProps productProps = new GlyRProductProps();
-		productProps.setProductId(product.getProductId());
 		for (String attr : attrs) {
+			GlyRProductProps productProps = new GlyRProductProps();
+			productProps.setProductId(product.getProductId());
 			// 保存一个属性
-			// 设置一个 产品-属性记录 ID
-			productProps.setId(getProductAttrRelationId());
 			productProps.setPropId(Integer.parseInt(attr));
 			glyRProductPropsRepository.saveAndFlush(productProps);
 		}
 		// new 产品类型
-		GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
-		productType.setProductId(product.getProductId());
 		for (String type : types) {
+			GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
+			productType.setProductId(product.getProductId());
 			// 保存一个类型
-			// 设置一个 产品-类型 记录ID
-			productType.setId(getProductTypesRelationId());
 			productType.setProductTypeId(Integer.parseInt(type));
 			glyProductTypeProductRepository.saveAndFlush(productType);
 		}
@@ -519,26 +508,6 @@ public class ProductServiceImpl implements ProductService {
 		return glyProductTypeRepository.findAll(new Sort(Direction.DESC, "creationTime", "parentProductTypeId"));
 	}
 
-	private int getProductAttrRelationId() {
-		int id = 1;
-		Page<GlyRProductProps> propPage = glyRProductPropsRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "id")));
-		Iterator<GlyRProductProps> iterator = propPage.iterator();
-		if (iterator.hasNext()) {
-			id = iterator.next().getId() + 1;
-		}
-		return id;
-	}
-
-	private int getProductTypesRelationId() {
-		int id = 1;
-		Page<GlyRProductTypeProduct> typePage = glyProductTypeProductRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "id")));
-		Iterator<GlyRProductTypeProduct> iterator = typePage.iterator();
-		if (iterator.hasNext()) {
-			id = iterator.next().getId() + 1;
-		}
-		return id;
-	}
-	
 	private static <T extends Number> String rounding(T number) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		return df.format(number);
