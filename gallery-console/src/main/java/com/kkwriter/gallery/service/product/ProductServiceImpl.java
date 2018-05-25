@@ -341,7 +341,6 @@ public class ProductServiceImpl implements ProductService {
 				product.setResidueNumber(product.getInventoryNumber());
 				product.setBookNumber(0);
 				product.setIsValid(1);
-				product.setProductId(getProductId());
 				// 保存产品信息
 				glyProductRepository.save(product);
 				// 保存产品属性
@@ -424,8 +423,6 @@ public class ProductServiceImpl implements ProductService {
 		product.setBookNumber(0);
 		product.setProductOrder(Float.parseFloat(productOrder));
 		product.setIsValid(1);
-		// 设置生成的产品ID
-		product.setProductId(getProductId());
 		// 保存产品
 		glyProductRepository.save(product);
 		// new 产品属性
@@ -514,16 +511,6 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<GlyProductType> queryAllTypes() {
 		return glyProductTypeRepository.findAll(new Sort(Direction.DESC, "creationTime", "parentProductTypeId"));
-	}
-
-	private int getProductId() {
-		int productId = 10001;
-		Page<GlyProduct> page = glyProductRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "productId")));
-		Iterator<GlyProduct> iterator = page.iterator();
-		if (iterator.hasNext()) {
-			productId = iterator.next().getProductId() + 1;
-		}
-		return productId;
 	}
 
 	private int getProductAttrRelationId() {
