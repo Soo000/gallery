@@ -377,9 +377,10 @@ public class ProductServiceImpl implements ProductService {
 				if (pictures == null) {
 					throw new RuntimeException("产品配图不能为空！");
 				}
-				GlyProductPicture productPicture = new GlyProductPicture();
-				productPicture.setProductId(product.getProductId());
 				for (String pic : pictures) {
+					GlyProductPicture productPicture = new GlyProductPicture();
+					productPicture.setProductId(product.getProductId());
+					
 					String[] args = pic.trim().split("-");
 					productPicture.setProductPictureFileName(args[0].trim());
 					productPicture.setProductPictureType(Integer.parseInt(args[1].trim()));
@@ -459,9 +460,9 @@ public class ProductServiceImpl implements ProductService {
 				throw new RuntimeException("创建文件夹失败！");
 			}
 		}
-		GlyProductPicture productPicture = new GlyProductPicture();
-		productPicture.setProductId(product.getProductId());
 		for (int i = 0; i < productPics.length; i++) {
+			GlyProductPicture productPicture = new GlyProductPicture();
+			productPicture.setProductId(product.getProductId());
 			String fileName = "product" + File.separator + product.getProductId() + File.separator + generatePictureName();
 			productPicture.setProductPictureFileName(fileName);
 			int pictureType = 11;
