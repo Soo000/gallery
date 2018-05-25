@@ -805,21 +805,27 @@ function deleteActivity(element) {
 
 function addProductSubmit(element) {
     var _this = element;
+    $(_this).prop("disabled", true);
+
     // 参数校验，一定要校验文件是否为图片
     if (!$("#product_name").val()) {
         $("#product_name").focus();
+        $(_this).prop("disabled", false);
         return;
     }
     if (!$("#product_intro").val()) {
         $("#product_intro").focus();
+        $(_this).prop("disabled", false);
         return;
     }
     if (!$("#product_detail").val()) {
         $("#product_detail").focus();
+        $(_this).prop("disabled", false);
         return;
     }
     if (!$("#init_price").val()) {
         $("#init_price").focus();
+        $(_this).prop("disabled", false);
         return;
     }
     if (!$("#discount").val()) {
@@ -827,6 +833,7 @@ function addProductSubmit(element) {
     }
     if (!$("#inventory_number").val()) {
         $("#inventory_number").focus();
+        $(_this).prop("disabled", false);
         return;
     }
     if (!$("#product_order").val()) {
@@ -841,6 +848,7 @@ function addProductSubmit(element) {
         }
     }
     if (total === 0) {
+        $(_this).prop("disabled", false);
         alert("请选择产品属性！");
         return;
     }
@@ -852,6 +860,7 @@ function addProductSubmit(element) {
         }
     }
     if (total === 0) {
+        $(_this).prop("disabled", false);
         alert("请选择产品类型！");
         return;
     }
@@ -859,6 +868,7 @@ function addProductSubmit(element) {
     var files = $("#add_product_div input[name='productPics']")[0].files;
     var allowPicTypes = ["image/jpg", "image/jpeg","image/png","image/x-png","image/bmp"];
     if (files.length === 0) {
+        $(_this).prop("disabled", false);
         alert("请选择图片！");
         return;
     }
@@ -877,6 +887,7 @@ function addProductSubmit(element) {
         }
     }
     if (acceptN !== files.length) {
+        $(_this).prop("disabled", false);
         alert("请检查图片类型是否正确！");
         return;
     }
@@ -898,5 +909,7 @@ function addProductSubmit(element) {
         }
     }).fail(function() {
         alert("添加商品失败！");
+    }).always(function () {
+        $(_this).prop("disabled", false);
     });
 }
