@@ -247,6 +247,15 @@ public class ProductServiceImpl implements ProductService {
 				logger.error("删除图片失败！图片信息：{}", picture.getProductPictureFileName());
 			}
 		}
+		file = file.getParentFile();
+		if (file.isDirectory()) {
+			String[] fileNames = file.list();
+			if (fileNames != null && fileNames.length == 0) {
+				if (!file.delete()) {
+					logger.error("删除产品图目录（{}）失败！", file.getAbsolutePath());
+				}
+			}
+		}
 	}
 
 	private String savePicture2Disk(final int productId, final String newPicture) {
