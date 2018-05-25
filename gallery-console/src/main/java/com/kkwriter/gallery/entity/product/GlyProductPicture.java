@@ -1,6 +1,8 @@
 package com.kkwriter.gallery.entity.product;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.kkwriter.gallery.entity.BaseEntity;
@@ -13,6 +15,7 @@ public class GlyProductPicture extends BaseEntity {
 	private static final long serialVersionUID = -3663355653844835580L;
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer productPictureCode;
 	
 	private Integer productId;

@@ -221,7 +221,6 @@ public class ProductServiceImpl implements ProductService {
 		String pictureName = savePicture2Disk(productId, picture.getNewPicture());
 		// 入库
 		GlyProductPicture glyPicture = new GlyProductPicture();
-		glyPicture.setProductPictureCode(getProductPictureId());
 		glyPicture.setProductId(productId);
 		glyPicture.setProductPictureFileName("product" + File.separator + productId + File.separator + pictureName);
 		glyPicture.setProductPictureType(type);
@@ -345,13 +344,13 @@ public class ProductServiceImpl implements ProductService {
 					default:
 					}
 				}
-				product.setRealPrice(product.getInitialPrice() * product.getDiscount() / 10);
+				product.setRealPrice(Float.valueOf(rounding(product.getInitialPrice() * product.getDiscount() / 10)));
 				product.setSaleNumber(0);
 				product.setResidueNumber(product.getInventoryNumber());
 				product.setBookNumber(0);
 				product.setIsValid(1);
 				// 保存产品信息
-				glyProductRepository.save(product);
+				glyProductRepository.saveAndFlush(product);
 				// 保存产品属性
 				if (props == null) {
 					throw new RuntimeException("产品属性不能为空！");
@@ -361,7 +360,7 @@ public class ProductServiceImpl implements ProductService {
 				for (String s : props) {
 					productProps.setId(getProductAttrRelationId());
 					productProps.setPropId(Integer.parseInt(s.trim()));
-					glyRProductPropsRepository.save(productProps);
+					glyRProductPropsRepository.saveAndFlush(productProps);
 				}
 				// 保存产品类型
 				if (types == null) {
@@ -372,7 +371,7 @@ public class ProductServiceImpl implements ProductService {
 				for (String s : types) {
 					productType.setId(getProductTypesRelationId());
 					productType.setProductTypeId(Integer.parseInt(s.trim()));
-					glyProductTypeProductRepository.save(productType);
+					glyProductTypeProductRepository.saveAndFlush(productType);
 				}
 				// 保存产品配图
 				if (pictures == null) {
@@ -386,9 +385,7 @@ public class ProductServiceImpl implements ProductService {
 					productPicture.setProductPictureType(Integer.parseInt(args[1].trim()));
 					productPicture.setProductPictureOrder(Float.parseFloat(args[2].trim()));
 					productPicture.setIsValid(1);
-					// 获取配图ID
-					productPicture.setProductPictureCode(getProductPictureId());
-					glyProductPictureRepository.save(productPicture);
+					glyProductPictureRepository.saveAndFlush(productPicture);
 				}
 			}
 		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
@@ -425,7 +422,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setProductDetail(productDetail);
 		product.setInitialPrice(Float.parseFloat(initPrice));
 		product.setDiscount(Float.parseFloat(discount));
-		product.setRealPrice(product.getInitialPrice() * product.getDiscount() / 10);
+		product.setRealPrice(Float.valueOf(rounding(product.getInitialPrice() * product.getDiscount() / 10)));
 		product.setInventoryNumber(Integer.parseInt(inventory));
 		product.setSaleNumber(0);
 		product.setResidueNumber(product.getInventoryNumber());
@@ -433,7 +430,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setProductOrder(Float.parseFloat(productOrder));
 		product.setIsValid(1);
 		// 保存产品
-		glyProductRepository.save(product);
+		glyProductRepository.saveAndFlush(product);
 		// new 产品属性
 		GlyRProductProps productProps = new GlyRProductProps();
 		productProps.setProductId(product.getProductId());
@@ -442,7 +439,7 @@ public class ProductServiceImpl implements ProductService {
 			// 设置一个 产品-属性记录 ID
 			productProps.setId(getProductAttrRelationId());
 			productProps.setPropId(Integer.parseInt(attr));
-			glyRProductPropsRepository.save(productProps);
+			glyRProductPropsRepository.saveAndFlush(productProps);
 		}
 		// new 产品类型
 		GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
@@ -452,7 +449,7 @@ public class ProductServiceImpl implements ProductService {
 			// 设置一个 产品-类型 记录ID
 			productType.setId(getProductTypesRelationId());
 			productType.setProductTypeId(Integer.parseInt(type));
-			glyProductTypeProductRepository.save(productType);
+			glyProductTypeProductRepository.saveAndFlush(productType);
 		}
 		// 保存产品配图
 		// 判断base文件夹是否存在，不存在则创建
@@ -465,7 +462,6 @@ public class ProductServiceImpl implements ProductService {
 		GlyProductPicture productPicture = new GlyProductPicture();
 		productPicture.setProductId(product.getProductId());
 		for (int i = 0; i < productPics.length; i++) {
-			productPicture.setProductPictureCode(getProductPictureId());
 			String fileName = "product" + File.separator + product.getProductId() + File.separator + generatePictureName();
 			productPicture.setProductPictureFileName(fileName);
 			int pictureType = 11;
@@ -475,7 +471,7 @@ public class ProductServiceImpl implements ProductService {
 			productPicture.setProductPictureType(pictureType);
 			productPicture.setProductPictureOrder(i + 1.0F);
 			productPicture.setIsValid(1);
-			glyProductPictureRepository.save(productPicture);
+			glyProductPictureRepository.saveAndFlush(productPicture);
 			// 将图片保存至对应目录
 			try (InputStream io = productPics[i].getInputStream();
 				 FileOutputStream fos = new FileOutputStream(new File( PICTURE_BASE_PATH + fileName))) {
@@ -541,17 +537,7 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return id;
 	}
-
-	private Integer getProductPictureId() {
-		int id = 1;
-		Page<GlyProductPicture> picturePage = glyProductPictureRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "productPictureCode")));
-		Iterator<GlyProductPicture> iterator = picturePage.iterator();
-		if (iterator.hasNext()) {
-			id = iterator.next().getProductPictureCode() + 1;
-		}
-		return id;
-	}
-
+	
 	private static <T extends Number> String rounding(T number) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		return df.format(number);
