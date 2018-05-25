@@ -250,14 +250,14 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private String savePicture2Disk(final int productId, final String newPicture) {
-		byte[] b = Base64.decodeBase64(newPicture.substring(23));
+		byte[] b = Base64.decodeBase64(newPicture.split(";base64,")[1]);
 		for (int i = 0; i < b.length; ++i) {
 			// 调整异常数据
 			if (b[i] < 0) {
 				b[i] += 256;
 			}
 		}
-		String pictureName = generatePictureName();
+		String pictureName = generatePictureName(newPicture.split(";base64,")[0].split(":")[1].split("/")[1]);
 		String imgPath = PICTURE_BASE_PATH + "product" + File.separator + productId;
 		File pictureDirectory = new File(imgPath);
 		if (!pictureDirectory.exists()) {
@@ -277,7 +277,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private String generatePictureName() {
-		return System.currentTimeMillis() + ".jpg";
+		return generatePictureName("jpg");
+	}
+
+	private String generatePictureName(String suffix) {
+		return System.currentTimeMillis() + "." + suffix;
 	}
 
 	@Override
