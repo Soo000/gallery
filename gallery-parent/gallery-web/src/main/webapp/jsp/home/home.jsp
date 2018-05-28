@@ -38,8 +38,8 @@
 				            <div>
 				                <!-- 如果是广告连接 -->
 				                <c:if test="${homeModuleVO.homeModuleItemVOs[0].moduleItemType == 0 }">
-				                    <a href="<%=request.getContextPath()%>/reservationctrl/pagectrl">
-						                <img class="area-single-pic" src="<%=request.getContextPath() %>/res/img/product/00006/001.jpg"/>
+				                    <a href="<%=request.getContextPath()%>/${homeModuleVO.homeModuleItemVOs[0].activityUrl }">
+						                <img class="area-single-pic" src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].activityPictureFileName}"/>
 				                    </a>
 				                </c:if>
 				                <!-- 如果是产品 -->

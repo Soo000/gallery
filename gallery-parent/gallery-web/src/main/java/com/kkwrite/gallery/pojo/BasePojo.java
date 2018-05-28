@@ -20,6 +20,20 @@ public class BasePojo {
 	}
 	
 	/**
+	 * 模块项类型字典类
+	 */
+	public static final class ModuleItem {
+		/**
+		 * 活动或者连接
+		 */
+		public static final int MODULE_ITEM_TYPE_ACTIVATE = 0;
+		/**
+		 * 产品
+		 */
+		public static final int MODULE_ITEM_TYPE_PRODUCT = 1;
+	}
+	
+	/**
 	 * 产品类型字典类
 	 */
 	public static final class ProductType {

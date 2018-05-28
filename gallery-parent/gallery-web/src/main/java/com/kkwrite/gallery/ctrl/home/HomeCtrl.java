@@ -11,12 +11,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kkwrite.gallery.ctrl.BaseCtrl;
 import com.kkwrite.gallery.pojo.BasePojo;
+import com.kkwrite.gallery.pojo.activity.ActivityDTO;
+import com.kkwrite.gallery.pojo.activity.ActivityQuery;
+import com.kkwrite.gallery.service.activity.ActivityService;
 import com.kkwrite.gallery.service.home.HomeService;
 import com.kkwrite.gallery.service.home.ModuleBO;
 import com.kkwrite.gallery.service.home.ModuleItemBO;
 import com.kkwrite.gallery.service.home.ModuleItemQuery;
 import com.kkwrite.gallery.service.home.ModuleQuery;
-import com.kkwrite.gallery.service.user.UserService;
 
 @Controller
 @RequestMapping("/homectrl")
@@ -26,9 +28,8 @@ public class HomeCtrl extends BaseCtrl {
 	
 	@Autowired
 	private HomeService homeService;
-	
 	@Autowired
-	private UserService userService;
+	private ActivityService activityService;
 	
 	@RequestMapping("/pagectrl")
 	public ModelAndView pageCtrl() {
@@ -94,6 +95,17 @@ public class HomeCtrl extends BaseCtrl {
 				homeModuleItemVO.setModuleItemOrder(moduleItemBO.getModuleItemOrder());
 				homeModuleItemVO.setModuleItemType(moduleItemBO.getModuleItemType());
 				homeModuleItemVO.setProductId(moduleItemBO.getProductId());
+				if (moduleItemBO.getModuleItemType() == BasePojo.ModuleItem.MODULE_ITEM_TYPE_ACTIVATE) {
+					ActivityQuery activityQuery = new ActivityQuery();
+					activityQuery.setActivityId(moduleItemBO.getProductId());
+					activityQuery.setValid(BasePojo.IS_VALID_Y);
+					ActivityDTO activityDTO = activityService.getActivityById(activityQuery);
+					if (activityDTO != null) {
+						homeModuleItemVO.setActivityName(activityDTO.getActivityName());
+						homeModuleItemVO.setActivityUrl(activityDTO.getActivityUrl());
+						homeModuleItemVO.setActivityPictureFileName(activityDTO.getActivityPictureFileName());
+					}
+				}
 				homeModuleItemVOs.add(homeModuleItemVO);
 			}
 			homeModuleVO.setHomeModuleItemVOs(homeModuleItemVOs);

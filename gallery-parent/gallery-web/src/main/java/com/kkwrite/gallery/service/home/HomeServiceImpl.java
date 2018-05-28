@@ -75,7 +75,6 @@ public class HomeServiceImpl implements HomeService {
 			moduleItemBO.setModuleItemType(glyModuleItemDO.getModuleItemType());
 			moduleItemBO.setModuleItemOrder(glyModuleItemDO.getModuleItemOrder());
 			moduleItemBO.setProductId(glyModuleItemDO.getProductId());
-			
 			moduleItemBOs.add(moduleItemBO);
 		}
 		return moduleItemBOs;

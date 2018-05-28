@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kkwrite.gallery.mapper.activity.GlyActivityMapper" >
+  <resultMap id="BaseResultMap" type="com.kkwrite.gallery.pojo.activity.GlyActivityDO" >
+    <id column="activity_id" property="activityId" jdbcType="INTEGER" />
+    <result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+    <result column="activity_picture_file_name" property="activityPictureFileName" jdbcType="VARCHAR" />
+    <result column="activity_url" property="activityUrl" jdbcType="VARCHAR" />
+    <result column="activity_type" property="activityType" jdbcType="INTEGER" />
+    <result column="activity_begin_time" property="activityBeginTime" jdbcType="TIMESTAMP" />
+    <result column="activity_end_time" property="activityEndTime" jdbcType="TIMESTAMP" />
+    <result column="activity_desc" property="activityDesc" jdbcType="VARCHAR" />
+    <result column="is_valid" property="valid" jdbcType="INTEGER" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="VARCHAR" />
+    <result column="ext_0" property="ext0" jdbcType="VARCHAR" />
+    <result column="ext_1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext_2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext_3" property="ext3" jdbcType="VARCHAR" />
+    <result column="ext_4" property="ext4" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    activity_id, activity_name, activity_picture_file_name, activity_url, activity_type, 
+    activity_begin_time, activity_end_time, activity_desc, is_valid, creation_time, creator, 
+    update_time, updator, ext_0, ext_1, ext_2, ext_3, ext_4
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from gly_activity
+    where activity_id = #{activityId,jdbcType=INTEGER}
+  </select>
+  <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.kkwrite.gallery.pojo.activity.ActivityQuery" >
+    select 
+    <include refid="Base_Column_List" />
+    from gly_activity
+    <where>
+        <if test="activityId != null">
+            activity_id = #{activityId,jdbcType=INTEGER}
+        </if>
+        <if test="valid != null">
+            and is_valid = #{valid,jdbcType=INTEGER}
+        </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from gly_activity
+    where activity_id = #{activityId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.kkwrite.gallery.pojo.activity.GlyActivityDO" >
+    insert into gly_activity (activity_id, activity_name, activity_picture_file_name, 
+      activity_url, activity_type, activity_begin_time, 
+      activity_end_time, activity_desc, is_valid, 
+      creation_time, creator, update_time, 
+      updator, ext_0, ext_1, 
+      ext_2, ext_3, ext_4)
+    values (#{activityId,jdbcType=INTEGER}, #{activityName,jdbcType=VARCHAR}, #{activityPictureFileName,jdbcType=VARCHAR}, 
+      #{activityUrl,jdbcType=VARCHAR}, #{activityType,jdbcType=INTEGER}, #{activityBeginTime,jdbcType=TIMESTAMP}, 
+      #{activityEndTime,jdbcType=TIMESTAMP}, #{activityDesc,jdbcType=VARCHAR}, #{valid,jdbcType=INTEGER}, 
+      #{creationTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updator,jdbcType=VARCHAR}, #{ext0,jdbcType=VARCHAR}, #{ext1,jdbcType=VARCHAR}, 
+      #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{ext4,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kkwrite.gallery.pojo.activity.GlyActivityDO" >
+    insert into gly_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="activityName != null" >
+        activity_name,
+      </if>
+      <if test="activityPictureFileName != null" >
+        activity_picture_file_name,
+      </if>
+      <if test="activityUrl != null" >
+        activity_url,
+      </if>
+      <if test="activityType != null" >
+        activity_type,
+      </if>
+      <if test="activityBeginTime != null" >
+        activity_begin_time,
+      </if>
+      <if test="activityEndTime != null" >
+        activity_end_time,
+      </if>
+      <if test="activityDesc != null" >
+        activity_desc,
+      </if>
+      <if test="valid != null" >
+        is_valid,
+      </if>
+      <if test="creationTime != null" >
+        creation_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updator != null" >
+        updator,
+      </if>
+      <if test="ext0 != null" >
+        ext_0,
+      </if>
+      <if test="ext1 != null" >
+        ext_1,
+      </if>
+      <if test="ext2 != null" >
+        ext_2,
+      </if>
+      <if test="ext3 != null" >
+        ext_3,
+      </if>
+      <if test="ext4 != null" >
+        ext_4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="activityId != null" >
+        #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="activityName != null" >
+        #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityPictureFileName != null" >
+        #{activityPictureFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityUrl != null" >
+        #{activityUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activityType != null" >
+        #{activityType,jdbcType=INTEGER},
+      </if>
+      <if test="activityBeginTime != null" >
+        #{activityBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityEndTime != null" >
+        #{activityEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityDesc != null" >
+        #{activityDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null" >
+        #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="ext0 != null" >
+        #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        #{ext4,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kkwrite.gallery.pojo.activity.GlyActivityDO" >
+    update gly_activity
+    <set >
+      <if test="activityName != null" >
+        activity_name = #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityPictureFileName != null" >
+        activity_picture_file_name = #{activityPictureFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityUrl != null" >
+        activity_url = #{activityUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activityType != null" >
+        activity_type = #{activityType,jdbcType=INTEGER},
+      </if>
+      <if test="activityBeginTime != null" >
+        activity_begin_time = #{activityBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityEndTime != null" >
+        activity_end_time = #{activityEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityDesc != null" >
+        activity_desc = #{activityDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null" >
+        is_valid = #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        creation_time = #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        updator = #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="ext0 != null" >
+        ext_0 = #{ext0,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext_1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext_2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext_3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="ext4 != null" >
+        ext_4 = #{ext4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where activity_id = #{activityId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kkwrite.gallery.pojo.activity.GlyActivityDO" >
+    update gly_activity
+    set activity_name = #{activityName,jdbcType=VARCHAR},
+      activity_picture_file_name = #{activityPictureFileName,jdbcType=VARCHAR},
+      activity_url = #{activityUrl,jdbcType=VARCHAR},
+      activity_type = #{activityType,jdbcType=INTEGER},
+      activity_begin_time = #{activityBeginTime,jdbcType=TIMESTAMP},
+      activity_end_time = #{activityEndTime,jdbcType=TIMESTAMP},
+      activity_desc = #{activityDesc,jdbcType=VARCHAR},
+      is_valid = #{valid,jdbcType=INTEGER},
+      creation_time = #{creationTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=VARCHAR},
+      ext_0 = #{ext0,jdbcType=VARCHAR},
+      ext_1 = #{ext1,jdbcType=VARCHAR},
+      ext_2 = #{ext2,jdbcType=VARCHAR},
+      ext_3 = #{ext3,jdbcType=VARCHAR},
+      ext_4 = #{ext4,jdbcType=VARCHAR}
+    where activity_id = #{activityId,jdbcType=INTEGER}
+  </update>
+</mapper>
