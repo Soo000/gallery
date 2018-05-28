@@ -8,6 +8,8 @@ import com.kkwrite.gallery.service.address.AddressService;
 import com.kkwrite.gallery.service.user.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,32 +53,59 @@ public class AddressCtrl extends BaseCtrl {
 	public ModelAndView pageCtrl(HttpServletRequest request) {
 		String from = request.getParameter("from");
 		String productIds = request.getParameter("productIds");
-		
 		// ModelAndView 默认使用转发forward
 		ModelAndView modelAndView = new ModelAndView("/address/address");
-		
+		// 查询用户
+		String username = getUsername();
+		if (StringUtils.isEmpty(username.trim())) {
+			logger.info("准备将请求转发到 /weixinctrl/getcode");
+			modelAndView.addObject("codeBackUrl", "/addressctrl/codeback/" + from + "/" + productIds);
+			modelAndView.setViewName("forward:/weixinctrl/getcode");
+			return modelAndView;
+		}
 		try {
-			// 查询用户
-			String username = getUsername();
-			GlyUser user = userService.queryUserByName(username);
-			modelAndView.addObject("user", user);
-			
+			generateAddressModelAndView(modelAndView, username, from, productIds);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/codeback/{from}/{productIds}")
+	public ModelAndView codeBack(String code, @PathVariable String from, @PathVariable String productIds) {
+		// 获取用户的 openId
+		String openId = getOpenId(code);
+		// 构建用户信息
+		buildUserInfo(openId);
+		// 用户登录用户
+		String username = getUsername();
+		ModelAndView modelAndView = new ModelAndView("/address/address");
+		try {
+			generateAddressModelAndView(modelAndView, username, from, productIds);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return modelAndView;
+	}
+
+	private void generateAddressModelAndView(ModelAndView modelAndView, String username, String from, String productIds) {
+		GlyUser user = userService.queryUserByName(username);
+		modelAndView.addObject("user", user);
+
+		try {
 			// 查询用户地址信息
 			List<GlyAddress> addresses = addressService.queryAddresses(user.getUserId());
 			modelAndView.addObject("addresses", addresses);
-			
-			if ("order".equals(from)) {
-				modelAndView.addObject("productIds", productIds.split("-"));
-				modelAndView.addObject("from", from);
-			}
-		} catch (ServiceException e) {
-			logger.error("[ run ] AddressCtrl.pageCtrl(), 查询用户或用户地址信息出错！");
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ServiceException("查询地址信息异常！");
 		}
-		
-		return modelAndView;
+
+		if ("order".equals(from)) {
+			modelAndView.addObject("productIds", productIds.split("-"));
+			modelAndView.addObject("from", from);
+		}
 	}
-	
+
 	@RequestMapping("/preadd")
 	public ModelAndView preAdd() {
 		return new ModelAndView("/address/addressEdit");
