@@ -29,14 +29,6 @@
 	<body>
 		<div class="container-fluid">
 			<div class="row">
-				<!-- header -->
-				<jsp:include page="../module/header.jsp">
-					<jsp:param name="headTitle" value="预约服务"/>
-					<jsp:param name="backUrl" value='../homectrl/pagectrl'/>
-				</jsp:include>
-			</div>
-			
-			<div class="row">
 				<div class="jumbotron reservation-img" style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;">
 					<img src="<%=request.getContextPath() %>/res/img/common/reservation.png" class="img-responsive" />
 				</div>
