@@ -10,6 +10,10 @@ public enum ReturnEnum {
 	 */
 	SUCCESS(0, "成功！"),
 	/**
+	 * 返回错误信息通用
+	 */
+	ERROR_MESSAGE(-1, ""),
+	/**
 	 * 未知错误返回
 	 */
 	UNKNOWN_ERROR(-1001, "未知错误！"),
@@ -48,5 +52,10 @@ public enum ReturnEnum {
 	ReturnEnum(int retCode, String retMsg) {
 		this.retCode = retCode;
 		this.retMsg = retMsg;
+	}
+
+	public static ReturnEnum formErrorMessage(String errorMessage) {
+		ERROR_MESSAGE.setRetMsg(errorMessage);
+		return ERROR_MESSAGE;
 	}
 }

@@ -3,9 +3,11 @@ package com.kkwriter.gallery.service.module;
 import com.kkwriter.gallery.entity.module.GlyModule;
 import com.kkwriter.gallery.entity.module.GlyModuleItem;
 import com.kkwriter.gallery.entity.product.GlyProductPicture;
+import com.kkwriter.gallery.exception.GalleyConsoleException;
 import com.kkwriter.gallery.repository.module.GlyModuleItemRepository;
 import com.kkwriter.gallery.repository.module.GlyModuleRepository;
 import com.kkwriter.gallery.repository.product.GlyProductPictureRepository;
+import com.kkwriter.gallery.result.ReturnEnum;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +68,7 @@ public class ModuleServiceImpl implements IModuleService {
         // 查询商品配图
         List<GlyProductPicture> pictureList = pictureRepository.findAllByProductId(item.getProductId(), new Sort(Sort.Direction.ASC, "productPictureType", "productPictureOrder"));
         if (pictureList == null || pictureList.isEmpty()) {
-            throw new RuntimeException("该商品没有配图，请先添加商品配图！");
+            throw new GalleyConsoleException(ReturnEnum.formErrorMessage("该商品不存在或该商品不存在配图！"));
         }
         GlyProductPicture glyPicture = null;
         for (GlyProductPicture picture : pictureList) {
