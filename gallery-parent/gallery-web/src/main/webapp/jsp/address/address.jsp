@@ -31,12 +31,6 @@
 	    </style>
 	</head>
 	<body>
-		<!-- header -->
-		<jsp:include page="../module/header.jsp">
-			<jsp:param name="headTitle" value="收货地址"/>
-			<jsp:param name="backUrl" value=''/>
-		</jsp:include>
-		
 		<div class="container">
 			<c:if test="${requestScope.from == 'order' }">
 				<form id="goBackOrderForm" style="display: none;" action="<%=request.getContextPath() %>/orderctrl/placeorder">

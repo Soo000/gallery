@@ -34,12 +34,6 @@
 	    </style>
 	</head>
 	<body>
-		<!-- header -->
-		<jsp:include page="../module/header.jsp">
-			<jsp:param name="headTitle" value="编辑地址"/>
-			<jsp:param name="backUrl" value=''/>
-		</jsp:include>
-		
 		<div class="container">
 			<c:choose>
 				<c:when test="${errorMsg != null }">
