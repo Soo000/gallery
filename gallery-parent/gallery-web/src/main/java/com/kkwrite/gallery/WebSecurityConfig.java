@@ -104,11 +104,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().mvcMatchers("/addressctrl/pagectrl").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/addressctrl/preadd").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/addressctrl/add").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/addressctrl/preedit").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/addressctrl/edit").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/addressctrl/deladd").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/addressctrl/save").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/addressctrl/getprocitvil").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/addressctrl/codeback/**").permitAll();
+
 
 		// 配置调用支付的jsp页面权限
 		http.authorizeRequests().mvcMatchers("/jsp/weixin/callPay.jsp").hasRole("USER");
