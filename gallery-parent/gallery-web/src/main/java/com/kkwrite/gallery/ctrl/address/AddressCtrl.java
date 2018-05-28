@@ -57,7 +57,7 @@ public class AddressCtrl extends BaseCtrl {
 		ModelAndView modelAndView = new ModelAndView("/address/address");
 		// 查询用户
 		String username = getUsername();
-		if (StringUtils.isEmpty(username.trim())) {
+		if (StringUtils.isEmpty(username)) {
 			logger.info("准备将请求转发到 /weixinctrl/getcode");
 			modelAndView.addObject("codeBackUrl", "/addressctrl/codeback/" + from + "/" + productIds);
 			modelAndView.setViewName("forward:/weixinctrl/getcode");
