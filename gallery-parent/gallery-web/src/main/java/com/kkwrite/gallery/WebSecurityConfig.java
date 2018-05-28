@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// 配置预约页面需要的角色
 		http.authorizeRequests().mvcMatchers("/reservationctrl/pagectrl").hasRole("USER");
 		http.authorizeRequests().mvcMatchers("/reservationctrl/reservation").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/reservationctrl/codeback/**").permitAll();
 		
 		// 配置购物车页面需要的角色
 		http.authorizeRequests().mvcMatchers("/cartctrl/pagectrl").hasRole("USER");
