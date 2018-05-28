@@ -31,6 +31,9 @@
 	    	.error {
 	    		border: 1px solid red;
 	    	}
+			body {
+				margin-top: 10px;
+			}
 	    </style>
 	</head>
 	<body>
