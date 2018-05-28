@@ -27,7 +27,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -38,16 +37,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author lisha
@@ -57,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final static String PICTURE_BASE_PATH = File.separator + "home" + File.separator + "gallery" +
 			File.separator + "apps" + File.separator + "gallery-web" + File.separator + "res" + File.separator + "img" + File.separator;
+	private final static String ACCEPT_IMPORT_FILE_TYPE = "xlsx";
 
 	@Resource(name = "glyProductRepository")
 	private GlyProductRepository glyProductRepository;
@@ -92,6 +97,37 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = RuntimeException.class)
+	public Map<String, List<Integer>> getProductTypeAndAttrByProductId(Integer productId) {
+		List<Integer> propList = glyRProductPropsRepository.findAllByProductId(productId)
+				.stream().map(GlyRProductProps::getPropId).collect(Collectors.toList());
+		List<Integer> typeList = glyProductTypeProductRepository.findAllByProductId(productId)
+				.stream().map(GlyRProductTypeProduct::getProductTypeId).collect(Collectors.toList());
+		Map<String, List<Integer>> map = new HashMap<>(2);
+		map.put("props", propList);
+		map.put("types", typeList);
+		return map;
+	}
+
+	@Override
+	public void downloadTemplateFile(HttpServletRequest request, HttpServletResponse response) {
+		response.setCharacterEncoding(request.getCharacterEncoding());
+		response.setContentType("application/octet-stream");
+		File file = new File("/home/gallery/apps/gallery-console/ProductInfoImport.xlsx");
+		try (FileInputStream in = new FileInputStream(file); OutputStream out = response.getOutputStream()) {
+			response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+			int n;
+			while ((n = in.read()) != -1) {
+				out.write(n);
+			}
+			out.flush();
+			response.flushBuffer();
+		} catch (IOException e) {
+			throw new GalleyConsoleException(ReturnEnum.formErrorMessage("服务异常，请重试！"));
+		}
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void modifyProduct(ModifyProductJsonBean param) {
 		int productId = param.getProductId();
@@ -101,18 +137,40 @@ public class ProductServiceImpl implements ProductService {
 			throw new GalleyConsoleException(ReturnEnum.UPDATE_FAILED);
 		}
 		// 设置新产品信息
-		product.setProductName(param.getProductName());
-		product.setProductIntro(param.getProductIntro());
-		product.setProductDetail(param.getProductDetail());
-		product.setInitialPrice(Float.valueOf(param.getInitialPrice()));
-		product.setDiscount(Float.valueOf(param.getDiscount()));
-		product.setRealPrice(Float.valueOf(rounding(product.getInitialPrice() * product.getDiscount() / 10)));
-		product.setInventoryNumber(Integer.valueOf(param.getInventoryNumber()));
-		product.setBookNumber(Integer.valueOf(param.getBookNumber()));
-		product.setResidueNumber(product.getInventoryNumber() - product.getBookNumber() - product.getSaleNumber());
-		product.setProductOrder(Float.valueOf(param.getProductOrder()));
-		product.setIsValid(Integer.valueOf(param.getIsValid()));
-		product.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+		GlyProduct newProduct = new GlyProduct();
+		newProduct.setProductName(param.getProductName());
+		newProduct.setProductIntro(param.getProductIntro());
+		newProduct.setProductDetail(param.getProductDetail());
+		if (param.getInitialPrice() == null) {
+			newProduct.setInitialPrice(product.getInitialPrice());
+		} else {
+			newProduct.setInitialPrice(Float.valueOf(param.getInitialPrice()));
+		}
+		if (param.getDiscount() == null) {
+			newProduct.setDiscount(product.getDiscount());
+		} else {
+			newProduct.setDiscount(Float.valueOf(param.getDiscount()));
+		}
+		newProduct.setRealPrice(Float.valueOf(rounding(newProduct.getInitialPrice() * newProduct.getDiscount() / 10)));
+		if (param.getInventoryNumber() == null) {
+			newProduct.setInventoryNumber(product.getInventoryNumber());
+		} else {
+			newProduct.setInventoryNumber(Integer.valueOf(param.getInventoryNumber()));
+		}
+		if (param.getBookNumber() == null) {
+			newProduct.setBookNumber(product.getBookNumber());
+		} else {
+			newProduct.setBookNumber(Integer.valueOf(param.getBookNumber()));
+		}
+		newProduct.setResidueNumber(newProduct.getInventoryNumber() - newProduct.getBookNumber() - product.getSaleNumber());
+		newProduct.setProductOrder(Float.valueOf(param.getProductOrder()));
+		newProduct.setIsValid(Integer.valueOf(param.getIsValid()));
+		newProduct.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+		try {
+			product.updateMe(newProduct);
+		} catch (IllegalAccessException e) {
+			logger.error(e.getMessage(), e);
+		}
 		// 更新产品信息
 		glyProductRepository.saveAndFlush(product);
 		// 操作属性
@@ -123,7 +181,6 @@ public class ProductServiceImpl implements ProductService {
 			// 新建产品属性
 			attrList.forEach((attr) -> {
 				GlyRProductProps props = new GlyRProductProps();
-				props.setId(getProductAttrRelationId());
 				props.setProductId(productId);
 				props.setPropId(Integer.valueOf(attr));
 				// 保存
@@ -138,7 +195,6 @@ public class ProductServiceImpl implements ProductService {
 			// 新建产品类型
 			typeList.forEach((type) -> {
 				GlyRProductTypeProduct types = new GlyRProductTypeProduct();
-				types.setId(getProductTypesRelationId());
 				types.setProductId(productId);
 				types.setProductTypeId(Integer.valueOf(type));
 				// 保存
@@ -183,7 +239,6 @@ public class ProductServiceImpl implements ProductService {
 		String pictureName = savePicture2Disk(productId, picture.getNewPicture());
 		// 入库
 		GlyProductPicture glyPicture = new GlyProductPicture();
-		glyPicture.setProductPictureCode(getProductPictureId());
 		glyPicture.setProductId(productId);
 		glyPicture.setProductPictureFileName("product" + File.separator + productId + File.separator + pictureName);
 		glyPicture.setProductPictureType(type);
@@ -209,17 +264,26 @@ public class ProductServiceImpl implements ProductService {
 				logger.error("删除图片失败！图片信息：{}", picture.getProductPictureFileName());
 			}
 		}
+		file = file.getParentFile();
+		if (file.isDirectory()) {
+			String[] fileNames = file.list();
+			if (fileNames != null && fileNames.length == 0) {
+				if (!file.delete()) {
+					logger.error("删除产品图目录（{}）失败！", file.getAbsolutePath());
+				}
+			}
+		}
 	}
 
 	private String savePicture2Disk(final int productId, final String newPicture) {
-		byte[] b = Base64.decodeBase64(newPicture.substring(23));
+		byte[] b = Base64.decodeBase64(newPicture.split(";base64,")[1]);
 		for (int i = 0; i < b.length; ++i) {
 			// 调整异常数据
 			if (b[i] < 0) {
 				b[i] += 256;
 			}
 		}
-		String pictureName = generatePictureName();
+		String pictureName = generatePictureName(newPicture.split(";base64,")[0].split(":")[1].split("/")[1]);
 		String imgPath = PICTURE_BASE_PATH + "product" + File.separator + productId;
 		File pictureDirectory = new File(imgPath);
 		if (!pictureDirectory.exists()) {
@@ -239,12 +303,24 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private String generatePictureName() {
-		return System.currentTimeMillis() + ".jpg";
+		return generatePictureName("jpg");
+	}
+
+	private String generatePictureName(String suffix) {
+		return System.currentTimeMillis() + "." + suffix;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void uploadProductFile(MultipartFile file) {
+		// 文件校验
+		if (file.isEmpty()) {
+			throw new GalleyConsoleException(ReturnEnum.formErrorMessage("导入文件为空！"));
+		}
+		String originalFilename = file.getOriginalFilename();
+		if (!originalFilename.endsWith(ACCEPT_IMPORT_FILE_TYPE)) {
+			throw new GalleyConsoleException(ReturnEnum.formErrorMessage("导入文件类型错误！请选择Excel"));
+		}
 		try (InputStream in = file.getInputStream(); Workbook wb = WorkbookFactory.create(in)) {
 			Sheet sheet = wb.getSheetAt(0);
 			int rows = sheet.getLastRowNum() + 1;
@@ -294,51 +370,46 @@ public class ProductServiceImpl implements ProductService {
 					default:
 					}
 				}
-				product.setRealPrice(product.getInitialPrice() * product.getDiscount() / 10);
+				product.setRealPrice(Float.valueOf(rounding(product.getInitialPrice() * product.getDiscount() / 10)));
 				product.setSaleNumber(0);
 				product.setResidueNumber(product.getInventoryNumber());
 				product.setBookNumber(0);
 				product.setIsValid(1);
-				product.setProductId(getProductId());
 				// 保存产品信息
-				glyProductRepository.save(product);
+				glyProductRepository.saveAndFlush(product);
 				// 保存产品属性
 				if (props == null) {
 					throw new RuntimeException("产品属性不能为空！");
 				}
-				GlyRProductProps productProps = new GlyRProductProps();
-				productProps.setProductId(product.getProductId());
 				for (String s : props) {
-					productProps.setId(getProductAttrRelationId());
+					GlyRProductProps productProps = new GlyRProductProps();
+					productProps.setProductId(product.getProductId());
 					productProps.setPropId(Integer.parseInt(s.trim()));
-					glyRProductPropsRepository.save(productProps);
+					glyRProductPropsRepository.saveAndFlush(productProps);
 				}
 				// 保存产品类型
 				if (types == null) {
 					throw new RuntimeException("产品类型不能为空！");
 				}
-				GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
-				productType.setProductId(product.getProductId());
 				for (String s : types) {
-					productType.setId(getProductTypesRelationId());
+					GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
+					productType.setProductId(product.getProductId());
 					productType.setProductTypeId(Integer.parseInt(s.trim()));
-					glyProductTypeProductRepository.save(productType);
+					glyProductTypeProductRepository.saveAndFlush(productType);
 				}
 				// 保存产品配图
 				if (pictures == null) {
 					throw new RuntimeException("产品配图不能为空！");
 				}
-				GlyProductPicture productPicture = new GlyProductPicture();
-				productPicture.setProductId(product.getProductId());
 				for (String pic : pictures) {
+					GlyProductPicture productPicture = new GlyProductPicture();
+					productPicture.setProductId(product.getProductId());
 					String[] args = pic.trim().split("-");
 					productPicture.setProductPictureFileName(args[0].trim());
 					productPicture.setProductPictureType(Integer.parseInt(args[1].trim()));
 					productPicture.setProductPictureOrder(Float.parseFloat(args[2].trim()));
 					productPicture.setIsValid(1);
-					// 获取配图ID
-					productPicture.setProductPictureCode(getProductPictureId());
-					glyProductPictureRepository.save(productPicture);
+					glyProductPictureRepository.saveAndFlush(productPicture);
 				}
 			}
 		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
@@ -375,36 +446,30 @@ public class ProductServiceImpl implements ProductService {
 		product.setProductDetail(productDetail);
 		product.setInitialPrice(Float.parseFloat(initPrice));
 		product.setDiscount(Float.parseFloat(discount));
-		product.setRealPrice(product.getInitialPrice() * product.getDiscount() / 10);
+		product.setRealPrice(Float.valueOf(rounding(product.getInitialPrice() * product.getDiscount() / 10)));
 		product.setInventoryNumber(Integer.parseInt(inventory));
 		product.setSaleNumber(0);
 		product.setResidueNumber(product.getInventoryNumber());
 		product.setBookNumber(0);
 		product.setProductOrder(Float.parseFloat(productOrder));
 		product.setIsValid(1);
-		// 设置生成的产品ID
-		product.setProductId(getProductId());
 		// 保存产品
-		glyProductRepository.save(product);
+		glyProductRepository.saveAndFlush(product);
 		// new 产品属性
-		GlyRProductProps productProps = new GlyRProductProps();
-		productProps.setProductId(product.getProductId());
 		for (String attr : attrs) {
+			GlyRProductProps productProps = new GlyRProductProps();
+			productProps.setProductId(product.getProductId());
 			// 保存一个属性
-			// 设置一个 产品-属性记录 ID
-			productProps.setId(getProductAttrRelationId());
 			productProps.setPropId(Integer.parseInt(attr));
-			glyRProductPropsRepository.save(productProps);
+			glyRProductPropsRepository.saveAndFlush(productProps);
 		}
 		// new 产品类型
-		GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
-		productType.setProductId(product.getProductId());
 		for (String type : types) {
+			GlyRProductTypeProduct productType = new GlyRProductTypeProduct();
+			productType.setProductId(product.getProductId());
 			// 保存一个类型
-			// 设置一个 产品-类型 记录ID
-			productType.setId(getProductTypesRelationId());
 			productType.setProductTypeId(Integer.parseInt(type));
-			glyProductTypeProductRepository.save(productType);
+			glyProductTypeProductRepository.saveAndFlush(productType);
 		}
 		// 保存产品配图
 		// 判断base文件夹是否存在，不存在则创建
@@ -414,10 +479,9 @@ public class ProductServiceImpl implements ProductService {
 				throw new RuntimeException("创建文件夹失败！");
 			}
 		}
-		GlyProductPicture productPicture = new GlyProductPicture();
-		productPicture.setProductId(product.getProductId());
 		for (int i = 0; i < productPics.length; i++) {
-			productPicture.setProductPictureCode(getProductPictureId());
+			GlyProductPicture productPicture = new GlyProductPicture();
+			productPicture.setProductId(product.getProductId());
 			String fileName = "product" + File.separator + product.getProductId() + File.separator + generatePictureName();
 			productPicture.setProductPictureFileName(fileName);
 			int pictureType = 11;
@@ -427,7 +491,7 @@ public class ProductServiceImpl implements ProductService {
 			productPicture.setProductPictureType(pictureType);
 			productPicture.setProductPictureOrder(i + 1.0F);
 			productPicture.setIsValid(1);
-			glyProductPictureRepository.save(productPicture);
+			glyProductPictureRepository.saveAndFlush(productPicture);
 			// 将图片保存至对应目录
 			try (InputStream io = productPics[i].getInputStream();
 				 FileOutputStream fos = new FileOutputStream(new File( PICTURE_BASE_PATH + fileName))) {
@@ -472,46 +536,6 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<GlyProductType> queryAllTypes() {
 		return glyProductTypeRepository.findAll(new Sort(Direction.DESC, "creationTime", "parentProductTypeId"));
-	}
-
-	private int getProductId() {
-		int productId = 10001;
-		Page<GlyProduct> page = glyProductRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "productId")));
-		Iterator<GlyProduct> iterator = page.iterator();
-		if (iterator.hasNext()) {
-			productId = iterator.next().getProductId() + 1;
-		}
-		return productId;
-	}
-
-	private int getProductAttrRelationId() {
-		int id = 1;
-		Page<GlyRProductProps> propPage = glyRProductPropsRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "id")));
-		Iterator<GlyRProductProps> iterator = propPage.iterator();
-		if (iterator.hasNext()) {
-			id = iterator.next().getId() + 1;
-		}
-		return id;
-	}
-
-	private int getProductTypesRelationId() {
-		int id = 1;
-		Page<GlyRProductTypeProduct> typePage = glyProductTypeProductRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "id")));
-		Iterator<GlyRProductTypeProduct> iterator = typePage.iterator();
-		if (iterator.hasNext()) {
-			id = iterator.next().getId() + 1;
-		}
-		return id;
-	}
-
-	private Integer getProductPictureId() {
-		int id = 1;
-		Page<GlyProductPicture> picturePage = glyProductPictureRepository.findAll(PageRequest.of(0, 1, new Sort(Direction.DESC, "productPictureCode")));
-		Iterator<GlyProductPicture> iterator = picturePage.iterator();
-		if (iterator.hasNext()) {
-			id = iterator.next().getProductPictureCode() + 1;
-		}
-		return id;
 	}
 
 	private static <T extends Number> String rounding(T number) {

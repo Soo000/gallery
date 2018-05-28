@@ -6,7 +6,7 @@ server:
   servlet:
     context-path: /
     session:
-      timeout: 1800s
+      timeout: 3600s
 spring:
   thymeleaf:
     mode: HTML
@@ -19,5 +19,4 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: none
-    show-sql: true
     

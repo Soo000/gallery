@@ -2,25 +2,25 @@
 	<div class="col-8 offset-2">
 		<form enctype="multipart/form-data">
 			<div class="form-group row">
-				<label for="product_name" class="col-2 col-form-label">产品名称</label>
+				<label for="product_name" class="col-2 col-form-label"><span style="color: red">*</span>产品名称</label>
 				<div class="col-10">
 					<input name="productName" type="text" class="form-control" id="product_name" placeholder="产品名称" required>
 				</div>
 			</div>
 			<div class="form-group row">
-				<label for="product_intro" class="col-2 col-form-label">产品简介</label>
+				<label for="product_intro" class="col-2 col-form-label"><span style="color: red">*</span>产品简介</label>
 				<div class="col-10">
 					<input name="productIntro" type="text" class="form-control" id="product_intro" placeholder="产品简介" required>
 				</div>
 			</div>
 			<div class="form-group row">
-				<label for="product_detail" class="col-2 col-form-label">产品详情</label>
+				<label for="product_detail" class="col-2 col-form-label"><span style="color: red">*</span>产品详情</label>
 				<div class="col-10">
 					<input name="productDetail" type="text" class="form-control" id="product_detail" placeholder="产品详情" required>
 				</div>
 			</div>
 			<div class="form-group row">
-				<label for="init_price" class="col-2 col-form-label">原始价格</label>
+				<label for="init_price" class="col-2 col-form-label"><span style="color: red">*</span>原始价格</label>
 				<div class="col-10">
 					<input name="initPrice" type="number" class="form-control" id="init_price" placeholder="原始价格" required step="0.01">
 				</div>
@@ -28,11 +28,11 @@
 			<div class="form-group row">
 				<label for="discount" class="col-2 col-form-label">折扣</label>
 				<div class="col-10">
-					<input name="discount" type="number" class="form-control" id="discount" placeholder="折扣" required step="0.01">
+					<input name="discount" type="number" class="form-control" id="discount" placeholder="折扣" step="0.01">
 				</div>
 			</div>
 			<div class="form-group row">
-				<label for="inventory_number" class="col-2 col-form-label">库存</label>
+				<label for="inventory_number" class="col-2 col-form-label"><span style="color: red">*</span>库存</label>
 				<div class="col-10">
 					<input name="inventoryNumber" type="number" class="form-control" id="inventory_number" placeholder="库存" required>
 				</div>
@@ -40,12 +40,12 @@
 			<div class="form-group row">
 				<label for="product_order" class="col-2 col-form-label">产品排序</label>
 				<div class="col-10">
-					<input name="productOrder" type="number" class="form-control" id="product_order" placeholder="产品排序" required step="0.01">
+					<input name="productOrder" type="number" class="form-control" id="product_order" placeholder="产品排序" step="0.01" value="999">
 				</div>
 			</div>
 			<fieldset class="form-group">
 				<div class="row">
-					<label class="col-form-label col-2 pt-0">产品属性</label>
+					<label class="col-form-label col-2 pt-0"><span style="color: red">*</span>产品属性</label>
 					<div class="col-10">
 						<div class="form-check form-check-inline" data-th-each="prop : ${allProps}">
 							<input class="form-check-input" id="productAttrs-0" data-th-id="'productAttrs-' + ${prop.propId}" name="productAttrs" type="checkbox" data-th-value="${prop.propId}"/>
@@ -56,7 +56,7 @@
 			</fieldset>
 			<fieldset class="form-group">
 				<div class="row">
-					<label class="col-form-label col-2 pt-0">产品类型</label>
+					<label class="col-form-label col-2 pt-0"><span style="color: red">*</span>产品类型</label>
 					<div class="col-10">
 						<div class="form-check form-check-inline" data-th-each="type : ${allTypes}" data-th-if="${type.productTypeId != 1}">
 							<input class="form-check-input" id="productTypes-0" data-th-id="'productTypes-' + ${type.productTypeId}" type="checkbox" name="productTypes" data-th-value="${type.productTypeId}"/>
@@ -66,7 +66,7 @@
 				</div>
 			</fieldset>
 			<div class="form-group row">
-				<label for="product_pics" class="col-2 col-form-label">产品配图</label>
+				<label for="product_pics" class="col-2 col-form-label"><span style="color: red">*</span>产品配图</label>
 				<div class="col-10">
 					<input class="form-control-file" name="productPics" type="file" id="product_pics" multiple required>
 					<small class="form-text text-muted">
@@ -76,22 +76,8 @@
 			</div>
 			<div class="form-group row">
 				<div class="col-10">
-					<button type="button" class="btn btn-primary btn-sm" id="add_a_product_btn">保存</button>
+					<button type="button" class="btn btn-primary btn-sm" onclick="addProductSubmit(this);">保存</button>
 					<button type="reset" class="btn btn-secondary btn-sm">重置</button>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label class="col-2 col-form-label">批量导入产品</label>
-				<div class="col-10">
-					<input class="form-control-file" name="file" type="file" required>
-					<small class="form-text text-muted">
-						选择文件后点击导入按钮
-					</small>
-				</div>
-			</div>
-			<div class="form-group row">
-				<div class="col-10">
-					<button type="button" class="btn btn-primary btn-sm" id="import_product_btn">批量导入</button>
 				</div>
 			</div>
 		</form>

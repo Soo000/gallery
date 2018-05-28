@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class ModifyProductJsonBean {
 
-    private int productId;
+    private Integer productId;
     private String productName;
     private String productIntro;
     private String productDetail;
@@ -26,11 +26,11 @@ public class ModifyProductJsonBean {
     private List<PictureInfo> mainPictures;
     private List<PictureInfo> detailPictures;
 
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
