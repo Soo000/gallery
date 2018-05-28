@@ -5,6 +5,9 @@ import javax.persistence.Id;
 
 import com.kkwriter.gallery.entity.BaseEntity;
 
+/**
+ * @author lisha
+ */
 @Entity(name = "gly_product_prop")
 public class GlyProductProp extends BaseEntity {
 	private static final long serialVersionUID = 3212762047635814904L;

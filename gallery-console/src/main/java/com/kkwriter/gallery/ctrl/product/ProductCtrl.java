@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,9 +24,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lisha
@@ -36,6 +39,22 @@ public class ProductCtrl {
 
     @Resource(name = "productServiceImpl")
     private ProductService productService;
+
+    @GetMapping(value = "/downloadTemplate")
+    public void downloadTemplateFile(HttpServletRequest request, HttpServletResponse response) {
+        productService.downloadTemplateFile(request, response);
+    }
+
+    @GetMapping(value = "/preImport")
+    public ModelAndView preImport() {
+        return new ModelAndView("import_product");
+    }
+
+    @GetMapping(value = "/getTypeAndAttr/{id}")
+    public Result<Map<String, List<Integer>>> getTypeAndAttr(@PathVariable Integer id) {
+        Map<String, List<Integer>> data = productService.getProductTypeAndAttrByProductId(id);
+        return ResultUtil.success(data);
+    }
 
     @PostMapping("/delete")
     public Result<?> deleteProduct(int productId) {

@@ -81,6 +81,18 @@
         openHomeModuleItemManagePage();
     });
 
+    // 广告活动管理导航按钮单击事件
+    $("#activity_manage_bar").click(function (e) {
+        e.preventDefault();
+        openActivityManagePage();
+    });
+
+    // 批量导入导航栏按钮单击事件
+    $("#import_product_info").click(function (e) {
+        e.preventDefault();
+        openImportProductsInfoPage();
+    });
+
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
@@ -101,73 +113,6 @@
                 }
             });
         }
-    });
-
-	// 添加商品页面，保存按钮单击事件
-	$("div.main").on("click", "#add_a_product_btn", function(e) {
-		e.preventDefault();
-		// 参数校验，一定要校验文件是否为图片
-		var files = $("#add_product_div input[name='productPics']")[0].files;
-		var allowPicTypes = ["image/jpg", "image/jpeg","image/png","image/x-png","image/bmp"];
-		if (files.length === 0) {
-			alert("请选择图片！");
-			return;
-		}
-		var acceptN = 0;
-		for (var i=0; i<files.length; i++) {
-			var fileType = files[i].type;
-			var typeAccepted = false;
-			for (var j=0; j<allowPicTypes.length; j++) {
-				if (fileType === allowPicTypes[j]) {
-					typeAccepted = true;
-				}
-			}
-			if (typeAccepted) {
-				acceptN++;
-			}
-		}
-		if (acceptN !== files.length) {
-			alert("请检查图片类型是否正确！");
-			return;
-		}
-		// 提交操作
-		$.ajax({
-			"url": "/product/add",
-			"type": "post",
-			"data": new FormData($("#add_product_div form")[0]),
-			"cache": false,
-			"processData": false,
-			"contentType": false
-		}).done(function(res) {
-			if (res.code === 0) {
-				alert("添加商品成功！");
-			} else {
-				alert("添加商品失败！" + res.msg);
-			}
-		}).fail(function() {
-			alert("添加商品失败！");
-		});
-	});
-
-	// 添加商品页面，导入按钮单击事件
-    $("div.main").on("click", "#import_product_btn", function (e) {
-        e.preventDefault();
-        $.ajax({
-            "url": "/product/upload",
-            "type": "post",
-            "data": new FormData($("#add_product_div form")[0]),
-            "cache": false,
-            "processData": false,
-            "contentType": false
-        }).done(function(res) {
-            if (res.code === 0) {
-                alert("导入成功！");
-            } else {
-                alert("导入失败！");
-            }
-        }).fail(function() {
-            alert("导入失败！");
-        });
     });
 
     // 修改产品页面，删除图片操作
@@ -365,29 +310,47 @@ function getProductByPage(page) {
                     $('#editProductModal').remove();
                 }
                 $("body").append(page);
-                $('#editProductModal').modal();
-                // 获取产品配图
-                $.get("/product/getProductPicturesByProductId", {"productId": productId, "_":new Date().getTime()}, function (result) {
-                    var mainPictures = [], detailPictures = [];
-                    // 分拣图片
-                    $.each(result.data, function (i, picture) {
-                        if (picture.productPictureType === 11) {
-                            mainPictures.push(picture);
-                        } else if (picture.productPictureType === 21) {
-                            detailPictures.push(picture);
+                // 取出type值和attr值做设置
+                $.get("/product/getTypeAndAttr/" + productId + "?_=" + new Date().getTime(), function (result) {
+                    if (result.code === 0) {
+                        var types = result.data.types;
+                        var props = result.data.props;
+                        if (types instanceof Array && types.length !== 0) {
+                            $.each(types, function (i, v) {
+                                $("#productTypes-" + v).prop("checked", true);
+                            });
                         }
-                    });
-                    // 替换主图
-                    var $imgs = $("div.main-picture-area img");
-                    $.each(mainPictures, function (i, picture) {
-                        $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
-                        $($imgs[i]).data("picture", picture);
-                    });
-                    // 替换详情图
-                    $imgs = $("div.detail-picture-area img");
-                    $.each(detailPictures, function (i, picture) {
-                        $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
-                        $($imgs[i]).data("picture", picture);
+                        if (props instanceof Array && props.length !== 0) {
+                            $.each(props, function (i, v) {
+                                $("#productAttrs-" + v).prop("checked", true);
+                            });
+                        }
+                    }
+                    // 获取产品配图
+                    $.get("/product/getProductPicturesByProductId", {"productId": productId, "_":new Date().getTime()}, function (result) {
+                        var mainPictures = [], detailPictures = [];
+                        // 分拣图片
+                        $.each(result.data, function (i, picture) {
+                            if (picture.productPictureType === 11) {
+                                mainPictures.push(picture);
+                            } else if (picture.productPictureType === 21) {
+                                detailPictures.push(picture);
+                            }
+                        });
+                        // 替换主图
+                        var $imgs = $("div.main-picture-area img");
+                        $.each(mainPictures, function (i, picture) {
+                            $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
+                            $($imgs[i]).data("picture", picture);
+                        });
+                        // 替换详情图
+                        $imgs = $("div.detail-picture-area img");
+                        $.each(detailPictures, function (i, picture) {
+                            $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
+                            $($imgs[i]).data("picture", picture);
+                        });
+                        // 显示modal
+                        $('#editProductModal').modal();
                     });
                 });
             });
@@ -397,13 +360,16 @@ function getProductByPage(page) {
             e.preventDefault();
             e.stopPropagation();
             var _this = $(this);
-            $.post("/product/delete", {"productId":$.trim($(this).parent().parent().find("td").eq(0).text())}, function (result) {
-                if (result.code === 0) {
-                    _this.parent().parent().remove();
-                } else {
-                    alert("删除产品服务异常！");
-                }
-            });
+            if (confirm("删除操作数据不可恢复，是否继续？")) {
+                $.post("/product/delete", {"productId":$.trim($(this).parent().parent().find("td").eq(0).text())}, function (result) {
+                    if (result.code === 0) {
+                        _this.parent().parent().remove();
+                    } else {
+                        alert("删除产品服务异常！");
+                    }
+                });
+            } else {
+            }
         });
     });
 }
@@ -441,38 +407,36 @@ function modifyProductModalSubmit() {
         }
     });
 
-    if (!productName || !productIntro || !productDetail) {
-        return;
-    }
-    if (!initialPrice || !$.isNumeric(initialPrice)) {
-        return;
-    }
-    if (!discount || !$.isNumeric(discount)) {
-        return;
-    }
-    if (!inventoryNumber || !$.isNumeric(inventoryNumber)) {
-        return;
-    }
-    if (!bookNumber || !$.isNumeric(bookNumber)) {
-        return;
-    }
-    if (!productOrder || !$.isNumeric(productOrder)) {
-        return;
-    }
-
     var params = {
-        "productId": $("#productId").val(),
-        "productName": productName,
-        "productIntro":productIntro,
-        "productDetail":productDetail,
-        "initialPrice":initialPrice,
-        "discount":discount,
-        "inventoryNumber":inventoryNumber,
-        "bookNumber":bookNumber,
-        "productOrder":productOrder,
-        "isValid":isValid
+        "productId": $("#productId").val()
     };
-
+    if (productName) {
+        params.productName = productName;
+    }
+    if (productIntro) {
+        params.productIntro = productIntro;
+    }
+    if (productDetail) {
+        params.productDetail = productDetail;
+    }
+    if (initialPrice) {
+        params.initialPrice = initialPrice;
+    }
+    if (discount) {
+        params.discount = discount;
+    }
+    if (inventoryNumber) {
+        params.inventoryNumber = inventoryNumber;
+    }
+    if (bookNumber) {
+        params.bookNumber = bookNumber;
+    }
+    if (productOrder) {
+        params.productOrder = productOrder;
+    }
+    if (isValid) {
+        params.isValid = isValid;
+    }
     if (productAttrs.length !== 0) {
         params.productAttrs = productAttrs;
     }
@@ -695,5 +659,267 @@ function deleteModuleItem(element) {
 function gotoModuleItemManage(element) {
     openHomeModuleItemManagePage(function () {
         selectModule2Manage(parseInt($.trim($(element).find("th").eq(0).text()), 0));
+    });
+}
+
+function resetEditActivityForm() {
+    $("#editActivityForm")[0].reset();
+    $("#activityId").val("-1");
+    $("#addImg").attr("src", "/img/add_picture.jpg");
+    $("#addImg").data("picture", null);
+    $('#activityTime').val(formatDatetimeLocal(new Date()) + " - " + formatDatetimeLocal(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)));
+}
+
+function openActivityManagePage() {
+    $.get("/activity/managePage", function (page) {
+        $("div.main").html("").html(page);
+        // 初始化日期选择控件
+        laydate.render({
+            elem: '#activityTime',
+            type: 'datetime',
+            range: true,
+            calendar: true,
+            value: formatDatetimeLocal(new Date()) + " - " + formatDatetimeLocal(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+        });
+        // modal hidden事件
+        $("#activityManageModal").on("hidden.bs.modal", function () {
+            resetEditActivityForm();
+        });
+    });
+}
+
+function formatDatetimeLocal(datetime) {
+    if (!datetime instanceof Date) {
+        return;
+    }
+    var year = datetime.getFullYear();
+    var month = datetime.getMonth() + 1;
+    month = month >= 10 ? month : "0" + month;
+    var day = datetime.getDate();
+    day = day >= 10 ? day : "0" + day;
+    var hour = datetime.getHours();
+    hour = hour >= 10 ? hour : "0" + hour;
+    var minute = datetime.getMinutes();
+    minute = minute >= 10 ? minute : "0" + minute;
+    var seconds = datetime.getSeconds();
+    seconds = seconds >= 10 ? seconds : "0" + seconds;
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + seconds;
+}
+
+function addActivityPicture(element) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        var $img = $("#addImg");
+        $img.attr("src", reader.result);
+        $img.data("picture", reader.result);
+    };
+    reader.readAsDataURL(element.files[0]);
+}
+
+function editActivitySubmit() {
+    var activityId = $.trim($("#activityId").val());
+    var activityName = $.trim($("#activityName").val());
+    var activityUrl = $.trim($("#activityUrl").val());
+    var activityType = $("input[name='activityType']:checked").val();
+    var activityTime = $.trim($("#activityTime").val());
+    var activityDescription = $.trim($("#activityDescription").val());
+    var valid = $("input[name='valid']:checked").val();
+    var picture = $("#addImg").data("picture");
+
+    var params = {};
+    if (activityId !== "-1") {
+        params.activityId = activityId;
+    }
+    if (activityName) {
+        params.activityName = activityName;
+    }
+    if (activityUrl) {
+        params.activityUrl = activityUrl;
+    }
+    if (activityType) {
+        params.activityType = activityType;
+    }
+    if (activityTime) {
+        params.activityTime = activityTime;
+    }
+    if (activityDescription) {
+        params.activityDescription = activityDescription;
+    }
+    if (valid) {
+        params.valid = valid;
+    }
+    if (picture) {
+        params.picture = picture;
+    }
+
+    $.post("/activity/save", params, function (result) {
+        if (result.code === 0) {
+            $("#activityManageModal").modal('hide');
+            resetEditActivityForm();
+            setTimeout(function () {
+                $("#activity_manage_bar").click();
+            }, 500);
+        } else {
+            alert(result.msg);
+        }
+    });
+}
+
+function preEditActivity(element) {
+    var $tds = $(element).parent().parent().children();
+    $("#addImg").attr("src", $($tds.eq(0)).find("img").attr("src"));
+    $("#activityId").val($($tds.eq(1)).text());
+    $("#activityName").val($($tds.eq(2)).text());
+    $("#activityUrl").val($($tds.eq(3)).text());
+    $("#activityType" + $($tds.eq(4)).attr("value")).prop("checked", true);
+    $("#activityTime").val($($tds.eq(5)).text().substr(0, 19) + " - " + $($tds.eq(6)).text().substr(0, 19));
+    $("#activityDescription").val($($tds.eq(7)).text());
+    $("#valid" + $($tds.eq(8)).attr("value")).prop("checked", true);
+    $("#activityManageModal").modal('show');
+}
+
+function deleteActivity(element) {
+    $.post("/activity/delete/", {"id": $($(element).parent().parent().children().eq(1)).text()}, function (result) {
+        if (result.code === 0) {
+            $(element).parent().parent().remove();
+        } else {
+            alert(result.msg);
+        }
+    });
+}
+
+function addProductSubmit(element) {
+    var _this = element;
+    $(_this).prop("disabled", true);
+
+    // 参数校验，一定要校验文件是否为图片
+    if (!$("#product_name").val()) {
+        $("#product_name").focus();
+        $(_this).prop("disabled", false);
+        return;
+    }
+    if (!$("#product_intro").val()) {
+        $("#product_intro").focus();
+        $(_this).prop("disabled", false);
+        return;
+    }
+    if (!$("#product_detail").val()) {
+        $("#product_detail").focus();
+        $(_this).prop("disabled", false);
+        return;
+    }
+    if (!$("#init_price").val()) {
+        $("#init_price").focus();
+        $(_this).prop("disabled", false);
+        return;
+    }
+    if (!$("#discount").val()) {
+        $("#discount").val(10);
+    }
+    if (!$("#inventory_number").val()) {
+        $("#inventory_number").focus();
+        $(_this).prop("disabled", false);
+        return;
+    }
+    if (!$("#product_order").val()) {
+        $("#product_order").val(999);
+    }
+
+    var total = 0;
+    var productAttrInputs = $("input[name='productAttrs']");
+    for (var i = 0; i < productAttrInputs.length; i++) {
+        if ($(productAttrInputs[i]).prop("checked")) {
+            total++;
+        }
+    }
+    if (total === 0) {
+        $(_this).prop("disabled", false);
+        alert("请选择产品属性！");
+        return;
+    }
+    total = 0;
+    var productTypeInputs = $("input[name='productTypes']");
+    for (var i = 0; i < productTypeInputs.length; i++) {
+        if ($(productTypeInputs[i]).prop("checked")) {
+            total++;
+        }
+    }
+    if (total === 0) {
+        $(_this).prop("disabled", false);
+        alert("请选择产品类型！");
+        return;
+    }
+
+    var files = $("#add_product_div input[name='productPics']")[0].files;
+    var allowPicTypes = ["image/jpg", "image/jpeg","image/png","image/x-png","image/bmp"];
+    if (files.length === 0) {
+        $(_this).prop("disabled", false);
+        alert("请选择图片！");
+        return;
+    }
+    var acceptN = 0;
+    for (var i=0; i<files.length; i++) {
+        var fileType = files[i].type;
+        var typeAccepted = false;
+        for (var j=0; j<allowPicTypes.length; j++) {
+            if (fileType === allowPicTypes[j]) {
+                typeAccepted = true;
+                break;
+            }
+        }
+        if (typeAccepted) {
+            acceptN++;
+        }
+    }
+    if (acceptN !== files.length) {
+        $(_this).prop("disabled", false);
+        alert("请检查图片类型是否正确！");
+        return;
+    }
+
+    // 提交操作
+    $.ajax({
+        "url": "/product/add",
+        "type": "post",
+        "data": new FormData($("#add_product_div form")[0]),
+        "cache": false,
+        "processData": false,
+        "contentType": false
+    }).done(function(res) {
+        if (res.code === 0) {
+            $(_this).siblings('button').click();
+            alert("添加商品成功！");
+        } else {
+            alert("添加商品失败！" + res.msg);
+        }
+    }).fail(function() {
+        alert("添加商品失败！");
+    }).always(function () {
+        $(_this).prop("disabled", false);
+    });
+}
+
+function openImportProductsInfoPage() {
+    $.get("/product/preImport").done(function (page) {
+        $("div.main").html("").html(page);
+    });
+}
+
+function importProductInfo() {
+    $.ajax({
+        "url": "/product/upload",
+        "type": "post",
+        "data": new FormData($("#import_product_div form")[0]),
+        "cache": false,
+        "processData": false,
+        "contentType": false
+    }).done(function(res) {
+        if (res.code === 0) {
+            alert("导入成功！");
+        } else {
+            alert(res.msg);
+        }
+    }).fail(function() {
+        alert("导入失败！");
     });
 }

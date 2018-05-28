@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import com.kkwriter.gallery.entity.address.GlyAddress;
 import com.kkwriter.gallery.repository.address.GlyAddressRepository;
 
+/**
+ * @author lisha
+ */
 @Service
 public class AddressServiceImpl implements AddressService {
 	@Resource(name = "glyAddressRepository")
@@ -14,7 +17,7 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	public GlyAddress queryAddressById(Integer id) {
-		return glyAddressRepository.findById(id).get();
+		return glyAddressRepository.findById(id).orElseThrow(null);
 	}
 	
 }

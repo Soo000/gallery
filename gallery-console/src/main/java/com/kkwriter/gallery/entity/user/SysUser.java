@@ -18,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.kkwriter.gallery.entity.BaseEntity;
 
+/**
+ * @author lisha
+ */
 @Entity
 public class SysUser extends BaseEntity implements UserDetails {
 	private static final long serialVersionUID = 7954747732590588192L;

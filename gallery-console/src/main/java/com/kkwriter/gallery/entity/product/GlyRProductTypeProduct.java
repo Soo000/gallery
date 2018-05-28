@@ -3,13 +3,19 @@ package com.kkwriter.gallery.entity.product;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * @author lisha
+ */
 @Entity(name = "gly_r_product_type_product")
 public class GlyRProductTypeProduct implements Serializable {
 	private static final long serialVersionUID = -7397675005270694600L;
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private Integer productId;

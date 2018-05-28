@@ -1,5 +1,9 @@
 package com.kkwriter.gallery.result;
 
+/**
+ * Result工具类，用于快速创建Result对象
+ * @author lisha
+ */
 public class ResultUtil {
 	
 	public static <T> Result<T> success(T t) {

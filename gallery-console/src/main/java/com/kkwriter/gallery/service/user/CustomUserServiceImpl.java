@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.kkwriter.gallery.entity.user.SysUser;
 import com.kkwriter.gallery.repository.user.SysUserRepository;
 
+/**
+ * @author lisha
+ */
 @Service
 public class CustomUserServiceImpl implements CustomUserService {
 	@Resource(name = "sysUserRepository")

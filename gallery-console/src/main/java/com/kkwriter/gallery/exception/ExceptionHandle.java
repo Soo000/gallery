@@ -10,6 +10,9 @@ import com.kkwriter.gallery.result.Result;
 import com.kkwriter.gallery.result.ResultUtil;
 import com.kkwriter.gallery.result.ReturnEnum;
 
+/**
+ * @author lisha
+ */
 @ControllerAdvice
 public class ExceptionHandle {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -18,8 +21,8 @@ public class ExceptionHandle {
 	@ResponseBody
 	public Result<Object> handle(Exception e) {
 		if (e instanceof GalleyConsoleException) {
-			GalleyConsoleException girlException = (GalleyConsoleException) e;
-			return ResultUtil.error(girlException.getRet());
+			GalleyConsoleException consoleException = (GalleyConsoleException) e;
+			return ResultUtil.error(consoleException.getRet());
 		} else {
 			logger.error(e.getMessage(), e);
 			return ResultUtil.error(ReturnEnum.UNKNOWN_ERROR);
