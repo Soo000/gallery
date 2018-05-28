@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <meta charset="UTF-8">
 <!-- 视口标签 -->
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 <!-- 设置IE浏览器采用的解析模式 -->
 <meta http-equiv="X-UA-Campatible" content="IE=edge">
 <!-- 缓存设置 -->
