@@ -58,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final static String PICTURE_BASE_PATH = File.separator + "home" + File.separator + "gallery" +
 			File.separator + "apps" + File.separator + "gallery-web" + File.separator + "res" + File.separator + "img" + File.separator;
+	private final static String ACCEPT_IMPORT_FILE_TYPE = "xlsx";
 
 	@Resource(name = "glyProductRepository")
 	private GlyProductRepository glyProductRepository;
@@ -291,6 +292,14 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void uploadProductFile(MultipartFile file) {
+		// 文件校验
+		if (file.isEmpty()) {
+			throw new GalleyConsoleException(ReturnEnum.formErrorMessage("导入文件为空！"));
+		}
+		String originalFilename = file.getOriginalFilename();
+		if (!originalFilename.endsWith(ACCEPT_IMPORT_FILE_TYPE)) {
+			throw new GalleyConsoleException(ReturnEnum.formErrorMessage("导入文件类型错误！请选择Excel"));
+		}
 		try (InputStream in = file.getInputStream(); Workbook wb = WorkbookFactory.create(in)) {
 			Sheet sheet = wb.getSheetAt(0);
 			int rows = sheet.getLastRowNum() + 1;

@@ -87,6 +87,12 @@
         openActivityManagePage();
     });
 
+    // 批量导入导航栏按钮单击事件
+    $("#import_product_info").click(function (e) {
+        e.preventDefault();
+        openImportProductsInfoPage();
+    });
+
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
@@ -107,27 +113,6 @@
                 }
             });
         }
-    });
-
-	// 添加商品页面，导入按钮单击事件
-    $("div.main").on("click", "#import_product_btn", function (e) {
-        e.preventDefault();
-        $.ajax({
-            "url": "/product/upload",
-            "type": "post",
-            "data": new FormData($("#add_product_div form")[0]),
-            "cache": false,
-            "processData": false,
-            "contentType": false
-        }).done(function(res) {
-            if (res.code === 0) {
-                alert("导入成功！");
-            } else {
-                alert("导入失败！");
-            }
-        }).fail(function() {
-            alert("导入失败！");
-        });
     });
 
     // 修改产品页面，删除图片操作
@@ -911,5 +896,30 @@ function addProductSubmit(element) {
         alert("添加商品失败！");
     }).always(function () {
         $(_this).prop("disabled", false);
+    });
+}
+
+function openImportProductsInfoPage() {
+    $.get("/product/preImport").done(function (page) {
+        $("div.main").html("").html(page);
+    });
+}
+
+function importProductInfo() {
+    $.ajax({
+        "url": "/product/upload",
+        "type": "post",
+        "data": new FormData($("#import_product_div form")[0]),
+        "cache": false,
+        "processData": false,
+        "contentType": false
+    }).done(function(res) {
+        if (res.code === 0) {
+            alert("导入成功！");
+        } else {
+            alert(res.msg);
+        }
+    }).fail(function() {
+        alert("导入失败！");
     });
 }

@@ -39,6 +39,11 @@ public class ProductCtrl {
     @Resource(name = "productServiceImpl")
     private ProductService productService;
 
+    @GetMapping("/preImport")
+    public ModelAndView preImport() {
+        return new ModelAndView("import_product");
+    }
+
     @GetMapping(value = "/getTypeAndAttr/{id}")
     public Result<Map<String, List<Integer>>> getTypeAndAttr(@PathVariable Integer id) {
         Map<String, List<Integer>> data = productService.getProductTypeAndAttrByProductId(id);
