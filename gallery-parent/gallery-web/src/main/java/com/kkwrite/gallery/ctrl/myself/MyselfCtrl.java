@@ -34,6 +34,15 @@ public class MyselfCtrl extends BaseCtrl {
 		
 		ModelAndView modelAndView = new ModelAndView("/myself/myself");
 		String username = getUsername();
+		logger.info("从 Session 中获取 username = " + username);
+		// 如果用户名为空，转到微信获取 code 接口
+		if (username == null || username.trim().length() <= 0) {
+			logger.info("准备将请求转发到 /weixinctrl/getcode");
+			modelAndView.addObject("codeBackUrl", "/myselfctrl/codeback");
+			modelAndView.setViewName("forward:/weixinctrl/getcode");
+			return modelAndView;
+		}
+		
 		modelAndView.addObject("username", username);
 		
 		// 获取用户信息
@@ -41,6 +50,27 @@ public class MyselfCtrl extends BaseCtrl {
 		modelAndView.addObject("orderInfo", orderInfo);
 		
 		logger.debug("[ end ] HomeCtrl.pageCtrl().");
+		return modelAndView;
+	}
+	
+	@RequestMapping("/codeback")
+	public ModelAndView codeBack(String code) {
+		// 获取用户的 openId
+		String openId = getOpenId(code);
+		// 构建用户信息
+		buildUserInfo(openId);
+		// 用户登录用户
+		String username = getUsername();
+	    logger.info("[ run ] HomeCtrl.init(), 从 Session 中获取 username = " + username);
+	    
+		ModelAndView modelAndView = new ModelAndView("/myself/myself");
+		
+		modelAndView.addObject("username", username);
+		
+		// 获取用户信息
+		Map<String, Integer> orderInfo = getUserOrderInfo(username);
+		modelAndView.addObject("orderInfo", orderInfo);
+		
 		return modelAndView;
 	}
 	

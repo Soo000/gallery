@@ -67,8 +67,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().mvcMatchers("/prodetailsctrl/pagectrl").access("permitAll");
 		// 更多评论
 		http.authorizeRequests().mvcMatchers("/prodetailsctrl/morevaluates").access("permitAll");
-		// 微信接口回调：调用微信用户授权接口回调不需要登录验证
-		http.authorizeRequests().mvcMatchers("/weixinctrl/authorizeback").access("permitAll");
 		
 		// 登录页面不需要认证
 		http.authorizeRequests().mvcMatchers("/loginctrl/prelogin").access("permitAll");
@@ -91,6 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		// 配置我的需要的角色
 		http.authorizeRequests().mvcMatchers("/myselfctrl/pagectrl").hasRole("USER");
+		http.authorizeRequests().mvcMatchers("/myselfctrl/codeback").access("permitAll");
 		
 		// 配置订单需要的角色
 		http.authorizeRequests().mvcMatchers("/orderctrl/pagectrl").hasRole("USER");
