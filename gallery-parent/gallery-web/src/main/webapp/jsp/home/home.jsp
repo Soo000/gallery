@@ -66,30 +66,39 @@
                     <c:if test="${homeModuleVO.moduleTemplate == 32 }">
 				        <div class="container area">
 				            <div class="row">
-				                <div class="col-xs-6" style="padding: 0 1px 0 0">
+				                <div class="col-xs-6" style="">
 				                    <c:if test="${homeModuleVO.homeModuleItemVOs[0] != null}">
-				                        <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[0].productId }">
-						                    <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].moduleItemImage}" class="img-responsive" style="height: 323px;"/>
-				                        </a>
-				                    </c:if>
+                                        <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[0].productId }">
+                                            <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].moduleItemImage}" 
+                                              class="img-responsive" style="padding: 0 1px 0 0; height: 274px;"/>
+                                        </a>
+                                    </c:if>
 				                </div>
-				                <div class="col-xs-6">
-				                    <div class="row">
-				                        <div class="col-xs-12" style="padding: 0 0 0 1px">
-				                            <c:if test="${homeModuleVO.homeModuleItemVOs[1] != null}">
-		                                        <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[1].productId }">
-		                                            <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[1].moduleItemImage}" class="img-responsive" />
-		                                        </a>
-		                                    </c:if>
-				                        </div>
-				                        <div class="col-xs-12" style="padding: 0 0 0 1px">
-				                            <c:if test="${homeModuleVO.homeModuleItemVOs[2] != null}">
-		                                        <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[2].productId }">
-		                                            <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[2].moduleItemImage}" class="img-responsive" />
-		                                        </a>
-		                                    </c:if>
-				                        </div>
+				                <div class="col-xs-6" style="">
+				                    <div class="container">
+					                    <div class="row">
+	                                        <div class="col-xs-12">
+	                                            <c:if test="${homeModuleVO.homeModuleItemVOs[1] != null}">
+	                                                <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[1].productId }">
+	                                                    <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[1].moduleItemImage}" 
+	                                                      class="img-responsive" style="padding: 0 0 0 0;"/>
+	                                                </a>
+	                                            </c:if>
+	                                        </div>
+	                                    </div>
 				                    </div>
+				                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <c:if test="${homeModuleVO.homeModuleItemVOs[2] != null}">
+                                                    <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[2].productId }">
+                                                        <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[2].moduleItemImage}" 
+                                                          class="img-responsive" style="padding: 1px 0 0 0;"/>
+                                                    </a>
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                    </div>
 				                </div>
 				            </div>
 				        </div>                       
@@ -115,20 +124,20 @@
 						            </div>
 						            <div class="col-xs-12">
 						                <div class="row">
-						                    <div class="col-xs-6" style="padding: 0 0 0 1px">
+						                    <div class="col-xs-6" style="padding: 0 1px 1px 0">
 						                        <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
 						                    </div>
-						                    <div class="col-xs-6" style="padding: 0 0 0 1px">
-						                        <img src="<%=request.getContextPath() %>/res/img/product/10002/1526610598068.jpg" class="img-responsive"/>
-						                    </div>
+						                    <div class="col-xs-6" style="padding: 0 0 1px 1px">
+                                                <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
+                                            </div>
 						                </div>
 						                <div class="row">
-						                    <div class="col-xs-6" style="padding: 0 0 0 1px">
-						                        <img src="<%=request.getContextPath() %>/res/img/product/10002/1526610598068.jpg" class="img-responsive"/>
-						                    </div>
-						                    <div class="col-xs-6" style="padding: 0 0 0 1px">
-						                        <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
-						                    </div>
+						                    <div class="col-xs-6" style="padding: 1px 1px 0 0">
+                                                <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
+                                            </div>
+						                    <div class="col-xs-6" style="padding: 1px 0 0 1px">
+                                                <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
+                                            </div>
 						                </div>
 						            </div>
 						        </div>
