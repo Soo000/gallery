@@ -14,6 +14,7 @@ import com.kkwriter.gallery.entity.product.GlyProductProp;
 import com.kkwriter.gallery.entity.product.GlyProductType;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author lisha
@@ -85,4 +86,10 @@ public interface ProductService {
 	 */
 	Map<String,List<Integer>> getProductTypeAndAttrByProductId(Integer productId);
 
+	/**
+	 * 下载导入模板
+	 * @param request 请求
+	 * @param response 响应
+	 */
+    void downloadTemplateFile(HttpServletRequest request, HttpServletResponse response);
 }

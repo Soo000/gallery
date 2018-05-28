@@ -37,12 +37,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -104,6 +107,24 @@ public class ProductServiceImpl implements ProductService {
 		map.put("props", propList);
 		map.put("types", typeList);
 		return map;
+	}
+
+	@Override
+	public void downloadTemplateFile(HttpServletRequest request, HttpServletResponse response) {
+		response.setCharacterEncoding(request.getCharacterEncoding());
+		response.setContentType("application/octet-stream");
+		File file = new File("/home/gallery/apps/gallery-console/ProductInfoImport.xlsx");
+		try (FileInputStream in = new FileInputStream(file); OutputStream out = response.getOutputStream()) {
+			response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+			int n;
+			while ((n = in.read()) != -1) {
+				out.write(n);
+			}
+			out.flush();
+			response.flushBuffer();
+		} catch (IOException e) {
+			throw new GalleyConsoleException(ReturnEnum.formErrorMessage("服务异常，请重试！"));
+		}
 	}
 
 	@Override

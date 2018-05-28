@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,12 @@ public class ProductCtrl {
     @Resource(name = "productServiceImpl")
     private ProductService productService;
 
-    @GetMapping("/preImport")
+    @GetMapping(value = "/downloadTemplate")
+    public void downloadTemplateFile(HttpServletRequest request, HttpServletResponse response) {
+        productService.downloadTemplateFile(request, response);
+    }
+
+    @GetMapping(value = "/preImport")
     public ModelAndView preImport() {
         return new ModelAndView("import_product");
     }
