@@ -24,7 +24,7 @@
 		<link href="<%=request.getContextPath() %>/res/css/categories.css" type="text/css" rel="stylesheet"/>
 		<title>产品分类</title>
 	</head>
-	<body style="margin-top: 0">
+	<body style="margin-top: 0; margin-bottom: 50px;">
 		<!-- 风格 -->
 		<div class="cond-title">
 			<span class="cond-title-text">风格</span>
@@ -75,7 +75,13 @@
 						<div class="col-xs-6">
 							<div class="thumbnail">
 								<a href="<%=request.getContextPath()%>/prodetailsctrl/pagectrl?productId=${product.productId }">
-									<img style="height: 130px" src="<%=request.getContextPath() %>/res/img/${product.productPictures[0].productPictureFileName }" />
+								    <c:if test="${product.productPictures != null}">
+								        <c:forEach var="productPicture" items="${product.productPictures }">
+								            <c:if test="${productPicture.productPictureType == 11 }">
+								                <img style="height: 130px" src="<%=request.getContextPath() %>/res/img/${productPicture.productPictureFileName }" />
+								            </c:if>
+								        </c:forEach>
+								    </c:if>
 									<div class="caption">
 										<!--<h6>小桥流水</h6>-->
 										<p>${product.productName }</p>
