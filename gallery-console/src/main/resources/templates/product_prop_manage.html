@@ -1,0 +1,86 @@
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productPropManageModal">
+    添加产品属性
+</button>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">属性名</th>
+            <th scope="col">属性类型</th>
+            <th scope="col">属性值</th>
+            <th scope="col">是否有效</th>
+            <th scope="col">创建时间</th>
+            <th scope="col">更新时间</th>
+            <th scope="col">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-th-each="prop : ${propList}">
+            <th scope="row" data-th-text="${prop.propId}"></th>
+            <td data-th-text="${prop.propName}"></td>
+            <td data-th-text="${prop.propType}"></td>
+            <td data-th-text="${prop.propValue}"></td>
+            <td data-th-text="${prop.isValid == 1 ? '有效' : '无效'}"></td>
+            <td data-th-text="${prop.creationTime}"></td>
+            <td data-th-text="${prop.updateTime}"></td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" onclick="modifyProductProp(this);">修改</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteProductProp(this);">删除</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="productPropManageModal" tabindex="-1" role="dialog" aria-labelledby="productPropManageModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productPropManageModalTitle">产品属性管理</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="productPropManageForm">
+                    <div class="form-group" style="display: none;">
+                        <label for="propId">ID</label>
+                        <input type="text" class="form-control" id="propId" name="propId" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="propName">属性名</label>
+                        <input type="text" class="form-control" id="propName" name="propName" placeholder="属性名">
+                    </div>
+                    <div class="form-group">
+                        <label for="propType">属性类型</label>
+                        <select class="form-control" id="propType" name="propType" required>
+                            <option value="size">size</option>
+                            <option value="materials">materials</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="propValue">属性值</label>
+                        <input type="text" class="form-control" id="propValue" name="propValue" placeholder="属性值" required>
+                    </div>
+                    <div class="form-group">
+                        <label>是否有效</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="valid" id="valid-0" value="0">
+                                <label class="form-check-label" for="valid-0">无效</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="valid" id="valid-1" value="1" checked>
+                                <label class="form-check-label" for="valid-1">有效</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="productPropManageSubmit();">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
