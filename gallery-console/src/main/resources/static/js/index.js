@@ -93,6 +93,12 @@
         openImportProductsInfoPage();
     });
 
+    // 产品属性管理导航栏按钮单击事件
+    $("#product_prop_manage_bar").click(function (e) {
+        e.preventDefault();
+        openProductPropManagePage();
+    });
+
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
@@ -921,5 +927,84 @@ function importProductInfo() {
         }
     }).fail(function() {
         alert("导入失败！");
+    });
+}
+
+function openProductPropManagePage() {
+    $.get("/product-prop/open").done(function (page) {
+        $("div.main").html("").html(page);
+        $("#productPropManageModal").on("hidden.bs.modal", function () {
+            $("#productPropManageForm")[0].reset();
+        });
+    });
+}
+
+function productPropManageSubmit() {
+    var formData = new FormData($("#productPropManageForm")[0]);
+    if (!$.trim(formData.get("propType"))) {
+        return;
+    }
+    if (!$.trim(formData.get("propValue"))) {
+        $("#propValue").focus();
+        return;
+    }
+    if (!$.trim(formData.get("valid"))) {
+        return;
+    }
+
+    $.ajax({
+        "url": "/product-prop/save",
+        "type": "post",
+        "data": formData,
+        "cache": false,
+        "processData": false,
+        "contentType": false
+    }).done(function(res) {
+        if (res.code === 0) {
+            $("#productPropManageModal").modal('hide');
+            setTimeout(function () {
+                $("#product_prop_manage_bar").click();
+            }, 500);
+            alert("提交成功！");
+        } else {
+            alert(res.msg);
+        }
+    }).fail(function() {
+        alert("提交失败！");
+    });
+}
+
+function modifyProductProp(element) {
+    var $tr = $(element).parent().parent();
+    var $tds = $tr.find("td");
+    $("#propId").val($.trim($tr.find("th")[0].innerText));
+    $("#propName").val($.trim($tds.eq(0).text()));
+    $("#propType").val($.trim($tds.eq(1).text()));
+    $("#propValue").val($.trim($tds.eq(2).text()));
+    var valid;
+    switch ($.trim($tds.eq(3).text())) {
+        case "无效":
+            valid = 0;
+            break;
+        default:
+            valid = 1;
+    }
+    $("#valid-" + valid).prop("checked", true);
+    $("#productPropManageModal").modal('show');
+}
+
+function deleteProductProp(element) {
+    var $tr = $(element).parent().parent();
+    var id = $tr.find("th")[0].innerText;
+    $.post("/product-prop/delete", {"id":id})
+    .done(function (result) {
+        if (result.code === 0) {
+            $tr.remove();
+        } else {
+            alert("删除失败！");
+        }
+    })
+    .fail(function () {
+        alert("删除失败！");
     });
 }
