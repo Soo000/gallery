@@ -7,6 +7,11 @@ server:
     context-path: /
     session:
       timeout: 3600s
+  jetty:
+    max-http-post-size: 52428800
+    accesslog:
+      enabled: true
+      date-format: yyyy-MM-dd HH:mm:ss Z
 spring:
   thymeleaf:
     mode: HTML
@@ -19,4 +24,3 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: none
-    
