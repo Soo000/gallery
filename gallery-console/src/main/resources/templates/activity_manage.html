@@ -1,5 +1,5 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#activityManageModal">
-    添加广告活动
+    <span class="oi oi-plus"></span>
 </button>
 <table class="table table-hover">
     <thead>
@@ -37,8 +37,12 @@
             <td data-th-text="${activity.creationTime}"></td>
             <td data-th-text="${activity.updateTime}"></td>
             <td>
-                <button type="button" class="btn btn-primary btn-sm" onclick="preEditActivity(this);">修改</button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="deleteActivity(this);">删除</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="preEditActivity(this);">
+                    <span class="oi oi-pencil"></span>
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteActivity(this);">
+                    <span class="oi oi-trash"></span>
+                </button>
             </td>
         </tr>
     </tbody>

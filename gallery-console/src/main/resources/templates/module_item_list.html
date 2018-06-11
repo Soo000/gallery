@@ -1,5 +1,7 @@
 <h4 data-th-text="${moduleName}"></h4>&nbsp;&nbsp;
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#moduleItemManageModal">添加模块项</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#moduleItemManageModal">
+    <span class="oi oi-plus"></span>
+</button>
 <div class="table-responsive">
     <table class="table table-hover">
         <thead>
@@ -31,10 +33,10 @@
                 <td data-th-text="${item.valid} == 0 ? '无效' : '有效'"></td>
                 <td>
                     <button type="button" class="btn btn-primary btn-sm" onclick="modifyModuleItem(this);">
-                        修改
+                        <span class="oi oi-pencil"></span>
                     </button>
                     <button type="button" class="btn btn-danger btn-sm" onclick="deleteModuleItem(this);">
-                        删除
+                        <span class="oi oi-trash"></span>
                     </button>
                 </td>
             </tr>

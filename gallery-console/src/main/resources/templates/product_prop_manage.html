@@ -1,5 +1,5 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productPropManageModal">
-    添加产品属性
+    <span class="oi oi-plus"></span>
 </button>
 <table class="table table-hover">
     <thead>
@@ -24,8 +24,12 @@
             <td data-th-text="${prop.creationTime}"></td>
             <td data-th-text="${prop.updateTime}"></td>
             <td>
-                <button type="button" class="btn btn-primary btn-sm" onclick="modifyProductProp(this);">修改</button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="deleteProductProp(this);">删除</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="modifyProductProp(this);">
+                    <span class="oi oi-pencil"></span>
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteProductProp(this);">
+                    <span class="oi oi-trash"></span>
+                </button>
             </td>
         </tr>
     </tbody>

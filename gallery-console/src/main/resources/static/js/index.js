@@ -303,8 +303,8 @@ function getProductByPage(page) {
             str += "<td>" + formatIsValid(v.isValid) + "</td>";
             str += "<td>" + formatTimestamp(v.creationTime) + "</td>";
             str += "<td>" + formatTimestamp(v.updateTime) + "</td>";
-            str += "<td><button type='button' class='btn btn-link product_edit_btn'>修改</button>" +
-                "<button type='button' class='btn btn-link product_delete_btn'>删除</button></td>";
+            str += "<td><button type='button' class='btn btn-sm btn-primary product_edit_btn'><span class='oi oi-pencil'></span></button>" +
+                "<button type='button' class='btn btn-sm btn-danger product_delete_btn'><span class='oi oi-trash'></span></button></td>";
             str += "</tr>";
             $("div.main tbody").append($(str));
         });
