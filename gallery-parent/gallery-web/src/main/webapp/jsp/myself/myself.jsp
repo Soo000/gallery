@@ -94,11 +94,9 @@
 		
 		<ul class="list-group" style="margin-bottom: 5px;">
 		    <li class="list-group-item">
-		    	<a href="../addressctrl/pagectrl">
-			    	<div class="pull-left">我的预约</div>
-			    	<i class="fa fa-angle-right fa-2x pull-right"></i>
-			    	<div class="clearfix"></div>
-		    	</a>
+		    	<div class="pull-left">我的预约</div>
+		    	<i class="fa fa-angle-right fa-2x pull-right"></i>
+		    	<div class="clearfix"></div>
 		    </li>
 		</ul>
 		
