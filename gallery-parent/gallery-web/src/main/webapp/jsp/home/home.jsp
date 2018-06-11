@@ -120,7 +120,7 @@
 						        </div>
 						        <c:if test="${homeModuleVO.homeModuleItemVOs != null}">
 									<div class="row">
-									    <div class="col-xs-12">
+									    <div class="col-xs-12" style="margin-bottom: 1px;">
 									        <c:if test="${homeModuleVO.homeModuleItemVOs[0] != null}">
                                                 <c:choose>
                                                    <c:when test="${homeModuleItemVO.moduleItemType == 1}">

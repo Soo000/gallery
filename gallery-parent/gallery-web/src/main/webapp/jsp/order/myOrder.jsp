@@ -9,12 +9,6 @@
 		<title>我的订单</title>
 	</head>
 	<body>
-		<!-- header -->
-		<jsp:include page="../module/header.jsp">
-			<jsp:param name="headTitle" value="我的订单"/>
-			<jsp:param name="backUrl" value='../myselfctrl/pagectrl'/>
-		</jsp:include>
-
 		<div>
 			<!-- 订单标签页 -->
 			<ul class="nav nav-tabs order-tab-header" role="tablist" id="orderTab">
@@ -135,7 +129,7 @@
 												</div>
 												<div class="order-buttons-bar">
 													<div class="pull-right order-buttons">
-														<button id="cancelOrderBtn" 
+														<button name="cancelOrderBtn" 
 															orderCode="${orderProducts.orderCode }"
 															orderStatus="${orderProducts.orderStatus }"
 															type="button" class="btn btn-default btn-xs">
@@ -289,7 +283,7 @@
 													${orderProducts.orderCode }&nbsp;&nbsp;&nbsp;&nbsp;
 													${orderProducts.orderStatusText }
 													&nbsp;&nbsp;|&nbsp;&nbsp;
-													<i id="deleteOrderBtn" orderCode="${orderProducts.orderCode }" class="fa fa-trash-o fa-2x"></i>
+													<i name="deleteOrderBtn" orderCode="${orderProducts.orderCode }" class="fa fa-trash-o fa-2x"></i>
 												</div>
 											</div>
 											<div class="body">
@@ -357,7 +351,7 @@
 			/**
 			 * 取消订单动作
 			 */
-			$("#cancelOrderBtn").click(function(evt) {
+			$("button[name='cancelOrderBtn']").click(function(evt) {
 				var orderCode = $(this).attr("orderCode");
 				var orderStatus = $(this).attr("orderStatus");
 				
@@ -376,7 +370,7 @@
 			/**
 			 * 删除订单动作
 			 */
-			$("#deleteOrderBtn").click(function(evt) {
+			$("i[name='deleteOrderBtn']").click(function(evt) {
 				var orderCode = $(this).attr("orderCode");
 				
 				layer.open({
