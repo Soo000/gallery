@@ -122,17 +122,37 @@
 									<div class="row">
 									    <div class="col-xs-12">
 									        <c:if test="${homeModuleVO.homeModuleItemVOs[0] != null}">
-									           <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].activityPictureFileName}" 
-									               class="img-responsive"/>
+                                                <c:choose>
+                                                   <c:when test="${homeModuleItemVO.moduleItemType == 1}">
+                                                       <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleVO.homeModuleItemVOs[0].productId }">
+                                                           <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].moduleItemImage}" class="img-responsive"/>
+                                                       </a>
+                                                   </c:when>
+                                                   <c:otherwise>
+                                                       <a href="<%=request.getContextPath() %>/${homeModuleVO.homeModuleItemVOs[0].activityUrl }">
+                                                           <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].activityPictureFileName}" class="img-responsive"/>
+                                                       </a>
+                                                   </c:otherwise>
+                                               </c:choose>
 									        </c:if>
-									        <%-- <img src="<%=request.getContextPath() %>/res/img/product/00001/001.png" class="img-responsive"/> --%>
 									    </div>
 									    <div class="col-xs-12">
 									        <div class="row">
 									           <c:if test="${homeModuleVO.homeModuleItemVOs[1] != null }">
 									               <c:forEach var="homeModuleItemVO" items="${homeModuleVO.homeModuleItemVOs }" begin="1" varStatus="i">
 									                   <div class="col-xs-6" style="padding: 0 1px 1px 0">
-                                                            <img src="<%=request.getContextPath() %>/res/img/${homeModuleItemVO.moduleItemImage}" class="img-responsive"/>
+									                       <c:choose>
+									                           <c:when test="${homeModuleItemVO.moduleItemType == 1}">
+									                               <a href="<%=request.getContextPath() %>/prodetailsctrl/pagectrl?productId=${homeModuleItemVO.productId }">
+									                                   <img src="<%=request.getContextPath() %>/res/img/${homeModuleItemVO.moduleItemImage}" class="img-responsive"/>
+									                               </a>
+									                           </c:when>
+									                           <c:otherwise>
+									                               <a href="<%=request.getContextPath()%>/${homeModuleItemVO.activityUrl } }">
+                                                                       <img src="<%=request.getContextPath() %>/res/img/${homeModuleItemVO.activityPictureFileName}" class="img-responsive"/>
+                                                                   </a>
+									                           </c:otherwise>
+									                       </c:choose>
                                                         </div>
                                                         <c:if test="${i.count % 2 == 0 }">
 								                            <c:out value="</div>" escapeXml="false"/>
@@ -150,7 +170,7 @@
                 </c:forEach>
             </c:when>
             <c:otherwise>
-                                     <div style="text-align: center;">首页空空如也</div>
+                <div style="text-align: center;">首页空空如也</div>
             </c:otherwise>
         </c:choose>
         
