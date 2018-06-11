@@ -118,29 +118,32 @@
 						        <div class="col-xs-12 area-title">
 						            ${homeModuleVO.moduleTitle }
 						        </div>
-						        <div class="row">
-						            <div class="col-xs-12">
-						                <img src="<%=request.getContextPath() %>/res/img/product/00001/001.png" class="img-responsive"/>
-						            </div>
-						            <div class="col-xs-12">
-						                <div class="row">
-						                    <div class="col-xs-6" style="padding: 0 1px 1px 0">
-						                        <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
-						                    </div>
-						                    <div class="col-xs-6" style="padding: 0 0 1px 1px">
-                                                <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
-                                            </div>
-						                </div>
-						                <div class="row">
-						                    <div class="col-xs-6" style="padding: 1px 1px 0 0">
-                                                <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
-                                            </div>
-						                    <div class="col-xs-6" style="padding: 1px 0 0 1px">
-                                                <img src="<%=request.getContextPath() %>/res/img/product/10001/1526608849145.jpg" class="img-responsive"/>
-                                            </div>
-						                </div>
-						            </div>
-						        </div>
+						        <c:if test="${homeModuleVO.homeModuleItemVOs != null}">
+									<div class="row">
+									    <div class="col-xs-12">
+									        <c:if test="${homeModuleVO.homeModuleItemVOs[0] != null}">
+									           <img src="<%=request.getContextPath() %>/res/img/${homeModuleVO.homeModuleItemVOs[0].activityPictureFileName}" 
+									               class="img-responsive"/>
+									        </c:if>
+									        <%-- <img src="<%=request.getContextPath() %>/res/img/product/00001/001.png" class="img-responsive"/> --%>
+									    </div>
+									    <div class="col-xs-12">
+									        <div class="row">
+									           <c:if test="${homeModuleVO.homeModuleItemVOs[1] != null }">
+									               <c:forEach var="homeModuleItemVO" items="${homeModuleVO.homeModuleItemVOs }" begin="1" varStatus="i">
+									                   <div class="col-xs-6" style="padding: 0 1px 1px 0">
+                                                            <img src="<%=request.getContextPath() %>/res/img/${homeModuleItemVO.moduleItemImage}" class="img-responsive"/>
+                                                        </div>
+                                                        <c:if test="${i.count % 2 == 0 }">
+								                            <c:out value="</div>" escapeXml="false"/>
+								                            <c:out value='<div class="row">' escapeXml="false"/>
+								                        </c:if>
+									               </c:forEach>
+									           </c:if>
+									        </div>
+									    </div>
+									</div>
+						        </c:if>
 						    </div>
 						</div>
                     </c:if>
