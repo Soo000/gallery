@@ -93,10 +93,16 @@
         openImportProductsInfoPage();
     });
 
-    // 产品属性管理导航栏按钮单击事件
+    // 商品属性管理导航栏按钮单击事件
     $("#product_prop_manage_bar").click(function (e) {
         e.preventDefault();
         openProductPropManagePage();
+    });
+
+    // 商品类型管理导航栏按钮单击事件
+    $("#product_type_manage_bar").click(function (e) {
+        e.preventDefault();
+        openProductTypeManagePage();
     });
 
 	// 修改价格按钮单击事件
@@ -1005,6 +1011,90 @@ function deleteProductProp(element) {
         }
     })
     .fail(function () {
+        alert("删除失败！");
+    });
+}
+
+function openProductTypeManagePage() {
+    $.get("/product-type/open").done(function (page) {
+        $("div.main").html("").html(page);
+        $("#productTypeManageModal").on("hidden.bs.modal", function () {
+            $("#productTypeManageForm")[0].reset();
+        });
+    });
+}
+
+function productTypeAjaxSubmit() {
+    $.ajax({
+        "url": "/product-type/save",
+        "type": "post",
+        "data": new FormData($("#productTypeManageForm")[0]),
+        "cache": false,
+        "processData": false,
+        "contentType": false
+    }).done(function (res) {
+        if (res.code === 0) {
+            $("#productTypeManageModal").modal('hide');
+            setTimeout(function () {
+                $("#product_type_manage_bar").click();
+            }, 500);
+            alert("提交成功！");
+        } else {
+            alert(res.msg);
+        }
+    }).fail(function () {
+        alert("提交失败！");
+    });
+}
+
+function productTypeManageSubmit() {
+    var $typeName = $("#productTypeName");
+    if (!$.trim($typeName.val())) {
+        $typeName.focus();
+        return;
+    }
+    var $typeOrder = $("#productTypeOrder");
+    if (!$.trim($typeOrder.val())) {
+        $typeOrder.focus();
+        return;
+    }
+    productTypeAjaxSubmit();
+}
+
+function productTypeManageAddSubItem(element) {
+    var $tr = $(element).parent().parent();
+    $("#parentProductTypeId").val($tr.find("th").text());
+    $("#productTypeManageModal").modal('show');
+}
+
+function modifyProductType(element) {
+    var $tr = $(element).parent().parent();
+    $("#productTypeId").val($tr.find('th').text());
+    $("#parentProductTypeId").val($tr.find('td').eq(0).text());
+    $("#productTypeName").val($tr.find('td').eq(1).text());
+    $("#productTypeValue").val($tr.find('td').eq(2).text());
+    $("#productTypeOrder").val($tr.find('td').eq(3).text());
+    var valid;
+    switch ($tr.find('td').eq(4).text()) {
+        case '无效':
+            valid = 0;
+            break;
+        default:
+            valid = 1;
+    }
+    $("#valid-" + valid).prop("checked", true);
+    $("#productTypeManageModal").modal('show');
+}
+
+function deleteProductType(element) {
+    var $tr = $(element).parent().parent();
+    $.post("/product-type/delete", {"id": $tr.find('th').text()}).done(function (result) {
+        if (result.code === 0) {
+            $tr.remove();
+        } else {
+            alert(result.msg);
+        }
+    }).fail(function () {
         alert("删除失败！");
     });
 }

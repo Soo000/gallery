@@ -1,4 +1,4 @@
-package com.kkwriter.gallery.service.product;
+package com.kkwriter.gallery.service.product.impl;
 
 import com.kkwriter.gallery.entity.json.ModifyProductJsonBean;
 import com.kkwriter.gallery.entity.product.GlyProduct;
@@ -16,6 +16,7 @@ import com.kkwriter.gallery.repository.product.GlyProductTypeProductRepository;
 import com.kkwriter.gallery.repository.product.GlyProductTypeRepository;
 import com.kkwriter.gallery.repository.product.GlyRProductPropsRepository;
 import com.kkwriter.gallery.result.ReturnEnum;
+import com.kkwriter.gallery.service.product.IProductService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -57,7 +58,7 @@ import java.util.stream.Collectors;
  * @author lisha
  */
 @Service
-public class ProductServiceImpl implements ProductService {
+public class IProductServiceImpl implements IProductService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final static String PICTURE_BASE_PATH = File.separator + "home" + File.separator + "gallery" +
 			File.separator + "apps" + File.separator + "gallery-web" + File.separator + "res" + File.separator + "img" + File.separator;

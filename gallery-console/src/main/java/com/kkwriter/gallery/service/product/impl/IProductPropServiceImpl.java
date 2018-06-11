@@ -1,7 +1,8 @@
-package com.kkwriter.gallery.service.product;
+package com.kkwriter.gallery.service.product.impl;
 
 import com.kkwriter.gallery.entity.product.GlyProductProp;
 import com.kkwriter.gallery.repository.product.GlyProductPropRepository;
+import com.kkwriter.gallery.service.product.IProductPropService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @author lisha
  */
 @Service(value = "productPropService")
-public class ProductPropServiceImpl implements ProductPropService {
+public class IProductPropServiceImpl implements IProductPropService {
 
     @Resource(name = "glyProductPropRepository")
     private GlyProductPropRepository repository;

@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author lisha
  */
-public interface ProductPropService {
+public interface IProductPropService {
     /**
      * 查询所有的产品属性
      * @return list

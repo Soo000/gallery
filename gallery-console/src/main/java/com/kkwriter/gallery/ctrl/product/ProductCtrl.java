@@ -9,7 +9,7 @@ import com.kkwriter.gallery.entity.product.GlyProductProp;
 import com.kkwriter.gallery.entity.product.GlyProductType;
 import com.kkwriter.gallery.result.Result;
 import com.kkwriter.gallery.result.ResultUtil;
-import com.kkwriter.gallery.service.product.ProductService;
+import com.kkwriter.gallery.service.product.IProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,12 +37,12 @@ import java.util.Map;
 @RequestMapping("/product")
 public class ProductCtrl {
 
-    @Resource(name = "productServiceImpl")
-    private ProductService productService;
+    @Resource(name = "IProductServiceImpl")
+    private IProductService IProductService;
 
     @GetMapping(value = "/downloadTemplate")
     public void downloadTemplateFile(HttpServletRequest request, HttpServletResponse response) {
-        productService.downloadTemplateFile(request, response);
+        IProductService.downloadTemplateFile(request, response);
     }
 
     @GetMapping(value = "/preImport")
@@ -52,13 +52,13 @@ public class ProductCtrl {
 
     @GetMapping(value = "/getTypeAndAttr/{id}")
     public Result<Map<String, List<Integer>>> getTypeAndAttr(@PathVariable Integer id) {
-        Map<String, List<Integer>> data = productService.getProductTypeAndAttrByProductId(id);
+        Map<String, List<Integer>> data = IProductService.getProductTypeAndAttrByProductId(id);
         return ResultUtil.success(data);
     }
 
     @PostMapping("/delete")
     public Result<?> deleteProduct(int productId) {
-        productService.deleteProduct(productId);
+        IProductService.deleteProduct(productId);
         return ResultUtil.success();
     }
 
@@ -71,13 +71,13 @@ public class ProductCtrl {
 
     @GetMapping("/query-product")
     public Result<Page<GlyProduct>> queryProductByPage(@PageableDefault(sort = {"creationTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResultUtil.success(productService.queryProductByPage(pageable));
+        return ResultUtil.success(IProductService.queryProductByPage(pageable));
     }
 
     @GetMapping("/getProductById")
     public ModelAndView queryById(int productId) {
         // 查询商品信息
-        GlyProduct product = productService.getProductInfoById(productId);
+        GlyProduct product = IProductService.getProductInfoById(productId);
         // 查询所有属性
         List<GlyProductProp> allProps = queryAllProps();
         if (allProps == null) {
@@ -99,7 +99,7 @@ public class ProductCtrl {
     @GetMapping(value = "/getProductPicturesByProductId")
     public Result<List<GlyProductPicture>> getProductPicturesByProductId(int productId) {
         // 查询商品配图
-        List<GlyProductPicture> pictures = productService.getAllPictures(productId);
+        List<GlyProductPicture> pictures = IProductService.getAllPictures(productId);
         return ResultUtil.success(pictures);
     }
 
@@ -108,7 +108,7 @@ public class ProductCtrl {
         Gson gson = new Gson();
         Type type = new TypeToken<ModifyProductJsonBean>(){}.getType();
         ModifyProductJsonBean bean = gson.fromJson(request.getParameter("params"), type);
-        productService.modifyProduct(bean);
+        IProductService.modifyProduct(bean);
         return ResultUtil.success();
     }
 
@@ -132,22 +132,22 @@ public class ProductCtrl {
 
     @PostMapping("/add")
     public Result<?> add(MultipartFile[] productPics, HttpServletRequest request) {
-        productService.addProduct(productPics, request);
+        IProductService.addProduct(productPics, request);
         return ResultUtil.success();
     }
 
     @PostMapping("/upload")
     public Result<?> importProduct(MultipartFile file) {
-        productService.uploadProductFile(file);
+        IProductService.uploadProductFile(file);
         return ResultUtil.success();
     }
 
     private List<GlyProductProp> queryAllProps() {
-        return productService.queryAllProps();
+        return IProductService.queryAllProps();
     }
 
     private List<GlyProductType> queryAllTypes() {
-        return productService.queryAllTypes();
+        return IProductService.queryAllTypes();
     }
 
 }

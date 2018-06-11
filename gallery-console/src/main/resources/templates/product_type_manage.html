@@ -1,0 +1,90 @@
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productTypeManageModal">
+    添加产品类型
+</button>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">PID</th>
+            <th scope="col">类型名</th>
+            <th scope="col">类型值</th>
+            <th scope="col">排序</th>
+            <th scope="col">是否有效</th>
+            <th scope="col">创建时间</th>
+            <th scope="col">更新时间</th>
+            <th scope="col">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-th-each="type : ${typeList}">
+            <th scope="row" data-th-text="${type.productTypeId}">1</th>
+            <td data-th-text="${type.parentProductTypeId}">0</td>
+            <td data-th-text="${type.productTypeName}">name</td>
+            <td data-th-text="${type.productTypeValue}">value</td>
+            <td data-th-text="${type.productTypeOrder}">order</td>
+            <td data-th-text="${type.isValid == 1 ? '有效' : '无效'}">yes</td>
+            <td data-th-text="${type.creationTime}">2018-06-08 18:08:08.0</td>
+            <td data-th-text="${type.updateTime}">2018-06-08 18:08:08.0</td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" onclick="productTypeManageAddSubItem(this);">添加子项</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="modifyProductType(this);">修改</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteProductType(this);">删除</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="productTypeManageModal" tabindex="-1" role="dialog" aria-labelledby="productTypeManageModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productTypeManageModalTitle">类型编辑</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="productTypeManageForm" method="post">
+                    <div class="form-group" style="display: none;">
+                        <label for="productTypeId">ID</label>
+                        <input type="number" class="form-control" id="productTypeId" name="productTypeId" placeholder="ID" required readonly>
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <label for="parentProductTypeId">PID</label>
+                        <input type="number" class="form-control" id="parentProductTypeId" name="parentProductTypeId" value="0" placeholder="PID" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="productTypeName">类型名</label>
+                        <input type="text" class="form-control" id="productTypeName" name="productTypeName" placeholder="类型名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productTypeValue">类型值</label>
+                        <input type="text" class="form-control" id="productTypeValue" name="productTypeValue" placeholder="类型值">
+                    </div>
+                    <div class="form-group">
+                        <label for="productTypeOrder">排序</label>
+                        <input type="number" class="form-control" id="productTypeOrder" name="productTypeOrder" placeholder="排序" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>是否有效</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="isValid" id="valid-0" value="0">
+                                <label class="form-check-label" for="valid-0">无效</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="isValid" id="valid-1" value="1" checked>
+                                <label class="form-check-label" for="valid-1">有效</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="productTypeManageSubmit();">提交</button>
+            </div>
+        </div>
+    </div>
+</div>

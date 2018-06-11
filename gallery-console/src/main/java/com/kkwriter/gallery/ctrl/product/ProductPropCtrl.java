@@ -3,7 +3,7 @@ package com.kkwriter.gallery.ctrl.product;
 import com.kkwriter.gallery.entity.product.GlyProductProp;
 import com.kkwriter.gallery.result.Result;
 import com.kkwriter.gallery.result.ResultUtil;
-import com.kkwriter.gallery.service.product.ProductPropService;
+import com.kkwriter.gallery.service.product.IProductPropService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 public class ProductPropCtrl {
 
     @Resource(name = "productPropService")
-    private ProductPropService propService;
+    private IProductPropService propService;
 
     @GetMapping(value = "/open")
     public ModelAndView openPage() {

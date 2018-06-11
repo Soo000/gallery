@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author lisha
  */
-public interface ProductService {
+public interface IProductService {
 
 	/**
 	 * 商品导入
