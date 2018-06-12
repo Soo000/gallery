@@ -1,6 +1,6 @@
 ;$(function() {
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
+	let token = $("meta[name='_csrf']").attr("content");
+	let header = $("meta[name='_csrf_header']").attr("content");
 	$(document).ajaxSend(function(e, xhr) {
 		xhr.setRequestHeader(header, token);
 	});
@@ -108,9 +108,9 @@
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
-        var _this = $(this);
-        var oldPrice = _this.parent().prevAll().eq(7).text();
-        var newPrice = prompt("请输入新价格：", oldPrice);
+        let _this = $(this);
+        let oldPrice = _this.parent().prevAll().eq(7).text();
+        let newPrice = prompt("请输入新价格：", oldPrice);
         if (newPrice) {
             if (!/^\d+$/.test(newPrice) || newPrice < 0) {
                 alert("请输入正确价格！");
@@ -128,10 +128,11 @@
     });
 
     // 修改产品页面，删除图片操作
-    $("body").on("click", "div.card a.delete-btn", function (e) {
+    let $body = $("body");
+    $body.on("click", "div.card a.delete-btn", function (e) {
         e.preventDefault();
         // 获取到img元素
-        var $img = $(this).parent().parent().parent().find("img");
+        let $img = $(this).parent().parent().parent().find("img");
         $img.attr("src", "/img/add_picture.jpg");
         // 判断该位置是否有图片
         if ($img.data("picture")) {
@@ -142,10 +143,10 @@
     });
 
     // 修改产品页面，添加图片操作
-    $("body").on("click", "div.card a.add-btn", function (e) {
+    $body.on("click", "div.card a.add-btn", function (e) {
         e.preventDefault();
         // 获取到img元素
-        var $img = $(this).parent().parent().parent().find("img");
+        let $img = $(this).parent().parent().parent().find("img");
         // 判断该位置是否有图片
         if (!$img.data("picture")) {
             $img.data("operate", "add");
@@ -201,8 +202,8 @@ function buildOrdersTable(result, status) {
     // 先清空
     $("div.main tbody").html("");
     // 新建
-    var orders = result.data.content;
-    var operateTd = "";
+    let orders = result.data.content;
+    let operateTd = "";
     if (status) {
         switch (status) {
             // 1-待付款 2-已支付 3-待收货 4-已完成 5-已过期 6-已取消
@@ -229,7 +230,7 @@ function buildOrdersTable(result, status) {
                 break;
         }
     }
-    var str = "";
+    let str = "";
     $.each(orders, function(i, v) {
         str = "";
         str += "<tr>";
@@ -285,8 +286,8 @@ function getProductByPage(page) {
         // 构建table body
         // 先清空
         $("div.main tbody").html("");
-        var products = result.data.content;
-        var str = "";
+        let products = result.data.content;
+        let str = "";
         $.each(products, function(i, v) {
             str = "";
             str += "<tr>";
@@ -315,18 +316,19 @@ function getProductByPage(page) {
         $("div.main button.product_edit_btn").click(function (e) {
             e.preventDefault();
             e.stopPropagation();
-            var _this = $(this);
-            var productId = $.trim(_this.parent().parent().find("td").eq(0).text());
+            let _this = $(this);
+            let productId = $.trim(_this.parent().parent().find("td").eq(0).text());
             $.get("/product/getProductById", {"productId": productId, "_":new Date().getTime()}, function (page) {
-                if ($('#editProductModal').length > 0) {
-                    $('#editProductModal').remove();
+                let $editProductModal = $('#editProductModal');
+                if ($editProductModal.length > 0) {
+                    $editProductModal.remove();
                 }
                 $("body").append(page);
                 // 取出type值和attr值做设置
                 $.get("/product/getTypeAndAttr/" + productId + "?_=" + new Date().getTime(), function (result) {
                     if (result.code === 0) {
-                        var types = result.data.types;
-                        var props = result.data.props;
+                        let types = result.data.types;
+                        let props = result.data.props;
                         if (types instanceof Array && types.length !== 0) {
                             $.each(types, function (i, v) {
                                 $("#productTypes-" + v).prop("checked", true);
@@ -340,7 +342,7 @@ function getProductByPage(page) {
                     }
                     // 获取产品配图
                     $.get("/product/getProductPicturesByProductId", {"productId": productId, "_":new Date().getTime()}, function (result) {
-                        var mainPictures = [], detailPictures = [];
+                        let mainPictures = [], detailPictures = [];
                         // 分拣图片
                         $.each(result.data, function (i, picture) {
                             if (picture.productPictureType === 11) {
@@ -350,7 +352,7 @@ function getProductByPage(page) {
                             }
                         });
                         // 替换主图
-                        var $imgs = $("div.main-picture-area img");
+                        let $imgs = $("div.main-picture-area img");
                         $.each(mainPictures, function (i, picture) {
                             $($imgs[i]).attr("src", "http://www.artlyt.com.cn/res/img/" + picture.productPictureFileName);
                             $($imgs[i]).data("picture", picture);
@@ -371,7 +373,7 @@ function getProductByPage(page) {
         $("div.main button.product_delete_btn").click(function (e) {
             e.preventDefault();
             e.stopPropagation();
-            var _this = $(this);
+            let _this = $(this);
             if (confirm("删除操作数据不可恢复，是否继续？")) {
                 $.post("/product/delete", {"productId":$.trim($(this).parent().parent().find("td").eq(0).text())}, function (result) {
                     if (result.code === 0) {
@@ -387,9 +389,9 @@ function getProductByPage(page) {
 }
 
 function modifyAddOnchange(inputObject) {
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = function() {
-        var $img = $(inputObject).parent().parent().parent().find("img");
+        let $img = $(inputObject).parent().parent().parent().find("img");
         $img.attr("src", reader.result);
         $img.data("picture_new", reader.result);
     };
@@ -397,29 +399,29 @@ function modifyAddOnchange(inputObject) {
 }
 
 function modifyProductModalSubmit() {
-    var productName = $.trim($("#productName").val());
-    var productIntro = $.trim($("#productIntro").val());
-    var productDetail = $.trim($("#productDetail").val());
-    var initialPrice = $.trim($("#initialPrice").val());
-    var discount = $.trim($("#discount").val());
-    var inventoryNumber = $.trim($("#inventoryNumber").val());
-    var bookNumber = $.trim($("#bookNumber").val());
-    var productOrder = $.trim($("#productOrder").val());
-    var isValid = $("input[name='valid']:checked").val();
-    var productAttrs = [];
+    let productName = $.trim($("#productName").val());
+    let productIntro = $.trim($("#productIntro").val());
+    let productDetail = $.trim($("#productDetail").val());
+    let initialPrice = $.trim($("#initialPrice").val());
+    let discount = $.trim($("#discount").val());
+    let inventoryNumber = $.trim($("#inventoryNumber").val());
+    let bookNumber = $.trim($("#bookNumber").val());
+    let productOrder = $.trim($("#productOrder").val());
+    let isValid = $("input[name='valid']:checked").val();
+    let productAttrs = [];
     $("input[name='productAttrs']").each(function () {
         if (this.checked) {
             productAttrs.push($(this).val());
         }
     });
-    var productTypes = [];
+    let productTypes = [];
     $("input[name='productTypes']").each(function () {
         if (this.checked) {
             productTypes.push($(this).val());
         }
     });
 
-    var params = {
+    let params = {
         "productId": $("#productId").val()
     };
     if (productName) {
@@ -456,11 +458,11 @@ function modifyProductModalSubmit() {
         params.productTypes = productTypes;
     }
 
-    var mainPictures = [];
+    let mainPictures = [];
     $("#modifyProductModalForm div.main-picture-area img").each(function (index) {
-        var operateType = $(this).data("operate");
+        let operateType = $(this).data("operate");
         if (operateType && operateType !== "-1") {
-            var img = {};
+            let img = {};
             img.position = index;
             img.operateType = operateType;
             if (operateType !== "delete") {
@@ -476,11 +478,11 @@ function modifyProductModalSubmit() {
         params.mainPictures = mainPictures;
     }
 
-    var detailPictures = [];
+    let detailPictures = [];
     $("#modifyProductModalForm div.detail-picture-area img").each(function (index) {
-        var operateType = $(this).data("operate");
+        let operateType = $(this).data("operate");
         if (operateType && operateType !== "-1") {
-            var img = {};
+            let img = {};
             img.position = index;
             img.operateType = operateType;
             if (operateType !== "delete") {
@@ -511,7 +513,7 @@ function openHomeModuleManagePage() {
     $.get("/module/openHomeModuleManagePage", function (page) {
         $("div.main").html("").html(page);
         // 模态框注册事件
-        $("#editModuleModal").on("hidden.bs.modal", function (e) {
+        $("#editModuleModal").on("hidden.bs.modal", function () {
             $("#editModuleModalForm")[0].reset();
             $("#moduleId").val("-1");
         });
@@ -519,7 +521,7 @@ function openHomeModuleManagePage() {
 }
 
 function editModuleSubmit() {
-    var formData = new FormData($("#editModuleModalForm")[0]);
+    let formData = new FormData($("#editModuleModalForm")[0]);
     $.ajax({
         "url": "/module/saveModule",
         "type": "post",
@@ -541,9 +543,9 @@ function editModuleSubmit() {
 }
 
 function preUpdateModule(element) {
-    var event = window.event || arguments.callee.caller.arguments[0];
+    let event = window.event || arguments.callee.caller.arguments[0];
     event.stopPropagation();
-    var $tr = $(element).parent().parent();
+    let $tr = $(element).parent().parent();
     $("#moduleId").val($.trim($tr.children().eq(0).text()));
     $("#moduleName").val($.trim($tr.children().eq(1).text()));
     $("#parentModuleId").val($.trim($tr.children().eq(2).text()));
@@ -551,7 +553,7 @@ function preUpdateModule(element) {
     $("#moduleTitle").val($.trim($tr.children().eq(4).text()));
     $("#moduleTemplate").val($.trim($tr.children().eq(5).text()));
     $("#moduleOrder").val($.trim($tr.children().eq(7).text()));
-    var valid = $.trim($tr.children().eq(8).text());
+    let valid = $.trim($tr.children().eq(8).text());
     switch (valid) {
         case "无效":
             valid = 0;
@@ -565,10 +567,10 @@ function preUpdateModule(element) {
 }
 
 function deleteModule(element) {
-    var event = window.event || arguments.callee.caller.arguments[0];
+    let event = window.event || arguments.callee.caller.arguments[0];
     event.stopPropagation();
-    var $tr = $(element).parent().parent();
-    var id = $tr.children().eq(0).text();
+    let $tr = $(element).parent().parent();
+    let id = $tr.children().eq(0).text();
     $.post("/module/deleteModule", {"id": id}, function (result) {
         if (result.code === 0) {
             $tr.remove();
@@ -589,7 +591,7 @@ function openHomeModuleItemManagePage(callBack) {
 }
 
 function selectModule2Manage(element) {
-    var moduleId;
+    let moduleId;
     if (typeof element !== "number") {
         moduleId = $.trim($(element).parent().children("span").text());
     } else {
@@ -598,7 +600,7 @@ function selectModule2Manage(element) {
     $.get("/module/getModuleItemListPage/" + moduleId, function (moduleList) {
         $("div.module-item-list").html("").html(moduleList);
         // 注册modal事件
-        $("#moduleItemManageModal").on("hidden.bs.modal", function (e) {
+        $("#moduleItemManageModal").on("hidden.bs.modal", function () {
             $("#editModuleItemForm")[0].reset();
             $("#moduleItemId").val("-1");
         });
@@ -627,12 +629,12 @@ function moduleItemEditSubmit() {
 }
 
 function modifyModuleItem(element) {
-    var $tr = $(element).parent().parent();
+    let $tr = $(element).parent().parent();
     $("#moduleItemId").val($.trim($tr.children().eq(1).text()));
     $("#productId").val($.trim($tr.children().eq(2).text()));
     $("#moduleItemName").val($.trim($tr.children().eq(3).text()));
     $("#moduleItemOrder").val($.trim($tr.children().eq(5).text()));
-    var type = $.trim($tr.children().eq(4).text());
+    let type = $.trim($tr.children().eq(4).text());
     switch (type) {
         case "广告":
             type = 0;
@@ -644,7 +646,7 @@ function modifyModuleItem(element) {
             type = 1;
     }
     $("#editModuleItemForm input[name='moduleItemType']").eq(type).attr("checked", true);
-    var valid = $.trim($tr.children().eq(6).text());
+    let valid = $.trim($tr.children().eq(6).text());
     switch (valid) {
         case "无效":
             valid = 0;
@@ -657,8 +659,8 @@ function modifyModuleItem(element) {
 }
 
 function deleteModuleItem(element) {
-    var $tr = $(element).parent().parent();
-    var itemId = $.trim($tr.children().eq(1).text());
+    let $tr = $(element).parent().parent();
+    let itemId = $.trim($tr.children().eq(1).text());
     $.post("/module/deleteModuleItem/" + itemId, function (result) {
         if (result.code === 0) {
             $tr.remove();
@@ -677,8 +679,9 @@ function gotoModuleItemManage(element) {
 function resetEditActivityForm() {
     $("#editActivityForm")[0].reset();
     $("#activityId").val("-1");
-    $("#addImg").attr("src", "/img/add_picture.jpg");
-    $("#addImg").data("picture", null);
+    let $addImg = $("#addImg");
+    $addImg.attr("src", "/img/add_picture.jpg");
+    $addImg.data("picture", null);
     $('#activityTime').val(formatDatetimeLocal(new Date()) + " - " + formatDatetimeLocal(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)));
 }
 
@@ -704,24 +707,24 @@ function formatDatetimeLocal(datetime) {
     if (!datetime instanceof Date) {
         return;
     }
-    var year = datetime.getFullYear();
-    var month = datetime.getMonth() + 1;
+    let year = datetime.getFullYear();
+    let month = datetime.getMonth() + 1;
     month = month >= 10 ? month : "0" + month;
-    var day = datetime.getDate();
+    let day = datetime.getDate();
     day = day >= 10 ? day : "0" + day;
-    var hour = datetime.getHours();
+    let hour = datetime.getHours();
     hour = hour >= 10 ? hour : "0" + hour;
-    var minute = datetime.getMinutes();
+    let minute = datetime.getMinutes();
     minute = minute >= 10 ? minute : "0" + minute;
-    var seconds = datetime.getSeconds();
+    let seconds = datetime.getSeconds();
     seconds = seconds >= 10 ? seconds : "0" + seconds;
     return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + seconds;
 }
 
 function addActivityPicture(element) {
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = function() {
-        var $img = $("#addImg");
+        let $img = $("#addImg");
         $img.attr("src", reader.result);
         $img.data("picture", reader.result);
     };
@@ -729,16 +732,16 @@ function addActivityPicture(element) {
 }
 
 function editActivitySubmit() {
-    var activityId = $.trim($("#activityId").val());
-    var activityName = $.trim($("#activityName").val());
-    var activityUrl = $.trim($("#activityUrl").val());
-    var activityType = $("input[name='activityType']:checked").val();
-    var activityTime = $.trim($("#activityTime").val());
-    var activityDescription = $.trim($("#activityDescription").val());
-    var valid = $("input[name='valid']:checked").val();
-    var picture = $("#addImg").data("picture");
+    let activityId = $.trim($("#activityId").val());
+    let activityName = $.trim($("#activityName").val());
+    let activityUrl = $.trim($("#activityUrl").val());
+    let activityType = $("input[name='activityType']:checked").val();
+    let activityTime = $.trim($("#activityTime").val());
+    let activityDescription = $.trim($("#activityDescription").val());
+    let valid = $("input[name='valid']:checked").val();
+    let picture = $("#addImg").data("picture");
 
-    var params = {};
+    let params = {};
     if (activityId !== "-1") {
         params.activityId = activityId;
     }
@@ -778,7 +781,7 @@ function editActivitySubmit() {
 }
 
 function preEditActivity(element) {
-    var $tds = $(element).parent().parent().children();
+    let $tds = $(element).parent().parent().children();
     $("#addImg").attr("src", $($tds.eq(0)).find("img").attr("src"));
     $("#activityId").val($($tds.eq(1)).text());
     $("#activityName").val($($tds.eq(2)).text());
@@ -801,45 +804,52 @@ function deleteActivity(element) {
 }
 
 function addProductSubmit(element) {
-    var _this = element;
+    let _this = element;
     $(_this).prop("disabled", true);
 
     // 参数校验，一定要校验文件是否为图片
-    if (!$("#product_name").val()) {
-        $("#product_name").focus();
+    let $productName = $("#product_name");
+    if (!$productName.val()) {
+        $productName.focus();
         $(_this).prop("disabled", false);
         return;
     }
-    if (!$("#product_intro").val()) {
-        $("#product_intro").focus();
+    let $productIntro = $("#product_intro");
+    if (!$productIntro.val()) {
+        $productIntro.focus();
         $(_this).prop("disabled", false);
         return;
     }
-    if (!$("#product_detail").val()) {
-        $("#product_detail").focus();
+    let $productDetail = $("#product_detail");
+    if (!$productDetail.val()) {
+        $productDetail.focus();
         $(_this).prop("disabled", false);
         return;
     }
-    if (!$("#init_price").val()) {
-        $("#init_price").focus();
+    let $initPrice = $("#init_price");
+    if (!$initPrice.val()) {
+        $initPrice.focus();
         $(_this).prop("disabled", false);
         return;
     }
-    if (!$("#discount").val()) {
-        $("#discount").val(10);
+    let $discount = $("#discount");
+    if (!$discount.val()) {
+        $discount.val(10);
     }
-    if (!$("#inventory_number").val()) {
-        $("#inventory_number").focus();
+    let $inventoryNumber = $("#inventory_number");
+    if (!$inventoryNumber.val()) {
+        $inventoryNumber.focus();
         $(_this).prop("disabled", false);
         return;
     }
-    if (!$("#product_order").val()) {
-        $("#product_order").val(999);
+    let $productOrder = $("#product_order");
+    if (!$productOrder.val()) {
+        $productOrder.val(999);
     }
 
-    var total = 0;
-    var productAttrInputs = $("input[name='productAttrs']");
-    for (var i = 0; i < productAttrInputs.length; i++) {
+    let total = 0;
+    let productAttrInputs = $("input[name='productAttrs']");
+    for (let i = 0; i < productAttrInputs.length; i++) {
         if ($(productAttrInputs[i]).prop("checked")) {
             total++;
         }
@@ -850,8 +860,8 @@ function addProductSubmit(element) {
         return;
     }
     total = 0;
-    var productTypeInputs = $("input[name='productTypes']");
-    for (var i = 0; i < productTypeInputs.length; i++) {
+    let productTypeInputs = $("input[name='productTypes']");
+    for (let i = 0; i < productTypeInputs.length; i++) {
         if ($(productTypeInputs[i]).prop("checked")) {
             total++;
         }
@@ -862,18 +872,18 @@ function addProductSubmit(element) {
         return;
     }
 
-    var files = $("#add_product_div input[name='productPics']")[0].files;
-    var allowPicTypes = ["image/jpg", "image/jpeg","image/png","image/x-png","image/bmp"];
+    let files = $("#add_product_div input[name='productPics']")[0].files;
+    let allowPicTypes = ["image/jpg", "image/jpeg","image/png","image/x-png","image/bmp"];
     if (files.length === 0) {
         $(_this).prop("disabled", false);
         alert("请选择图片！");
         return;
     }
-    var acceptN = 0;
-    for (var i=0; i<files.length; i++) {
-        var fileType = files[i].type;
-        var typeAccepted = false;
-        for (var j=0; j<allowPicTypes.length; j++) {
+    let acceptN = 0;
+    for (let i=0; i<files.length; i++) {
+        let fileType = files[i].type;
+        let typeAccepted = false;
+        for (let j=0; j<allowPicTypes.length; j++) {
             if (fileType === allowPicTypes[j]) {
                 typeAccepted = true;
                 break;
@@ -946,7 +956,7 @@ function openProductPropManagePage() {
 }
 
 function productPropManageSubmit() {
-    var formData = new FormData($("#productPropManageForm")[0]);
+    let formData = new FormData($("#productPropManageForm")[0]);
     if (!$.trim(formData.get("propType"))) {
         return;
     }
@@ -981,13 +991,13 @@ function productPropManageSubmit() {
 }
 
 function modifyProductProp(element) {
-    var $tr = $(element).parent().parent();
-    var $tds = $tr.find("td");
+    let $tr = $(element).parent().parent();
+    let $tds = $tr.find("td");
     $("#propId").val($.trim($tr.find("th")[0].innerText));
     $("#propName").val($.trim($tds.eq(0).text()));
     $("#propType").val($.trim($tds.eq(1).text()));
     $("#propValue").val($.trim($tds.eq(2).text()));
-    var valid;
+    let valid;
     switch ($.trim($tds.eq(3).text())) {
         case "无效":
             valid = 0;
@@ -1000,8 +1010,8 @@ function modifyProductProp(element) {
 }
 
 function deleteProductProp(element) {
-    var $tr = $(element).parent().parent();
-    var id = $tr.find("th")[0].innerText;
+    let $tr = $(element).parent().parent();
+    let id = $tr.find("th")[0].innerText;
     $.post("/product-prop/delete", {"id":id})
     .done(function (result) {
         if (result.code === 0) {
@@ -1048,12 +1058,12 @@ function productTypeAjaxSubmit() {
 }
 
 function productTypeManageSubmit() {
-    var $typeName = $("#productTypeName");
+    let $typeName = $("#productTypeName");
     if (!$.trim($typeName.val())) {
         $typeName.focus();
         return;
     }
-    var $typeOrder = $("#productTypeOrder");
+    let $typeOrder = $("#productTypeOrder");
     if (!$.trim($typeOrder.val())) {
         $typeOrder.focus();
         return;
@@ -1062,19 +1072,19 @@ function productTypeManageSubmit() {
 }
 
 function productTypeManageAddSubItem(element) {
-    var $tr = $(element).parent().parent();
+    let $tr = $(element).parent().parent();
     $("#parentProductTypeId").val($tr.find("th").text());
     $("#productTypeManageModal").modal('show');
 }
 
 function modifyProductType(element) {
-    var $tr = $(element).parent().parent();
+    let $tr = $(element).parent().parent();
     $("#productTypeId").val($tr.find('th').text());
     $("#parentProductTypeId").val($tr.find('td').eq(0).text());
     $("#productTypeName").val($tr.find('td').eq(1).text());
     $("#productTypeValue").val($tr.find('td').eq(2).text());
     $("#productTypeOrder").val($tr.find('td').eq(3).text());
-    var valid;
+    let valid;
     switch ($tr.find('td').eq(4).text()) {
         case '无效':
             valid = 0;
@@ -1087,7 +1097,7 @@ function modifyProductType(element) {
 }
 
 function deleteProductType(element) {
-    var $tr = $(element).parent().parent();
+    let $tr = $(element).parent().parent();
     $.post("/product-type/delete", {"id": $tr.find('th').text()}).done(function (result) {
         if (result.code === 0) {
             $tr.remove();
@@ -1097,4 +1107,8 @@ function deleteProductType(element) {
     }).fail(function () {
         alert("删除失败！");
     });
+}
+
+function chooseProductId() {
+    window.open("/product/open-choose-page", "choose product");
 }

@@ -38,11 +38,16 @@ import java.util.Map;
 public class ProductCtrl {
 
     @Resource(name = "IProductServiceImpl")
-    private IProductService IProductService;
+    private IProductService productService;
+
+    @GetMapping(value = "/open-choose-page")
+    public ModelAndView openChoosePage() {
+        return new ModelAndView("product_choose_page");
+    }
 
     @GetMapping(value = "/downloadTemplate")
     public void downloadTemplateFile(HttpServletRequest request, HttpServletResponse response) {
-        IProductService.downloadTemplateFile(request, response);
+        productService.downloadTemplateFile(request, response);
     }
 
     @GetMapping(value = "/preImport")
@@ -52,13 +57,13 @@ public class ProductCtrl {
 
     @GetMapping(value = "/getTypeAndAttr/{id}")
     public Result<Map<String, List<Integer>>> getTypeAndAttr(@PathVariable Integer id) {
-        Map<String, List<Integer>> data = IProductService.getProductTypeAndAttrByProductId(id);
+        Map<String, List<Integer>> data = productService.getProductTypeAndAttrByProductId(id);
         return ResultUtil.success(data);
     }
 
     @PostMapping("/delete")
     public Result<?> deleteProduct(int productId) {
-        IProductService.deleteProduct(productId);
+        productService.deleteProduct(productId);
         return ResultUtil.success();
     }
 
@@ -71,13 +76,13 @@ public class ProductCtrl {
 
     @GetMapping("/query-product")
     public Result<Page<GlyProduct>> queryProductByPage(@PageableDefault(sort = {"creationTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResultUtil.success(IProductService.queryProductByPage(pageable));
+        return ResultUtil.success(productService.queryProductByPage(pageable));
     }
 
     @GetMapping("/getProductById")
     public ModelAndView queryById(int productId) {
         // 查询商品信息
-        GlyProduct product = IProductService.getProductInfoById(productId);
+        GlyProduct product = productService.getProductInfoById(productId);
         // 查询所有属性
         List<GlyProductProp> allProps = queryAllProps();
         if (allProps == null) {
@@ -99,7 +104,7 @@ public class ProductCtrl {
     @GetMapping(value = "/getProductPicturesByProductId")
     public Result<List<GlyProductPicture>> getProductPicturesByProductId(int productId) {
         // 查询商品配图
-        List<GlyProductPicture> pictures = IProductService.getAllPictures(productId);
+        List<GlyProductPicture> pictures = productService.getAllPictures(productId);
         return ResultUtil.success(pictures);
     }
 
@@ -108,7 +113,7 @@ public class ProductCtrl {
         Gson gson = new Gson();
         Type type = new TypeToken<ModifyProductJsonBean>(){}.getType();
         ModifyProductJsonBean bean = gson.fromJson(request.getParameter("params"), type);
-        IProductService.modifyProduct(bean);
+        productService.modifyProduct(bean);
         return ResultUtil.success();
     }
 
@@ -132,22 +137,22 @@ public class ProductCtrl {
 
     @PostMapping("/add")
     public Result<?> add(MultipartFile[] productPics, HttpServletRequest request) {
-        IProductService.addProduct(productPics, request);
+        productService.addProduct(productPics, request);
         return ResultUtil.success();
     }
 
     @PostMapping("/upload")
     public Result<?> importProduct(MultipartFile file) {
-        IProductService.uploadProductFile(file);
+        productService.uploadProductFile(file);
         return ResultUtil.success();
     }
 
     private List<GlyProductProp> queryAllProps() {
-        return IProductService.queryAllProps();
+        return productService.queryAllProps();
     }
 
     private List<GlyProductType> queryAllTypes() {
-        return IProductService.queryAllTypes();
+        return productService.queryAllTypes();
     }
 
 }

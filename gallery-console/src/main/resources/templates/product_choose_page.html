@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="renderer" content="webkit"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>选择产品</title>
+    <!-- Loading Bootstrap -->
+    <link th:href="@{/lib/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+    <!--open-iconic-bootstrap-->
+    <link th:href="@{/lib/open-iconic/font/css/open-iconic-bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">产品名</th>
+                            <th scope="col">简介</th>
+                            <th scope="col">原始价格</th>
+                            <th scope="col">实际价格</th>
+                            <th scope="col">折扣</th>
+                            <th scope="col">库存</th>
+                            <th scope="col">销量</th>
+                            <th scope="col">预约量</th>
+                            <th scope="col">剩余</th>
+                            <th scope="col">是否有效</th>
+                            <th scope="col">创建时间</th>
+                            <th scope="col">更新时间</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+                <ul class="pagination float-right"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script th:src="@{/lib/jquery/jquery-3.3.1.min.js}"></script>
+    <!--Bootstrap js-->
+    <script th:src="@{/lib/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- page -->
+    <script th:src="@{/lib/jqpaginator/jqpaginator.min.js}"></script>
+    <!--common js-->
+    <script th:src="@{/js/common.js}"></script>
+    <!--Custom JS-->
+    <script>
+        const pageSize = 6;
+
+        $(function () {
+            queryProductOnePage(1);
+        });
+
+        function queryProductOnePage(page) {
+            $.get('/product/query-product', {page: page - 1, size: pageSize, _: new Date().getTime()}).done(function (result) {
+                if (result.code !== 0) {
+                    alert('查询产品信息失败！');
+                    return;
+                }
+                let products = result.data.content;
+                let bodyString = '';
+                let str = '';
+                $.each(products, function (i, v) {
+                    str += '<tr>';
+                    str += `<td>` + v.productId + `</td>`;
+                    str += `<td>` + v.productName + `</td>`;
+                    str += `<td>` + (v.productIntro.length > 8 ? (v.productIntro.substr(0, 6) + `...`) : v.productIntro) + `</td>`;
+                    str += `<td>` + v.initialPrice + `</td>`;
+                    str += `<td>` + v.realPrice + `</td>`;
+                    str += `<td>` + v.discount + `</td>`;
+                    str += `<td>` + v.inventoryNumber + `</td>`;
+                    str += `<td>` + v.saleNumber + `</td>`;
+                    str += `<td>` + v.bookNumber + `</td>`;
+                    str += `<td>` + v.residueNumber + `</td>`;
+                    str += `<td>` + formatIsValid(v.isValid) + `</td>`;
+                    str += `<td>` + formatTimestamp(v.creationTime) + `</td>`;
+                    str += `<td>` + formatTimestamp(v.updateTime) + `</td>`;
+                    str += `<td><button class="btn btn-primary btn-sm" onclick="check(this);"><span class="oi oi-check"></span></button></td>`;
+                    str += '</tr>';
+                    bodyString += str;
+                    str = '';
+                });
+                $('#tableBody').html('').append($(bodyString));
+                // 初始化分页插件
+                if (page === 1) {
+                    initPaginated(result.data.totalElements);
+                }
+            }).fail(function () {
+                alert('查询产品信息失败！');
+            });
+        }
+
+        function initPaginated(totalCounts) {
+            if ($('ul.pagination li').length  > 0)
+                return;
+            $('ul.pagination').jqPaginator({
+                totalCounts: totalCounts,
+                pageSize: pageSize,
+                visiblePages: 10,
+                currentPage: 1,
+                first: '<li class="page-item first"><a class="page-link" href="javascript:void(0);">首页</a></li>',
+                prev: '<li class="page-item prev"><a class="page-link" href="javascript:void(0);">上一页</a></li>',
+                next: '<li class="page-item next"><a class="page-link" href="javascript:void(0);">下一页</a></li>',
+                last: '<li class="page-item last"><a class="page-link" href="javascript:void(0);">尾页</a></li>',
+                page: '<li class="page-item"><a class="page-link" href="javascript:void(0);">{{page}}</a></li>',
+                onPageChange: function (page, type) {
+                    if (type !== "init") {
+                        queryProductOnePage(page);
+                    }
+                }
+            });
+        }
+
+        function check(element) {
+            let productId = $(element).parent().siblings('td').first().text();
+            $(window.opener.document.getElementById('productId')).val(productId);
+            window.close();
+        }
+
+    </script>
+</body>
+</html>
