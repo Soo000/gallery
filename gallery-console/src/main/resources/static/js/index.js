@@ -112,7 +112,7 @@
         let oldPrice = _this.parent().prevAll().eq(7).text();
         let newPrice = prompt("请输入新价格：", oldPrice);
         if (newPrice) {
-            if (!/^\d+$/.test(newPrice) || newPrice < 0) {
+            if (!$.isNumeric(newPrice) || newPrice < 0) {
                 alert("请输入正确价格！");
                 return;
             }
