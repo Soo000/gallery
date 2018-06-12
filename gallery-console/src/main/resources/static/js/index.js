@@ -237,6 +237,7 @@ function buildOrdersTable(result, status) {
         str += "<th>" + v.orderCode + "</th>";
         str += "<td>" + v.glyUser.username + "</td>";
         str += "<td>" + v.glyAddress.receiver + "</td>";
+        str += "<td>" + v.glyAddress.phoneNum + "</td>";
         str += "<td>" + v.glyAddress.address + "</td>";
         str += "<td>" + v.productNum + "</td>";
         str += "<td>" + v.realPayment + "</td>";
