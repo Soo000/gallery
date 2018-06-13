@@ -399,7 +399,8 @@ function modifyAddOnchange(inputObject) {
     reader.readAsDataURL(inputObject.files[0]);
 }
 
-function modifyProductModalSubmit() {
+function modifyProductModalSubmit(element) {
+    let $this = $(element);
     let productName = $.trim($("#productName").val());
     let productIntro = $.trim($("#productIntro").val());
     let productDetail = $.trim($("#productDetail").val());
@@ -499,7 +500,8 @@ function modifyProductModalSubmit() {
         params.detailPictures = detailPictures;
     }
 
-    $.post("/product/modify", {"params":JSON.stringify(params)}, function (result) {
+    $this.prop('disabled', true);
+    $.post("/product/modify", {"params":JSON.stringify(params)}).done(function (result) {
         if (result.code === 0) {
             $("#edit_product_bar").click();
             $("#editProductModal").modal('toggle');
@@ -507,7 +509,11 @@ function modifyProductModalSubmit() {
         } else {
             alert("修改失败！");
         }
-    }, 'json');
+    }).fail(function () {
+        alert('修改失败！');
+    }).always(function () {
+        $this.prop('disabled', false);
+    });
 }
 
 function openHomeModuleManagePage() {
