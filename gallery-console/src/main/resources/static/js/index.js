@@ -105,6 +105,12 @@
         openProductTypeManagePage();
     });
 
+    // 预约单管理按钮单击事件
+    $("#reservation_order_manage_btn").click(function (e) {
+        e.preventDefault();
+        openReservationOrderManagePage();
+    });
+
 	// 修改价格按钮单击事件
     $("div.main").on("click", "button.edit-price-btn", function (e) {
         e.preventDefault();
@@ -1118,4 +1124,102 @@ function deleteProductType(element) {
 
 function chooseProductId() {
     window.open("/product/open-choose-page", "choose product");
+}
+
+function openReservationOrderManagePage() {
+    $.get("/reservation/open").done(function (page) {
+        $("div.main").html("").html(page);
+        queryReservationOrderTotalNum();
+    }).fail(function () {
+        alert('页面加载失败！请重试！');
+    });
+}
+
+function queryReservationOrderTotalNum() {
+    $.get("/reservation/query-total-num").done(function (result) {
+        if (result.code === 0) {
+            let num = result.data;
+            if (num <= 0) {
+                return;
+            }
+            let pageSize = 6;
+            $('ul.pagination').jqPaginator({
+                totalCounts: num,
+                pageSize: pageSize,
+                visiblePages: 10,
+                currentPage: 1,
+                first: '<li class="page-item first"><a class="page-link" href="javascript:void(0);">首页</a></li>',
+                prev: '<li class="page-item prev"><a class="page-link" href="javascript:void(0);">上一页</a></li>',
+                next: '<li class="page-item next"><a class="page-link" href="javascript:void(0);">下一页</a></li>',
+                last: '<li class="page-item last"><a class="page-link" href="javascript:void(0);">尾页</a></li>',
+                page: '<li class="page-item"><a class="page-link" href="javascript:void(0);">{{page}}</a></li>',
+                onPageChange: function (page, type) {
+                    if (type !== "init") {
+                        queryReservationOrderData(page, pageSize);
+                    }
+                }
+            });
+            queryReservationOrderData(1, pageSize);
+        }
+    });
+}
+
+function queryReservationOrderData(pageNum, pageSize) {
+    $.get("/reservation/query-data", {page: pageNum - 1, size: pageSize, _: new Date().getTime()}).done(function (page) {
+        $("#reservationDataBody").html("").html(page);
+    }).fail(function () {
+        alert("查询预约订单数据失败！");
+    });
+}
+
+function modifyReservationOrder(element) {
+    let $tr = $(element).parent().parent();
+    $("#reservationCode").val($.trim($tr.find('th').eq(0).text()));
+    let status = $tr.find('td').eq(6).attr('value');
+    $("#reservationStatus").val(status);
+    let valid = $tr.find('td').eq(7).attr('value');
+    $("#valid").val(valid);
+    let $modifyModal = $("#modifyReservationStatusModal");
+    $modifyModal.data('$tr', $tr);
+    $modifyModal.modal('show');
+}
+
+function modifyReservationOrderSubmit() {
+    let params = {"reservationCode": $("#reservationCode").val(),
+        "reservationStatus": $("#reservationStatus").val(),
+        "valid": $("#valid").val()
+    };
+    let $modifyModal = $("#modifyReservationStatusModal");
+
+    $.post("/reservation/modify", params).done(function (result) {
+        if (result.code === 0) {
+            let $tr = $modifyModal.data('$tr');
+            let status = params.reservationStatus;
+            let valid = params.valid;
+            let $status = $tr.find('td').eq(6);
+            $status.attr('value', status);
+            let $valid = $tr.find('td').eq(7);
+            $valid.attr('value', valid);
+            switch (status) {
+                case "0":
+                    $status.text('已预约');
+                    break;
+                case "1":
+                    $status.text('处理中');
+                    break;
+                default:
+                    $status.text('已完成');
+            }
+            valid = valid === "0" ? "无效" : "有效";
+            $valid.text(valid);
+            $tr.find("td").eq(9).text(result.data.replace("T", " ").substr(0, 19) + ".0");
+            $modifyModal.modal('hide');
+        } else {
+            alert("服务异常，未修改！");
+        }
+    }).fail(function () {
+        alert("服务异常，未修改！");
+    }).always(function () {
+        $modifyModal.removeData('$tr');
+    });
 }

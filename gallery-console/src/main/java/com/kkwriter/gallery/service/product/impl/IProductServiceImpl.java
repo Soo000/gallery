@@ -1,5 +1,6 @@
 package com.kkwriter.gallery.service.product.impl;
 
+import com.kkwriter.gallery.entity.BaseEntity;
 import com.kkwriter.gallery.entity.json.ModifyProductJsonBean;
 import com.kkwriter.gallery.entity.product.GlyProduct;
 import com.kkwriter.gallery.entity.product.GlyProductPicture;
@@ -168,7 +169,7 @@ public class IProductServiceImpl implements IProductService {
 		newProduct.setIsValid(Integer.valueOf(param.getIsValid()));
 		newProduct.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 		try {
-			product.updateMe(newProduct);
+			BaseEntity.update(product, newProduct);
 		} catch (IllegalAccessException e) {
 			logger.error(e.getMessage(), e);
 		}

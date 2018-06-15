@@ -1,0 +1,22 @@
+<tr data-th-each="v : ${data}">
+    <th scope="row" data-th-text="${v.reservationCode}">20180528192229671</th>
+    <td data-th-text="${v.reservationName}">测量设计</td>
+    <td data-th-text="${v.reservationUsername}">张三</td>
+    <td data-th-text="${v.reservationPhoneNumber}">150****2595</td>
+    <td data-th-text="${v.reservationAddress}">xx省xx市xx区xx街道xx号</td>
+    <td data-th-text="${v.reservationDescription}">订单描述</td>
+    <td data-th-text="${v.reservationTime}">2018-08-08 08:08:08.0</td>
+
+    <td data-th-if="${v.reservationStatus == 0}" data-th-value="${v.reservationStatus}">已预约</td>
+    <td data-th-if="${v.reservationStatus == 1}" data-th-value="${v.reservationStatus}">处理中</td>
+    <td data-th-if="${v.reservationStatus == 2}" data-th-value="${v.reservationStatus}">已完成</td>
+
+    <td data-th-text="${v.valid == 1 ? '有效' : '无效'}" data-th-value="${v.valid}">有效</td>
+    <td data-th-text="${v.creationTime}">2018-08-08 08:08:08.0</td>
+    <td data-th-text="${v.updateTime}">2019-09-09 09:09:09.0</td>
+    <td>
+        <button class="btn btn-primary btn-sm" onclick="modifyReservationOrder(this);">
+            <span class="oi oi-pencil"></span>
+        </button>
+    </td>
+</tr>

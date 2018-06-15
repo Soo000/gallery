@@ -1,0 +1,62 @@
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">预约单号</th>
+            <th scope="col">预约类型</th>
+            <th scope="col">预约人</th>
+            <th scope="col">手机号</th>
+            <th scope="col">地址</th>
+            <th scope="col">描述</th>
+            <th scope="col">预约时间</th>
+            <th scope="col">订单状态</th>
+            <th scope="col">是否有效</th>
+            <th scope="col">创建时间</th>
+            <th scope="col">更新时间</th>
+            <th scope="col">操作</th>
+        </tr>
+    </thead>
+    <tbody id="reservationDataBody">
+    </tbody>
+</table>
+<ul class="pagination float-right"></ul>
+
+<!-- Modal -->
+<div class="modal fade" id="modifyReservationStatusModal" tabindex="-1" role="dialog" aria-labelledby="modifyReservationStatusModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyReservationStatusModalTitle">编辑预约订单</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="reservationCode">订单编号</label>
+                        <input class="form-control" id="reservationCode" name="reservationCode" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationStatus">预约单状态</label>
+                        <select class="form-control" id="reservationStatus" name="reservationStatus">
+                            <option value="0">已预约</option>
+                            <option value="1">处理中</option>
+                            <option value="2" selected>已完成</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="valid">是否有效</label>
+                        <select class="form-control" id="valid" name="valid">
+                            <option value="0">无效</option>
+                            <option value="1" selected>有效</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="modifyReservationOrderSubmit();">修改</button>
+            </div>
+        </div>
+    </div>
+</div>

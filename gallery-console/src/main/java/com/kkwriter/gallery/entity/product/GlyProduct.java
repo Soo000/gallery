@@ -157,22 +157,4 @@ public class GlyProduct extends BaseEntity {
                 '}' + " | " + super.toString();
     }
 
-    public void updateMe(GlyProduct that) throws IllegalAccessException {
-        GlyProduct obj = this;
-        Field[] field = that.getClass().getDeclaredFields();
-        Field[] superField = that.getClass().getSuperclass().getDeclaredFields();
-        Field[] result = Arrays.copyOf(field, field.length + superField.length);
-        System.arraycopy(superField, 0, result, field.length, superField.length);
-        for (Field f : result) {
-            if ("serialVersionUID".equals(f.getName())) {
-                continue;
-            }
-            f.setAccessible(true);
-            Object value = f.get(that);
-            if (value != null) {
-                f.set(obj, value);
-            }
-        }
-    }
-
 }
