@@ -27,6 +27,7 @@ public interface IGlyReservationService {
     /**
      * 保存一个预约数据
      * @param reservation 需要保存的预约对象
+     * @return GlyReservation 保存后的对象
      */
     GlyReservation save(GlyReservation reservation);
 }
